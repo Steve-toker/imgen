@@ -2653,6 +2653,18 @@
       renderResults();
     }
 
+    function clearResultFiltersForGeneration() {
+      if (state.viewMode === "all" && !state.filterPersonId) {
+        return;
+      }
+      state.viewMode = "all";
+      state.filterPersonId = "";
+      state.peoplePanelOpen = false;
+      savePeople();
+      renderPeoplePanel();
+      renderResults();
+    }
+
     function toggleFiltersPanel() {
       state.peoplePanelOpen = !state.peoplePanelOpen;
       renderPeoplePanel();
@@ -4035,6 +4047,7 @@
       if (!prompt) {
         throw new Error(`Prompt ${index + 1} is empty.`);
       }
+      clearResultFiltersForGeneration();
       const previousResult = state.results[index];
       const canReusePrevious = !isModerationOnlyResult(previousResult);
       const previousImageUrl = canReusePrevious ? (previousResult?.imageUrl || "") : "";
