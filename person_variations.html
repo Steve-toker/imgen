@@ -1,0 +1,4262 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Funny Person Variations</title>
+  <link rel="icon" href="data:," />
+  <style>
+    :root {
+      --bg: #0d1016;
+      --panel: rgba(20, 26, 36, 0.94);
+      --panel-soft: rgba(28, 36, 49, 0.92);
+      --panel-border: #2a3344;
+      --text: #f4f6fb;
+      --muted: #bac4d8;
+      --accent: #ff8a4c;
+      --accent-strong: #ff6b2c;
+      --accent-soft: rgba(255, 138, 76, 0.2);
+      --success: #86efac;
+      --danger: #ff7b7b;
+      --shadow: 0 24px 60px rgba(0, 0, 0, 0.38);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(255, 138, 76, 0.16), transparent 30%),
+        radial-gradient(circle at top right, rgba(94, 184, 255, 0.12), transparent 24%),
+        linear-gradient(180deg, #090c12 0%, #101520 100%);
+      padding: 24px;
+    }
+
+    .wrap {
+      width: min(1360px, 100%);
+      margin: 0 auto;
+      display: grid;
+      gap: 18px;
+    }
+
+    .hero {
+      display: grid;
+      gap: 8px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.5rem, 2vw, 2.25rem);
+      font-weight: 760;
+      letter-spacing: -0.03em;
+    }
+
+    .hero p,
+    .status {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(320px, 420px) minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--panel-border);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .panel-body {
+      padding: 18px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .panel-head {
+      padding: 16px 18px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .panel-head strong {
+      font-size: 0.98rem;
+      letter-spacing: 0.01em;
+    }
+
+    .panel-head span {
+      font-size: 0.84rem;
+      color: var(--muted);
+    }
+
+    .head-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .paste-target {
+      min-height: 110px;
+      border: 1px dashed #51637f;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 18px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01)),
+        rgba(15, 19, 27, 0.96);
+      color: var(--muted);
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+    }
+
+    .paste-target:focus,
+    .paste-target.ready {
+      border-style: solid;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-soft);
+    }
+
+    .source-preview {
+      display: none;
+      gap: 12px;
+      grid-template-columns: 120px minmax(0, 1fr);
+      align-items: center;
+      background: rgba(8, 11, 17, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 18px;
+      padding: 12px;
+    }
+
+    .source-preview.open {
+      display: grid;
+    }
+
+    .source-preview img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      border-radius: 14px;
+      background: #0d1016;
+    }
+
+    .source-copy {
+      display: grid;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    .source-copy strong {
+      font-size: 0.94rem;
+    }
+
+    .source-copy span {
+      color: var(--muted);
+      font-size: 0.86rem;
+      line-height: 1.4;
+      overflow-wrap: anywhere;
+    }
+
+    .token-panel {
+      display: grid;
+      gap: 12px;
+      padding: 14px;
+      border-radius: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      background: rgba(8, 11, 17, 0.35);
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+    }
+
+    .field-label {
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .field input[type="password"] {
+      width: 100%;
+      border-radius: 14px;
+      border: 1px solid var(--panel-border);
+      background: #161c27;
+      color: var(--text);
+      padding: 11px 12px;
+      font: inherit;
+    }
+
+    .field-inline {
+      display: inline-grid;
+      gap: 6px;
+      min-width: 96px;
+    }
+
+    .field-inline select {
+      border-radius: 12px;
+      border: 1px solid var(--panel-border);
+      background: #161c27;
+      color: var(--text);
+      padding: 10px 12px;
+      font: inherit;
+    }
+
+    .controls,
+    .prompt-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .source-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .source-picker-label {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font: inherit;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .source-picker-label.is-busy {
+      opacity: 0.6;
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 10px 14px;
+      font: inherit;
+      color: #fff;
+      background: var(--accent);
+      cursor: pointer;
+      transition: transform 0.15s ease, opacity 0.15s ease, background 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      opacity: 0.96;
+    }
+
+    button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .ghost-btn {
+      background: var(--panel-soft);
+      border: 1px solid var(--panel-border);
+      color: var(--text);
+    }
+
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .icon-btn svg {
+      width: 18px;
+      height: 18px;
+      fill: currentColor;
+    }
+
+    .danger-btn {
+      background: rgba(255, 123, 123, 0.14);
+      border: 1px solid rgba(255, 123, 123, 0.28);
+      color: #ffd8d8;
+    }
+
+    .prompt-editor {
+      display: none;
+      gap: 14px;
+    }
+
+    .prompt-editor.open {
+      display: grid;
+    }
+
+    .prompt-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .prompt-row {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: start;
+      background: rgba(10, 14, 21, 0.46);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 18px;
+      padding: 12px;
+    }
+
+    .prompt-row.dragging {
+      opacity: 0.55;
+      border-color: var(--accent);
+    }
+
+    .prompt-row.drop-target {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px var(--accent-soft);
+    }
+
+    .drag-handle {
+      width: 40px;
+      min-height: 88px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--muted);
+      display: grid;
+      place-items: center;
+      cursor: grab;
+      user-select: none;
+      font-size: 1.1rem;
+    }
+
+    .drag-handle:active {
+      cursor: grabbing;
+    }
+
+    .prompt-row textarea {
+      width: 100%;
+      min-height: 88px;
+      resize: vertical;
+      border-radius: 14px;
+      border: 1px solid var(--panel-border);
+      background: #161c27;
+      color: var(--text);
+      padding: 11px 12px;
+      font: inherit;
+      line-height: 1.4;
+    }
+
+    .prompt-tools {
+      display: grid;
+      gap: 8px;
+      justify-items: end;
+    }
+
+    .toggle-row {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 0.82rem;
+      white-space: nowrap;
+    }
+
+    .toggle-row input {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--accent);
+      margin: 0;
+    }
+
+    .prompt-badge {
+      min-width: 42px;
+      text-align: center;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .tiny-btn {
+      min-width: 74px;
+      padding: 8px 10px;
+      font-size: 0.88rem;
+    }
+
+    .results-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .toolbar-actions {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-left: auto;
+    }
+
+    .filter-icon-btn.active {
+      border-color: rgba(255, 138, 76, 0.28);
+      background: rgba(255, 138, 76, 0.14);
+      color: #fff2ea;
+    }
+
+    .view-toggle {
+      display: inline-flex;
+      gap: 8px;
+      padding: 4px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .view-toggle button {
+      min-width: 88px;
+      border-radius: 999px;
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--muted);
+    }
+
+    .view-toggle button.active {
+      background: rgba(255, 138, 76, 0.14);
+      border-color: rgba(255, 138, 76, 0.28);
+      color: #fff2ea;
+    }
+
+    .filter-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+
+    .filter-pill[hidden] {
+      display: none;
+    }
+
+    .people-panel {
+      display: grid;
+      gap: 12px;
+      padding: 14px;
+      border-radius: 20px;
+      background: rgba(8, 11, 17, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .people-panel[hidden] {
+      display: none;
+    }
+
+    .people-panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .people-panel-head strong {
+      font-size: 0.94rem;
+    }
+
+    .people-panel-head span {
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    .people-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 12px;
+    }
+
+    .person-card {
+      display: grid;
+      gap: 12px;
+      padding: 12px;
+      border-radius: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      background: rgba(15, 19, 27, 0.82);
+      transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .person-card.active {
+      border-color: rgba(255, 138, 76, 0.38);
+      box-shadow: 0 0 0 2px rgba(255, 138, 76, 0.12);
+    }
+
+    .person-card.drop-target {
+      border-color: rgba(94, 184, 255, 0.55);
+      box-shadow: 0 0 0 2px rgba(94, 184, 255, 0.15);
+      transform: translateY(-1px);
+    }
+
+    .person-card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .person-card-actions {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .person-action-btn {
+      width: 34px;
+      height: 34px;
+      padding: 0;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--muted);
+    }
+
+    .person-action-btn svg {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+    }
+
+    .person-action-btn.delete {
+      color: #ffd7d1;
+    }
+
+    .person-select {
+      display: grid;
+      gap: 3px;
+      padding: 0;
+      border: 0;
+      text-align: left;
+      background: transparent;
+      color: inherit;
+    }
+
+    .person-select:hover {
+      transform: none;
+      opacity: 1;
+    }
+
+    .person-select strong {
+      font-size: 0.94rem;
+    }
+
+    .person-select span {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .person-stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .person-source-chip {
+      width: 58px;
+      height: 58px;
+      padding: 0;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 2px solid transparent;
+      background: rgba(255, 255, 255, 0.05);
+      position: relative;
+    }
+
+    .person-source-chip img,
+    .person-source-chip .source-placeholder {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .person-source-chip .source-placeholder {
+      display: grid;
+      place-items: center;
+      font-size: 0.72rem;
+      color: var(--muted);
+      padding: 8px;
+      text-align: center;
+      line-height: 1.2;
+      background:
+        linear-gradient(135deg, rgba(255, 138, 76, 0.14), rgba(255, 255, 255, 0) 55%),
+        rgba(12, 16, 24, 0.96);
+    }
+
+    .person-source-chip.active {
+      border-color: rgba(255, 138, 76, 0.9);
+    }
+
+    .person-source-chip.dragging {
+      opacity: 0.5;
+    }
+
+    .person-source-chip.drop-target {
+      border-color: rgba(94, 184, 255, 0.9);
+      box-shadow: 0 0 0 2px rgba(94, 184, 255, 0.18);
+    }
+
+    .person-source-chip::after {
+      content: attr(data-index);
+      position: absolute;
+      right: 5px;
+      bottom: 5px;
+      min-width: 18px;
+      height: 18px;
+      padding: 0 5px;
+      border-radius: 999px;
+      background: rgba(10, 14, 21, 0.82);
+      color: #fff;
+      font-size: 0.7rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .person-help {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 14px;
+    }
+
+    .result-card {
+      display: grid;
+      gap: 10px;
+      padding: 12px;
+      background: rgba(10, 14, 21, 0.52);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 20px;
+      min-height: 320px;
+    }
+
+    .result-frame {
+      position: relative;
+      aspect-ratio: 1 / 1;
+      border-radius: 16px;
+      overflow: hidden;
+      background:
+        linear-gradient(135deg, rgba(255, 138, 76, 0.16), rgba(255, 255, 255, 0) 45%),
+        repeating-linear-gradient(
+          -45deg,
+          rgba(255, 255, 255, 0.025) 0,
+          rgba(255, 255, 255, 0.025) 12px,
+          transparent 12px,
+          transparent 24px
+        ),
+        #121826;
+      display: grid;
+      place-items: center;
+      color: var(--muted);
+      text-align: center;
+      padding: 16px;
+      touch-action: pan-y;
+    }
+
+    .result-frame.clickable {
+      cursor: zoom-in;
+    }
+
+    .result-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .result-meta {
+      display: grid;
+      gap: 6px;
+    }
+
+    .result-meta strong {
+      font-size: 0.9rem;
+    }
+
+    .result-person-label {
+      font-size: 0.78rem;
+      color: var(--muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .result-person-thumb {
+      width: 20px;
+      height: 20px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.08);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.68rem;
+      color: var(--muted);
+      flex: 0 0 auto;
+    }
+
+    .result-person-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .result-version-label {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .carousel-dots {
+      position: absolute;
+      left: 50%;
+      bottom: 12px;
+      z-index: 2;
+      transform: translateX(-50%);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(10, 14, 21, 0.72);
+      backdrop-filter: blur(8px);
+    }
+
+    .carousel-dots[hidden] {
+      display: none;
+    }
+
+    .carousel-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .carousel-dot.active {
+      background: #fff;
+    }
+
+    .mini-icon-btn {
+      width: 42px;
+      height: 42px;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+    }
+
+    .mini-icon-btn svg {
+      width: 18px;
+      height: 18px;
+      fill: currentColor;
+    }
+
+    .result-regenerate {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 2;
+      background: rgba(10, 14, 21, 0.84);
+      backdrop-filter: blur(8px);
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .result-regenerate.is-busy {
+      opacity: 0.6;
+    }
+
+    .result-delete {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 2;
+      background: rgba(10, 14, 21, 0.84);
+      backdrop-filter: blur(8px);
+      border-color: rgba(255, 255, 255, 0.1);
+      color: #ffd7d1;
+    }
+
+    .result-version-nav {
+      position: absolute;
+      top: 50%;
+      z-index: 2;
+      transform: translateY(-50%);
+      background: rgba(10, 14, 21, 0.84);
+      backdrop-filter: blur(8px);
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .result-version-nav.prev {
+      left: 10px;
+    }
+
+    .result-version-nav.next {
+      right: 10px;
+    }
+
+    .result-status {
+      font-size: 0.83rem;
+      color: var(--muted);
+    }
+
+    .result-status.success {
+      color: var(--success);
+    }
+
+    .result-status.notice {
+      color: #ffbf8a;
+    }
+
+    .result-status.error {
+      color: var(--danger);
+    }
+
+    .empty-state {
+      padding: 26px;
+      border-radius: 20px;
+      border: 1px dashed rgba(255, 255, 255, 0.14);
+      text-align: center;
+      color: var(--muted);
+      background: rgba(9, 13, 20, 0.35);
+    }
+
+    .footer-note a {
+      color: #ffc7ae;
+    }
+
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: none;
+      place-items: center;
+      padding: 28px;
+      background: rgba(6, 8, 12, 0.9);
+      backdrop-filter: blur(8px);
+      overflow: hidden;
+    }
+
+    .lightbox.open {
+      display: grid;
+    }
+
+    .lightbox-content {
+      position: relative;
+      width: min(92vw, 920px);
+      margin: auto;
+      display: grid;
+      gap: 14px;
+      padding: 18px;
+      max-height: calc(100vh - 56px);
+      border-radius: 28px;
+      background: rgba(15, 19, 27, 0.96);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 32px 90px rgba(0, 0, 0, 0.4);
+      overflow: hidden;
+    }
+
+    .lightbox-stage {
+      position: relative;
+      border-radius: 24px;
+      overflow: hidden;
+      background: #0d1016;
+      min-height: 320px;
+      touch-action: none;
+    }
+
+    .lightbox-image {
+      width: 100%;
+      max-height: min(72vh, 820px);
+      object-fit: contain;
+      display: block;
+      background: #0d1016;
+      transform-origin: center center;
+      user-select: none;
+      -webkit-user-drag: none;
+      cursor: zoom-in;
+    }
+
+    .lightbox-stage.is-zoomed .lightbox-image {
+      cursor: grab;
+    }
+
+    .lightbox-stage.is-zoomed .lightbox-image.dragging {
+      cursor: grabbing;
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+    }
+
+    .lightbox-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .lightbox-nav.prev {
+      left: 12px;
+    }
+
+    .lightbox-nav.next {
+      right: 12px;
+    }
+
+    .lightbox-nav.up {
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .lightbox-nav.down {
+      top: auto;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .lightbox-nav:disabled {
+      opacity: 0.25;
+    }
+
+    .lightbox-meta {
+      display: grid;
+      gap: 6px;
+      color: var(--muted);
+    }
+
+    .lightbox-meta strong {
+      color: var(--text);
+      font-size: 1rem;
+    }
+
+    .lightbox-dots {
+      position: static;
+      transform: none;
+      justify-self: center;
+    }
+
+    @media (max-width: 980px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .lightbox-nav.prev {
+        left: 8px;
+      }
+
+      .lightbox-nav.next {
+        right: 8px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding: 14px;
+      }
+
+      .source-preview {
+        grid-template-columns: 1fr;
+      }
+
+      .prompt-row {
+        grid-template-columns: 1fr;
+      }
+
+      .prompt-tools {
+        justify-items: start;
+        grid-auto-flow: column;
+        align-items: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <h1>Funny Person Variations</h1>
+      <p>Paste a photo of one person, adjust the prompts, then generate a full set of variations that keep that same person in the scene.</p>
+      <p class="status" id="status">Run <code>.venv/bin/python image_edit_server.py</code>, open <code>http://127.0.0.1:8765/</code>, click the paste area, then press <code>Cmd+V</code>.</p>
+    </section>
+
+    <section class="layout">
+      <div class="panel">
+        <div class="panel-head">
+          <div class="head-group">
+            <strong>Source + Prompts</strong>
+            <button
+              id="toggle-prompts-btn"
+              class="ghost-btn icon-btn"
+              type="button"
+              title="Edit prompts"
+              aria-label="Edit prompts"
+              aria-expanded="false"
+              aria-controls="prompt-editor"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M3 17.25V21h3.75l11-11.03-3.75-3.75L3 17.25zm17.71-10.04a1.003 1.003 0 0 0 0-1.42l-2.5-2.5a1.003 1.003 0 0 0-1.42 0l-1.96 1.96 3.75 3.75 2.13-1.79z"/>
+              </svg>
+            </button>
+          </div>
+          <span>Saved locally</span>
+        </div>
+        <div class="panel-body">
+          <div
+            id="paste-target"
+            class="paste-target"
+            tabindex="0"
+            role="button"
+            aria-label="Paste image or image URL here"
+          >Click here, then press Cmd+V to paste a person photo or image URL</div>
+
+          <div class="source-actions">
+            <label for="pick-image-input" id="pick-image-btn" class="ghost-btn source-picker-label">Choose Image</label>
+            <label for="camera-image-input" id="camera-image-btn" class="ghost-btn source-picker-label">Use Camera</label>
+            <input id="pick-image-input" type="file" accept="image/*" hidden />
+            <input id="camera-image-input" type="file" accept="image/*" capture="environment" hidden />
+          </div>
+
+          <div id="source-preview" class="source-preview">
+            <img id="source-image" alt="Pasted source preview" />
+            <div class="source-copy">
+              <strong id="source-title">Ready to generate</strong>
+              <span id="source-description"></span>
+              <div class="controls">
+                <label class="field-inline" for="generate-count-select">
+                  <span class="field-label">Images</span>
+                  <select id="generate-count-select" aria-label="Number of images to generate"></select>
+                </label>
+                <button id="generate-all-btn" type="button">Generate</button>
+                <button id="clear-source-btn" class="ghost-btn" type="button">Clear Source</button>
+              </div>
+            </div>
+          </div>
+
+          <form id="token-form" class="token-panel">
+            <label class="field" for="token-input">
+              <span class="field-label">xAI API key for frontend-only image edits</span>
+              <input id="token-input" type="password" placeholder="xai-..." autocomplete="off" spellcheck="false" />
+            </label>
+            <div class="controls">
+              <label class="toggle-row" for="save-token-checkbox">
+                <input id="save-token-checkbox" type="checkbox" />
+                <span>Save token in local storage</span>
+              </label>
+              <button id="clear-token-btn" class="ghost-btn" type="button">Clear Token</button>
+            </div>
+          </form>
+
+          <div id="prompt-editor" class="prompt-editor">
+            <div class="prompt-actions">
+              <button id="add-prompt-btn" class="ghost-btn" type="button">Add Prompt</button>
+              <button id="reset-prompts-btn" class="ghost-btn" type="button">Reset Funny 10</button>
+              <button id="delete-all-images-btn" class="danger-btn" type="button">Delete All Images</button>
+            </div>
+
+            <div id="prompt-list" class="prompt-list" aria-live="polite"></div>
+          </div>
+
+          <p class="footer-note status">The old compare tool is still available at <a href="./edited_image_compare.html">/edited_image_compare.html</a>.</p>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <strong>Generated Images</strong>
+          <span id="results-summary">0 ready</span>
+        </div>
+        <div class="panel-body">
+          <div class="results-toolbar">
+            <div class="toolbar-actions">
+              <div id="filter-pill" class="filter-pill" hidden></div>
+              <button id="toggle-filters-btn" type="button" class="ghost-btn icon-btn filter-icon-btn" aria-label="Filter by person">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M3 5h18l-7 8v5l-4 2v-7L3 5z"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div id="people-panel" class="people-panel" hidden>
+            <div class="people-panel-head">
+              <strong>Filter By Person</strong>
+              <div class="controls">
+                <button id="show-all-images-btn" type="button" class="ghost-btn tiny-btn">Show All</button>
+                <span>Drag one source thumbnail onto another to merge them into the same person.</span>
+              </div>
+            </div>
+            <div id="people-list" class="people-list"></div>
+            <div class="person-help">Click a thumbnail to make it the active source for new generations.</div>
+          </div>
+          <div id="results-grid" class="results-grid"></div>
+          <div id="results-empty" class="empty-state">Paste a person image and click Generate Enabled. Each prompt also has its own Run button.</div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div id="lightbox" class="lightbox" aria-hidden="true">
+    <div class="lightbox-content">
+      <button id="lightbox-prev-btn" class="ghost-btn icon-btn lightbox-nav prev" type="button" aria-label="Previous generation">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+        </svg>
+      </button>
+      <button id="lightbox-up-btn" class="ghost-btn icon-btn lightbox-nav up" type="button" aria-label="Previous prompt">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="m12 8.83 5.59 5.58L19 13l-7-7-7 7 1.41 1.41z"/>
+        </svg>
+      </button>
+      <button id="lightbox-next-btn" class="ghost-btn icon-btn lightbox-nav next" type="button" aria-label="Next generation">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="m8.59 16.59 1.41 1.41 6-6-6-6-1.41 1.41L13.17 12z"/>
+        </svg>
+      </button>
+      <button id="lightbox-down-btn" class="ghost-btn icon-btn lightbox-nav down" type="button" aria-label="Next prompt">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="m12 15.17-5.59-5.58L5 11l7 7 7-7-1.41-1.41z"/>
+        </svg>
+      </button>
+      <button id="lightbox-close-btn" class="ghost-btn icon-btn lightbox-close" type="button" aria-label="Close full size image">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M18.3 5.71 12 12l6.3 6.29-1.41 1.41L10.59 13.41 4.29 19.7 2.88 18.29 9.17 12 2.88 5.71 4.29 4.3l6.3 6.29 6.29-6.3z"/>
+        </svg>
+      </button>
+      <div id="lightbox-stage" class="lightbox-stage">
+        <img id="lightbox-image" class="lightbox-image" alt="Full size generated image" />
+      </div>
+      <div id="lightbox-dots" class="carousel-dots lightbox-dots" aria-hidden="true"></div>
+      <div class="lightbox-meta">
+        <strong id="lightbox-title">Variation</strong>
+        <span id="lightbox-version-label">Version</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const peopleStorageKey = "personVariations.people.v2";
+    const activePersonStorageKey = "personVariations.activePerson.v2";
+    const activeSourceStorageKey = "personVariations.activeSource.v2";
+    const filterPersonStorageKey = "personVariations.filterPerson.v2";
+    const resultsViewStorageKey = "personVariations.viewMode.v2";
+    const promptStorageKey = "personVariations.prompts.v1";
+    const resultsStorageKey = "personVariations.results.v1";
+    const sourceStorageKey = "personVariations.source.v1";
+    const tokenStorageKey = "personVariations.token.v1";
+    const generateCountStorageKey = "personVariations.generateCount.v1";
+    const imageDbName = "personVariations.images.v1";
+    const imageStoreName = "images";
+    const sourceImageStoreName = "sourceImages";
+    const defaultPrompts = [
+      "Turn this person into an overdramatic office hero presenting a pie chart that says Very Important Naps, cinematic lighting, expressive face, playful realism.",
+      "Put this person in a supermarket aisle wearing a tiny crown and judging avocados like a world-class sommelier, funny but photorealistic.",
+      "Show this person as a medieval knight riding an absurdly small scooter through a castle hallway, detailed and comedic.",
+      "Make this person the host of a chaotic cooking show where every pancake has gone wrong, flour in the air, vivid and funny.",
+      "Place this person on a red carpet dressed like a glamorous detective who has just solved the mystery of the missing sandwich.",
+      "Turn this person into a serious museum guide proudly presenting a banana taped to the wall like it is priceless art, photorealistic humor.",
+      "Show this person as an astronaut on the moon trying very hard to walk a stubborn corgi in a space suit, cinematic and silly.",
+      "Make this person a fitness influencer lifting one giant baguette in a luxury gym, dramatic action shot, playful realism.",
+      "Place this person in a business meeting where they are calmly negotiating with three ducks around a conference table, sharp and funny.",
+      "Turn this person into a weather reporter standing in a storm of flying pizza slices, heroic pose, detailed comedic realism."
+    ];
+    const verticalRecomposeSuffix = "Recompose into a tall vertical scene. Expand beyond the original crop. Show the same person fully integrated in a new environment. Replace the original background completely. Do not preserve the original photo frame, square crop or black padding. Fill the entire image naturally from top to bottom.";
+    const verticalAspectRatio = 9 / 16;
+    const preparedSourceMaxLongSide = 2048;
+    const maxParallelGenerations = 2;
+
+    const pasteTarget = document.getElementById("paste-target");
+    const statusEl = document.getElementById("status");
+    const sourcePreview = document.getElementById("source-preview");
+    const sourceImage = document.getElementById("source-image");
+    const sourceTitle = document.getElementById("source-title");
+    const sourceDescription = document.getElementById("source-description");
+    const pickImageButton = document.getElementById("pick-image-btn");
+    const cameraImageButton = document.getElementById("camera-image-btn");
+    const pickImageInput = document.getElementById("pick-image-input");
+    const cameraImageInput = document.getElementById("camera-image-input");
+    const tokenInput = document.getElementById("token-input");
+    const saveTokenCheckbox = document.getElementById("save-token-checkbox");
+    const clearTokenButton = document.getElementById("clear-token-btn");
+    const togglePromptsButton = document.getElementById("toggle-prompts-btn");
+    const promptEditor = document.getElementById("prompt-editor");
+    const promptList = document.getElementById("prompt-list");
+    const addPromptButton = document.getElementById("add-prompt-btn");
+    const resetPromptsButton = document.getElementById("reset-prompts-btn");
+    const deleteAllImagesButton = document.getElementById("delete-all-images-btn");
+    const generateCountSelect = document.getElementById("generate-count-select");
+    const generateAllButton = document.getElementById("generate-all-btn");
+    const clearSourceButton = document.getElementById("clear-source-btn");
+    const toggleFiltersButton = document.getElementById("toggle-filters-btn");
+    const showAllImagesButton = document.getElementById("show-all-images-btn");
+    const filterPill = document.getElementById("filter-pill");
+    const peoplePanel = document.getElementById("people-panel");
+    const peopleList = document.getElementById("people-list");
+    const resultsGrid = document.getElementById("results-grid");
+    const resultsEmpty = document.getElementById("results-empty");
+    const resultsSummary = document.getElementById("results-summary");
+    const lightbox = document.getElementById("lightbox");
+    const lightboxStage = document.getElementById("lightbox-stage");
+    const lightboxImage = document.getElementById("lightbox-image");
+    const lightboxDots = document.getElementById("lightbox-dots");
+    const lightboxTitle = document.getElementById("lightbox-title");
+    const lightboxVersionLabel = document.getElementById("lightbox-version-label");
+    const lightboxPrevButton = document.getElementById("lightbox-prev-btn");
+    const lightboxUpButton = document.getElementById("lightbox-up-btn");
+    const lightboxNextButton = document.getElementById("lightbox-next-btn");
+    const lightboxDownButton = document.getElementById("lightbox-down-btn");
+    const lightboxCloseButton = document.getElementById("lightbox-close-btn");
+    const blobUrlCache = new Map();
+    const blobUrlLoads = new Set();
+    const sourceBlobUrlCache = new Map();
+    const sourceBlobUrlLoads = new Set();
+    let imageDbPromise = null;
+
+    const state = {
+      people: [],
+      activePersonId: "",
+      activeSourceId: "",
+      filterPersonId: "",
+      source: "",
+      sourcePreviewUrl: "",
+      sourceBlobKey: "",
+      sourceLabel: "",
+      prompts: [],
+      results: [],
+      viewMode: "people",
+      peoplePanelOpen: false,
+      visibleItems: [],
+      isGenerating: false,
+      promptEditorOpen: false,
+      lightboxIndex: -1,
+      lightboxKey: "",
+      lightboxZoom: 1,
+      lightboxPanX: 0,
+      lightboxPanY: 0,
+      generateCount: 10,
+      dragIndex: -1,
+      dragSource: null,
+      variantSelections: {},
+      objectPreviewUrl: "",
+      preparedSourceKey: "",
+      preparedSourceDataUrl: "",
+      preparedSourcePromise: null,
+      storageQuotaExceeded: false
+    };
+
+    function makePromptEntry(text, enabled = true) {
+      return {
+        text: String(text || ""),
+        enabled: Boolean(enabled)
+      };
+    }
+
+    function getEnabledPromptIndices() {
+      return state.prompts
+        .map((prompt, index) => (prompt.enabled ? index : -1))
+        .filter((index) => index >= 0);
+    }
+
+    function getClampedGenerateCount() {
+      const maxCount = Math.max(1, state.prompts.length || 1);
+      const numericValue = Number(state.generateCount) || 1;
+      return Math.max(1, Math.min(maxCount, numericValue));
+    }
+
+    function setStatus(message) {
+      statusEl.textContent = message;
+    }
+
+    function loadSavedToken() {
+      const savedToken = localStorage.getItem(tokenStorageKey) || "";
+      if (savedToken) {
+        tokenInput.value = savedToken;
+        saveTokenCheckbox.checked = true;
+      }
+    }
+
+    function persistTokenIfNeeded() {
+      if (saveTokenCheckbox.checked && tokenInput.value.trim()) {
+        localStorage.setItem(tokenStorageKey, tokenInput.value.trim());
+      } else {
+        localStorage.removeItem(tokenStorageKey);
+      }
+    }
+
+    function makeId(prefix) {
+      return `${prefix}_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
+    }
+
+    function normalizePromptList(prompts) {
+      if (!Array.isArray(prompts)) {
+        return [];
+      }
+      return prompts.map((prompt) => {
+        if (typeof prompt === "string") {
+          return makePromptEntry(prompt, true);
+        }
+        return makePromptEntry(prompt?.text || "", prompt?.enabled ?? true);
+      });
+    }
+
+    function clonePrompts(prompts) {
+      const normalized = normalizePromptList(prompts);
+      if (!normalized.length) {
+        return defaultPrompts.map((prompt) => makePromptEntry(prompt, true));
+      }
+      return normalized;
+    }
+
+    function clearPreparedSourceCache() {
+      state.preparedSourceKey = "";
+      state.preparedSourceDataUrl = "";
+      state.preparedSourcePromise = null;
+    }
+
+    function buildApiPrompt(prompt) {
+      return `${String(prompt || "").trim()} ${verticalRecomposeSuffix}`.trim();
+    }
+
+    function logSourceDebug(stage, details = {}) {
+      try {
+        console.log(`[person_variations source] ${stage}`, details);
+      } catch (_error) {
+        // Ignore console logging failures.
+      }
+    }
+
+    function isEditableElement(target) {
+      if (!(target instanceof Element)) {
+        return false;
+      }
+      return Boolean(target.closest("input, textarea, [contenteditable='true'], [contenteditable=''], select"));
+    }
+
+    function normalizeVersionEntry(value) {
+      if (!value) {
+        return null;
+      }
+      if (typeof value === "string") {
+        return {
+          remoteUrl: value,
+          blobKey: "",
+          createdAt: Date.now()
+        };
+      }
+      return {
+        remoteUrl: typeof value.remoteUrl === "string" ? value.remoteUrl : "",
+        blobKey: typeof value.blobKey === "string" ? value.blobKey : "",
+        createdAt: Number.isFinite(value.createdAt) ? Number(value.createdAt) : Date.now()
+      };
+    }
+
+    function isModerationMessage(message) {
+      return /moderat/i.test(String(message || ""));
+    }
+
+    function isModerationOnlyResult(result) {
+      if (!result) {
+        return false;
+      }
+      return isModerationMessage(result.error);
+    }
+
+    function cloneResults(results) {
+      if (!Array.isArray(results)) {
+        return [];
+      }
+      return results.map((value) => ({
+        prompt: typeof value?.prompt === "string" ? value.prompt : "",
+        status: typeof value?.status === "string" ? value.status : "idle",
+        error: typeof value?.error === "string" ? value.error : "",
+        notice: typeof value?.notice === "string" ? value.notice : "",
+        imageUrl: typeof value?.imageUrl === "string" ? value.imageUrl : "",
+        currentVersion: Number.isFinite(value?.currentVersion) ? Number(value.currentVersion) : 0,
+        versions: Array.isArray(value?.versions)
+          ? value.versions.map(normalizeVersionEntry).filter(Boolean)
+          : []
+      }));
+    }
+
+    function loadStoredPrompts() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(promptStorageKey) || "null");
+        if (Array.isArray(saved) && saved.length) {
+          const normalized = normalizePromptList(saved);
+          if (normalized.some((value) => value.text.trim())) {
+            return normalized;
+          }
+        }
+      } catch (_error) {
+        localStorage.removeItem(promptStorageKey);
+      }
+      return [];
+    }
+
+    function loadLegacyPrompts() {
+      const storedPrompts = loadStoredPrompts();
+      if (storedPrompts.length) {
+        return storedPrompts;
+      }
+      return defaultPrompts.map((prompt) => makePromptEntry(prompt, true));
+    }
+
+    function loadLegacyResultsMetadata() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(resultsStorageKey) || "null");
+        return cloneResults(saved);
+      } catch (_error) {
+        localStorage.removeItem(resultsStorageKey);
+        return [];
+      }
+    }
+
+    function loadLegacyGenerateCount() {
+      const savedCount = Number(localStorage.getItem(generateCountStorageKey) || "");
+      if (Number.isFinite(savedCount) && savedCount > 0) {
+        return savedCount;
+      }
+      return 10;
+    }
+
+    function loadLegacySource() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(sourceStorageKey) || "null");
+        if (saved && typeof saved.source === "string") {
+          return {
+            source: saved.source,
+            sourceLabel: typeof saved.sourceLabel === "string" ? saved.sourceLabel : "saved image"
+          };
+        }
+      } catch (_error) {
+        localStorage.removeItem(sourceStorageKey);
+      }
+      return {
+        source: "",
+        sourceLabel: ""
+      };
+    }
+
+    function makeSourceEntry(data = {}) {
+      return {
+        id: typeof data.id === "string" && data.id ? data.id : makeId("source"),
+        image: typeof data.image === "string" ? data.image : "",
+        imageBlobKey: typeof data.imageBlobKey === "string" ? data.imageBlobKey : "",
+        label: typeof data.label === "string" ? data.label : "",
+        prompts: clonePrompts(data.prompts),
+        results: cloneResults(data.results),
+        generateCount: Number.isFinite(data.generateCount) && data.generateCount > 0 ? Number(data.generateCount) : 10,
+        createdAt: Number.isFinite(data.createdAt) ? Number(data.createdAt) : Date.now(),
+        updatedAt: Number.isFinite(data.updatedAt) ? Number(data.updatedAt) : Date.now()
+      };
+    }
+
+    function makePersonEntry(data = {}) {
+      const sources = Array.isArray(data.sources) && data.sources.length
+        ? data.sources.map((source) => makeSourceEntry(source))
+        : [makeSourceEntry(data.source || {})];
+      return {
+        id: typeof data.id === "string" && data.id ? data.id : makeId("person"),
+        name: typeof data.name === "string" && data.name.trim() ? data.name.trim() : `Person ${Date.now().toString().slice(-4)}`,
+        sources,
+        createdAt: Number.isFinite(data.createdAt) ? Number(data.createdAt) : Date.now(),
+        updatedAt: Number.isFinite(data.updatedAt) ? Number(data.updatedAt) : Date.now()
+      };
+    }
+
+    function normalizePersonEntry(value, index) {
+      const person = makePersonEntry(value || {});
+      if (!person.name || /^Person \d{4}$/.test(person.name)) {
+        person.name = `Person ${index + 1}`;
+      }
+      return person;
+    }
+
+    function buildMigratedPeople() {
+      const legacyPrompts = loadLegacyPrompts();
+      const legacyResults = loadLegacyResultsMetadata();
+      const legacySource = loadLegacySource();
+      const source = makeSourceEntry({
+        image: legacySource.source,
+        label: legacySource.sourceLabel,
+        prompts: legacyPrompts,
+        results: legacyResults,
+        generateCount: loadLegacyGenerateCount()
+      });
+      return [makePersonEntry({
+        name: "Person 1",
+        sources: [source]
+      })];
+    }
+
+    function loadPeople() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(peopleStorageKey) || "null");
+        if (Array.isArray(saved) && saved.length) {
+          return saved.map(normalizePersonEntry);
+        }
+      } catch (_error) {
+        localStorage.removeItem(peopleStorageKey);
+      }
+      return buildMigratedPeople();
+    }
+
+    function resolveInitialPrompts() {
+      const storedPrompts = loadStoredPrompts();
+      if (storedPrompts.length) {
+        return storedPrompts;
+      }
+      const activeSourcePrompts = normalizePromptList(getActiveSource()?.prompts);
+      if (activeSourcePrompts.length) {
+        return activeSourcePrompts;
+      }
+      for (const person of state.people) {
+        for (const source of person.sources || []) {
+          const sourcePrompts = normalizePromptList(source?.prompts);
+          if (sourcePrompts.length) {
+            return sourcePrompts;
+          }
+        }
+      }
+      return defaultPrompts.map((prompt) => makePromptEntry(prompt, true));
+    }
+
+    function getPersonById(personId) {
+      return state.people.find((person) => person.id === personId) || null;
+    }
+
+    function getSourceById(personId, sourceId) {
+      const person = getPersonById(personId);
+      if (!person) {
+        return null;
+      }
+      return person.sources.find((source) => source.id === sourceId) || null;
+    }
+
+    function getActivePerson() {
+      return getPersonById(state.activePersonId);
+    }
+
+    function getFilteredPerson() {
+      return getPersonById(state.filterPersonId);
+    }
+
+    function getActiveSource() {
+      return getSourceById(state.activePersonId, state.activeSourceId);
+    }
+
+    function findSourceLocationByImage(sourceImage) {
+      if (!sourceImage) {
+        return null;
+      }
+      for (const person of state.people) {
+        const source = person.sources.find((entry) => entry.image === sourceImage);
+        if (source) {
+          return {
+            personId: person.id,
+            sourceId: source.id
+          };
+        }
+      }
+      return null;
+    }
+
+    function ensureActiveSelection() {
+      if (!state.people.length) {
+        state.people = buildMigratedPeople();
+      }
+      const currentPerson = getPersonById(state.activePersonId);
+      if (!currentPerson) {
+        state.activePersonId = state.people[0].id;
+      }
+      const activePerson = getPersonById(state.activePersonId);
+      if (!activePerson.sources.length) {
+        activePerson.sources.push(makeSourceEntry({}));
+      }
+      if (!getSourceById(state.activePersonId, state.activeSourceId)) {
+        state.activeSourceId = activePerson.sources[0].id;
+      }
+    }
+
+    function ensureFilterSelection() {
+      if (state.viewMode !== "people") {
+        return;
+      }
+      if (getFilteredPerson()) {
+        return;
+      }
+      const activePerson = getActivePerson();
+      state.filterPersonId = activePerson?.id || state.people[0]?.id || "";
+    }
+
+    function syncActiveSourceState() {
+      const activeSource = getActiveSource();
+      const activePerson = getActivePerson();
+      if (!activeSource || !activePerson) {
+        return;
+      }
+      activeSource.image = state.sourceBlobKey ? "" : state.source;
+      activeSource.imageBlobKey = state.sourceBlobKey || "";
+      activeSource.label = state.sourceLabel;
+      activeSource.prompts = clonePrompts(state.prompts);
+      activeSource.results = cloneResults(state.results);
+      activeSource.generateCount = Number(state.generateCount) || 10;
+      activeSource.updatedAt = Date.now();
+      activePerson.updatedAt = Date.now();
+    }
+
+    function cleanupLegacyStorage() {
+      localStorage.removeItem(resultsStorageKey);
+      localStorage.removeItem(sourceStorageKey);
+      localStorage.removeItem(generateCountStorageKey);
+    }
+
+    function savePeople() {
+      syncActiveSourceState();
+      try {
+        localStorage.setItem(peopleStorageKey, JSON.stringify(state.people));
+        localStorage.setItem(activePersonStorageKey, state.activePersonId);
+        localStorage.setItem(activeSourceStorageKey, state.activeSourceId);
+        localStorage.setItem(filterPersonStorageKey, state.filterPersonId);
+        localStorage.setItem(resultsViewStorageKey, state.viewMode);
+        cleanupLegacyStorage();
+        state.storageQuotaExceeded = false;
+      } catch (error) {
+        if (!isQuotaError(error)) {
+          throw error;
+        }
+        if (!state.storageQuotaExceeded) {
+          state.storageQuotaExceeded = true;
+          logSourceDebug("storage:quota_exceeded", {
+            peopleCount: state.people.length,
+            activePersonId: state.activePersonId,
+            activeSourceId: state.activeSourceId
+          });
+          setStatus("Browser storage is full. Changes still work for this session, but new state is not being saved.");
+        }
+      }
+    }
+
+    function loadViewMode() {
+      const savedMode = localStorage.getItem(resultsViewStorageKey);
+      if (savedMode === "all" || savedMode === "people") {
+        state.viewMode = savedMode;
+      }
+    }
+
+    function loadActiveSelection() {
+      state.activePersonId = localStorage.getItem(activePersonStorageKey) || "";
+      state.activeSourceId = localStorage.getItem(activeSourceStorageKey) || "";
+      state.filterPersonId = localStorage.getItem(filterPersonStorageKey) || "";
+      ensureActiveSelection();
+      ensureFilterSelection();
+    }
+
+    function loadActiveSourceIntoState() {
+      ensureActiveSelection();
+      const activeSource = getActiveSource();
+      state.sourceBlobKey = activeSource?.imageBlobKey || "";
+      const resolvedSourceUrl = getSourceImageUrl(activeSource);
+      state.source = activeSource?.image || resolvedSourceUrl || "";
+      state.sourcePreviewUrl = resolvedSourceUrl || activeSource?.image || "";
+      state.sourceLabel = activeSource?.label || "";
+      state.results = cloneResults(activeSource?.results);
+      state.generateCount = Number(activeSource?.generateCount) || 10;
+      clearPreparedSourceCache();
+      if (!resolvedSourceUrl && activeSource?.imageBlobKey) {
+        hydrateSourceImage(activeSource, { updateActiveSource: true });
+      }
+    }
+
+    function savePrompts() {
+      localStorage.setItem(promptStorageKey, JSON.stringify(clonePrompts(state.prompts)));
+      savePeople();
+    }
+
+    function saveResultsMetadata() {
+      savePeople();
+    }
+
+    function saveGenerateCount() {
+      savePeople();
+    }
+
+    function saveSource() {
+      savePeople();
+    }
+
+    async function migrateInlineSourceImages() {
+      let changed = false;
+      for (const person of state.people) {
+        for (const source of person.sources || []) {
+          if (isDataImageUrl(source.image) && !source.imageBlobKey) {
+            const persisted = await persistLocalSourceImage(source.image);
+            source.imageBlobKey = persisted.imageBlobKey;
+            source.image = "";
+            changed = true;
+          }
+        }
+      }
+      if (changed) {
+        loadActiveSourceIntoState();
+        savePeople();
+      }
+    }
+
+    function openImageDb() {
+      if (imageDbPromise) {
+        return imageDbPromise;
+      }
+      imageDbPromise = new Promise((resolve, reject) => {
+        const request = indexedDB.open(imageDbName, 2);
+        request.onupgradeneeded = () => {
+          const db = request.result;
+          if (!db.objectStoreNames.contains(imageStoreName)) {
+            const imageStore = db.createObjectStore(imageStoreName, { keyPath: "id" });
+            imageStore.createIndex("createdAt", "createdAt");
+          }
+          if (!db.objectStoreNames.contains(sourceImageStoreName)) {
+            const sourceStore = db.createObjectStore(sourceImageStoreName, { keyPath: "id" });
+            sourceStore.createIndex("createdAt", "createdAt");
+          }
+        };
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+      });
+      return imageDbPromise;
+    }
+
+    async function addImageRecord(record) {
+      const db = await openImageDb();
+      return new Promise((resolve, reject) => {
+        const transaction = db.transaction(imageStoreName, "readwrite");
+        transaction.objectStore(imageStoreName).put(record);
+        transaction.oncomplete = () => resolve(record.id);
+        transaction.onerror = () => reject(transaction.error || new Error("Could not store generated image."));
+        transaction.onabort = () => reject(transaction.error || new Error("Could not store generated image."));
+      });
+    }
+
+    async function addSourceImageRecord(record) {
+      const db = await openImageDb();
+      return new Promise((resolve, reject) => {
+        const transaction = db.transaction(sourceImageStoreName, "readwrite");
+        transaction.objectStore(sourceImageStoreName).put(record);
+        transaction.oncomplete = () => resolve(record.id);
+        transaction.onerror = () => reject(transaction.error || new Error("Could not store source image."));
+        transaction.onabort = () => reject(transaction.error || new Error("Could not store source image."));
+      });
+    }
+
+    async function getImageRecord(id) {
+      const db = await openImageDb();
+      return new Promise((resolve, reject) => {
+        const transaction = db.transaction(imageStoreName, "readonly");
+        const request = transaction.objectStore(imageStoreName).get(id);
+        request.onsuccess = () => resolve(request.result || null);
+        request.onerror = () => reject(request.error);
+      });
+    }
+
+    async function getSourceImageRecord(id) {
+      const db = await openImageDb();
+      return new Promise((resolve, reject) => {
+        const transaction = db.transaction(sourceImageStoreName, "readonly");
+        const request = transaction.objectStore(sourceImageStoreName).get(id);
+        request.onsuccess = () => resolve(request.result || null);
+        request.onerror = () => reject(request.error);
+      });
+    }
+
+    async function deleteImageRecord(id) {
+      const db = await openImageDb();
+      return new Promise((resolve, reject) => {
+        const transaction = db.transaction(imageStoreName, "readwrite");
+        transaction.objectStore(imageStoreName).delete(id);
+        transaction.oncomplete = () => resolve();
+        transaction.onerror = () => reject(transaction.error || new Error("Could not delete generated image."));
+        transaction.onabort = () => reject(transaction.error || new Error("Could not delete generated image."));
+      });
+    }
+
+    async function deleteSourceImageRecord(id) {
+      const db = await openImageDb();
+      return new Promise((resolve, reject) => {
+        const transaction = db.transaction(sourceImageStoreName, "readwrite");
+        transaction.objectStore(sourceImageStoreName).delete(id);
+        transaction.oncomplete = () => resolve();
+        transaction.onerror = () => reject(transaction.error || new Error("Could not delete source image."));
+        transaction.onabort = () => reject(transaction.error || new Error("Could not delete source image."));
+      });
+    }
+
+    async function getOldestImageRecord() {
+      const db = await openImageDb();
+      return new Promise((resolve, reject) => {
+        const transaction = db.transaction(imageStoreName, "readonly");
+        const index = transaction.objectStore(imageStoreName).index("createdAt");
+        const request = index.openCursor();
+        request.onsuccess = () => resolve(request.result ? request.result.value : null);
+        request.onerror = () => reject(request.error);
+      });
+    }
+
+    function isQuotaError(error) {
+      return Boolean(
+        error &&
+        (
+          error.name === "QuotaExceededError" ||
+          error.name === "NS_ERROR_DOM_QUOTA_REACHED" ||
+          /quota/i.test(String(error.message || ""))
+        )
+      );
+    }
+
+    function revokeBlobUrl(blobKey) {
+      const cachedUrl = blobUrlCache.get(blobKey);
+      if (cachedUrl) {
+        URL.revokeObjectURL(cachedUrl);
+        blobUrlCache.delete(blobKey);
+      }
+    }
+
+    function revokeSourceBlobUrl(blobKey) {
+      const cachedUrl = sourceBlobUrlCache.get(blobKey);
+      if (cachedUrl) {
+        URL.revokeObjectURL(cachedUrl);
+        sourceBlobUrlCache.delete(blobKey);
+      }
+    }
+
+    function pruneBlobKeysFromState(blobKeys) {
+      if (!blobKeys.length) {
+        return;
+      }
+      const blobKeySet = new Set(blobKeys);
+      state.results.forEach((result) => {
+        if (!Array.isArray(result?.versions)) {
+          return;
+        }
+        result.versions = result.versions
+          .map((version) => {
+            if (!version?.blobKey || !blobKeySet.has(version.blobKey)) {
+              return version;
+            }
+            revokeBlobUrl(version.blobKey);
+            return {
+              remoteUrl: version.remoteUrl || "",
+              blobKey: "",
+              createdAt: version.createdAt || Date.now()
+            };
+          })
+          .filter((version) => version.blobKey || version.remoteUrl);
+        ensureResultVersions(result);
+      });
+      saveResultsMetadata();
+    }
+
+    async function storeBlobWithFifo(blob, remoteUrl) {
+      const evictedKeys = [];
+      while (true) {
+        const id = `img_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
+        try {
+          await addImageRecord({
+            id,
+            blob,
+            createdAt: Date.now(),
+            remoteUrl
+          });
+          return { id, evictedKeys };
+        } catch (error) {
+          if (!isQuotaError(error)) {
+            throw error;
+          }
+          const oldestRecord = await getOldestImageRecord();
+          if (!oldestRecord?.id) {
+            throw error;
+          }
+          await deleteImageRecord(oldestRecord.id);
+          evictedKeys.push(oldestRecord.id);
+          pruneBlobKeysFromState([oldestRecord.id]);
+        }
+      }
+    }
+
+    async function persistGeneratedVersion(imageUrl) {
+      const persistedRemoteUrl = isDataImageUrl(imageUrl) ? "" : imageUrl;
+      const response = await fetch(imageUrl);
+      if (!response.ok) {
+        throw new Error(`Could not download generated image (${response.status}).`);
+      }
+      const blob = await response.blob();
+      const { id } = await storeBlobWithFifo(blob, persistedRemoteUrl);
+      const objectUrl = URL.createObjectURL(blob);
+      blobUrlCache.set(id, objectUrl);
+      return {
+        remoteUrl: persistedRemoteUrl,
+        blobKey: id,
+        createdAt: Date.now()
+      };
+    }
+
+    function isHttpUrl(value) {
+      return /^https?:\/\/\S+$/i.test(value);
+    }
+
+    function isDataImageUrl(value) {
+      return /^data:image\/[a-zA-Z0-9.+-]+;base64,/i.test(value);
+    }
+
+    function isSupportedImageSource(value) {
+      return isHttpUrl(value) || isDataImageUrl(value) || String(value || "").startsWith("blob:");
+    }
+
+    function addCacheBuster(url) {
+      if (!url || isDataImageUrl(url) || url.startsWith("blob:")) {
+        return url;
+      }
+      const separator = url.includes("?") ? "&" : "?";
+      return `${url}${separator}t=${Date.now()}`;
+    }
+
+    function blobToDataUrl(blob) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = () => reject(new Error("Failed to read pasted image."));
+        reader.readAsDataURL(blob);
+      });
+    }
+
+    async function dataUrlToBlob(dataUrl) {
+      const response = await fetch(dataUrl);
+      if (!response.ok) {
+        throw new Error("Failed to process source image.");
+      }
+      return response.blob();
+    }
+
+    function releaseObjectPreviewUrl() {
+      if (state.objectPreviewUrl) {
+        URL.revokeObjectURL(state.objectPreviewUrl);
+        state.objectPreviewUrl = "";
+      }
+    }
+
+    function getSourceImageUrl(source) {
+      if (!source) {
+        return "";
+      }
+      if (source.imageBlobKey && sourceBlobUrlCache.has(source.imageBlobKey)) {
+        return sourceBlobUrlCache.get(source.imageBlobKey) || "";
+      }
+      return source.image || "";
+    }
+
+    async function hydrateSourceImage(source, options = {}) {
+      if (!source?.imageBlobKey || sourceBlobUrlCache.has(source.imageBlobKey) || sourceBlobUrlLoads.has(source.imageBlobKey)) {
+        return getSourceImageUrl(source);
+      }
+      const blobKey = source.imageBlobKey;
+      sourceBlobUrlLoads.add(blobKey);
+      try {
+        const record = await getSourceImageRecord(blobKey);
+        if (!record?.blob) {
+          source.imageBlobKey = "";
+          savePeople();
+          return "";
+        }
+        const objectUrl = URL.createObjectURL(record.blob);
+        sourceBlobUrlCache.set(blobKey, objectUrl);
+        if (options.updateActiveSource && source.id === state.activeSourceId) {
+          state.sourceBlobKey = source.imageBlobKey;
+          state.source = objectUrl;
+          state.sourcePreviewUrl = objectUrl;
+          renderSourcePreview();
+        } else if (options.render) {
+          renderWorkspace();
+        }
+        return objectUrl;
+      } catch (_error) {
+        return "";
+      } finally {
+        sourceBlobUrlLoads.delete(blobKey);
+      }
+    }
+
+    async function persistLocalSourceImage(sourceValue, existingBlobKey = "") {
+      const blob = await dataUrlToBlob(sourceValue);
+      const id = existingBlobKey || `src_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
+      await addSourceImageRecord({
+        id,
+        blob,
+        createdAt: Date.now()
+      });
+      revokeSourceBlobUrl(id);
+      const objectUrl = URL.createObjectURL(blob);
+      sourceBlobUrlCache.set(id, objectUrl);
+      return {
+        imageBlobKey: id,
+        runtimeUrl: objectUrl
+      };
+    }
+
+    function loadImageElement(src) {
+      return new Promise((resolve, reject) => {
+        const image = new Image();
+        image.decoding = "async";
+        image.onload = () => resolve(image);
+        image.onerror = () => reject(new Error("Could not load the source image for reframing."));
+        image.src = src;
+      });
+    }
+
+    async function buildPreparedSource() {
+      const source = state.source;
+      if (!source) {
+        throw new Error("Paste a source image first.");
+      }
+      if (isHttpUrl(source)) {
+        return source;
+      }
+      if (state.preparedSourceKey === source) {
+        if (state.preparedSourceDataUrl) {
+          return state.preparedSourceDataUrl;
+        }
+        if (state.preparedSourcePromise) {
+          return state.preparedSourcePromise;
+        }
+      }
+
+      state.preparedSourceKey = source;
+      state.preparedSourcePromise = (async () => {
+        const image = await loadImageElement(source);
+        const sourceWidth = image.naturalWidth;
+        const sourceHeight = image.naturalHeight;
+        if (!sourceWidth || !sourceHeight) {
+          throw new Error("Could not read the source image dimensions.");
+        }
+
+        let canvasWidth = sourceWidth;
+        let canvasHeight = sourceHeight;
+        if ((sourceWidth / sourceHeight) > verticalAspectRatio) {
+          canvasHeight = Math.ceil(sourceWidth / verticalAspectRatio);
+        } else {
+          canvasWidth = Math.ceil(sourceHeight * verticalAspectRatio);
+        }
+
+        const longestSide = Math.max(canvasWidth, canvasHeight);
+        const scaleDown = longestSide > preparedSourceMaxLongSide
+          ? (preparedSourceMaxLongSide / longestSide)
+          : 1;
+        const finalCanvasWidth = Math.max(1, Math.round(canvasWidth * scaleDown));
+        const finalCanvasHeight = Math.max(1, Math.round(canvasHeight * scaleDown));
+        const finalDrawWidth = Math.max(1, Math.round(sourceWidth * scaleDown));
+        const finalDrawHeight = Math.max(1, Math.round(sourceHeight * scaleDown));
+
+        const canvas = document.createElement("canvas");
+        canvas.width = finalCanvasWidth;
+        canvas.height = finalCanvasHeight;
+        const context = canvas.getContext("2d");
+        if (!context) {
+          throw new Error("Could not prepare the source image.");
+        }
+
+        context.fillStyle = "#0b0f17";
+        context.fillRect(0, 0, finalCanvasWidth, finalCanvasHeight);
+        const drawX = Math.round((finalCanvasWidth - finalDrawWidth) / 2);
+        const drawY = Math.round((finalCanvasHeight - finalDrawHeight) / 2);
+        context.drawImage(image, drawX, drawY, finalDrawWidth, finalDrawHeight);
+        return canvas.toDataURL("image/jpeg", 0.92);
+      })();
+
+      try {
+        const preparedSource = await state.preparedSourcePromise;
+        if (state.preparedSourceKey === source) {
+          state.preparedSourceDataUrl = preparedSource;
+          state.preparedSourcePromise = null;
+        }
+        return preparedSource;
+      } catch (error) {
+        if (state.preparedSourceKey === source) {
+          clearPreparedSourceCache();
+        }
+        throw error;
+      }
+    }
+
+    function setTemporaryPreview(previewUrl, label) {
+      state.sourcePreviewUrl = previewUrl;
+      state.sourceLabel = label;
+      sourcePreview.classList.add("open");
+      pasteTarget.classList.add("ready");
+      pasteTarget.textContent = "Source image loading...";
+      sourceImage.src = previewUrl;
+      sourceTitle.textContent = "Loading source image";
+      sourceDescription.textContent = label;
+    }
+
+    async function loadSelectedFile(file, label) {
+      if (!file || !file.type.startsWith("image/")) {
+        logSourceDebug("file:invalid", {
+          hasFile: Boolean(file),
+          type: file?.type || ""
+        });
+        setStatus("Choose an image file.");
+        return;
+      }
+      logSourceDebug("file:start", {
+        name: file.name || "",
+        type: file.type,
+        size: file.size
+      });
+      setStatus("Loading selected image...");
+      releaseObjectPreviewUrl();
+      state.objectPreviewUrl = URL.createObjectURL(file);
+      setTemporaryPreview(state.objectPreviewUrl, label);
+      const dataUrl = await blobToDataUrl(file);
+      await setSource(dataUrl, label, state.objectPreviewUrl);
+    }
+
+    function sourceHasGeneratedImages(source) {
+      return Array.isArray(source?.results) && source.results.some((result) => getResultImageUrl(result));
+    }
+
+    function sourceHasAnyState(source) {
+      return Boolean(
+        source?.image ||
+        source?.imageBlobKey ||
+        sourceHasGeneratedImages(source) ||
+        (Array.isArray(source?.results) && source.results.some((result) => result?.status && result.status !== "idle"))
+      );
+    }
+
+    function getSourceGenerationCount(source) {
+      if (!Array.isArray(source?.results)) {
+        return 0;
+      }
+      return source.results.reduce((total, result) => total + getResultVersionCount(result), 0);
+    }
+
+    function getPersonImageCount(person) {
+      return Array.isArray(person?.sources)
+        ? person.sources.reduce((total, source) => total + getSourceGenerationCount(source), 0)
+        : 0;
+    }
+
+    function getSourceDisplayLabel(source, index = 0) {
+      return source?.label || `Source ${index + 1}`;
+    }
+
+    function makeDraftSourceEntry(sourceImage = "", label = "") {
+      return makeSourceEntry({
+        image: sourceImage,
+        label,
+        prompts: state.prompts.length ? state.prompts : defaultPrompts.map((prompt) => makePromptEntry(prompt, true)),
+        results: [],
+        generateCount: state.generateCount || 10
+      });
+    }
+
+    function renderViewToggle() {
+      toggleFiltersButton.classList.toggle("active", state.peoplePanelOpen || state.viewMode === "people");
+      peoplePanel.hidden = !state.peoplePanelOpen;
+      if (state.viewMode === "people") {
+        const filteredPerson = getFilteredPerson();
+        filterPill.hidden = !filteredPerson;
+        filterPill.textContent = filteredPerson ? `Showing ${filteredPerson.name}` : "";
+      } else {
+        filterPill.hidden = true;
+        filterPill.textContent = "";
+      }
+    }
+
+    function clearPeopleDragState() {
+      state.dragSource = null;
+      document.querySelectorAll(".person-card.drop-target, .person-source-chip.drop-target, .person-source-chip.dragging").forEach((element) => {
+        element.classList.remove("drop-target", "dragging");
+      });
+    }
+
+    function getPersonBlobKeys(person) {
+      if (!Array.isArray(person?.sources)) {
+        return [];
+      }
+      return person.sources.flatMap((source) => getResultBlobKeys({ versions: source?.results?.flatMap((result) => result?.versions || []) }));
+    }
+
+    function getPersonSourceBlobKeys(person) {
+      if (!Array.isArray(person?.sources)) {
+        return [];
+      }
+      return person.sources
+        .map((source) => source?.imageBlobKey || "")
+        .filter(Boolean);
+    }
+
+    async function deletePerson(personId) {
+      if (state.isGenerating) {
+        return;
+      }
+      const person = getPersonById(personId);
+      if (!person) {
+        return;
+      }
+      await deleteBlobKeys(getPersonBlobKeys(person));
+      await Promise.allSettled(getPersonSourceBlobKeys(person).map((blobKey) => {
+        revokeSourceBlobUrl(blobKey);
+        return deleteSourceImageRecord(blobKey);
+      }));
+      state.people = state.people.filter((entry) => entry.id !== personId);
+      if (!state.people.length) {
+        const nextPerson = makePersonEntry({
+          name: "Person 1",
+          sources: [makeDraftSourceEntry("", "")]
+        });
+        state.people = [nextPerson];
+      }
+      if (state.activePersonId === personId) {
+        state.activePersonId = state.people[0].id;
+        state.activeSourceId = state.people[0].sources[0].id;
+        loadActiveSourceIntoState();
+      } else {
+        ensureActiveSelection();
+      }
+      if (state.filterPersonId === personId) {
+        state.filterPersonId = getActivePerson()?.id || state.people[0]?.id || "";
+      }
+      ensureFilterSelection();
+      closeLightbox();
+      savePeople();
+      renderWorkspace();
+      setStatus(`Removed ${person.name} and all connected generations.`);
+    }
+
+    function renderPeoplePanel() {
+      renderViewToggle();
+      peopleList.innerHTML = "";
+      state.people.forEach((person) => {
+        const card = document.createElement("article");
+        card.className = "person-card";
+        if (state.viewMode === "people" && person.id === state.filterPersonId) {
+          card.classList.add("active");
+        }
+        card.addEventListener("dragover", (event) => {
+          if (!state.dragSource || state.dragSource.personId === person.id) {
+            return;
+          }
+          event.preventDefault();
+          card.classList.add("drop-target");
+        });
+        card.addEventListener("dragleave", () => {
+          card.classList.remove("drop-target");
+        });
+        card.addEventListener("drop", (event) => {
+          event.preventDefault();
+          card.classList.remove("drop-target");
+          const dragged = state.dragSource;
+          clearPeopleDragState();
+          if (!dragged) {
+            return;
+          }
+          mergeSourceIntoPerson(dragged.personId, dragged.sourceId, person.id);
+        });
+
+        const head = document.createElement("div");
+        head.className = "person-card-head";
+        const selectButton = document.createElement("button");
+        selectButton.className = "person-select";
+        selectButton.type = "button";
+        selectButton.addEventListener("click", () => {
+          selectFilterPerson(person.id, { closePanel: true });
+        });
+        const name = document.createElement("strong");
+        name.textContent = person.name;
+        const meta = document.createElement("span");
+        meta.textContent = `${getPersonImageCount(person)} images • ${person.sources.length} source${person.sources.length === 1 ? "" : "s"}`;
+        selectButton.append(name, meta);
+        head.appendChild(selectButton);
+
+        const actions = document.createElement("div");
+        actions.className = "person-card-actions";
+
+        const deleteButton = document.createElement("button");
+        deleteButton.className = "person-action-btn delete";
+        deleteButton.type = "button";
+        deleteButton.title = `Remove ${person.name}`;
+        deleteButton.setAttribute("aria-label", `Remove ${person.name}`);
+        deleteButton.innerHTML = `
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M9 3h6l1 2h4v2H4V5h4l1-2Zm-2 6h2v9H7V9Zm4 0h2v9h-2V9Zm4 0h2v9h-2V9ZM6 21a2 2 0 0 1-2-2V7h16v12a2 2 0 0 1-2 2H6Z"/>
+          </svg>
+        `;
+        deleteButton.addEventListener("click", (event) => {
+          event.stopPropagation();
+          deletePerson(person.id).catch((error) => {
+            setStatus(error.message || `Could not remove ${person.name}.`);
+          });
+        });
+
+        actions.append(deleteButton);
+        head.appendChild(actions);
+
+        const stack = document.createElement("div");
+        stack.className = "person-stack";
+        person.sources.forEach((source, index) => {
+          hydrateSourceImage(source, { render: true });
+          const sourceImageUrl = getSourceImageUrl(source);
+          const chip = document.createElement("button");
+          chip.className = "person-source-chip ghost-btn";
+          chip.type = "button";
+          chip.draggable = true;
+          chip.dataset.index = String(index + 1);
+          chip.title = `${getSourceDisplayLabel(source, index)}${source.id === state.activeSourceId ? " (active)" : ""}`;
+          if (person.id === state.activePersonId && source.id === state.activeSourceId) {
+            chip.classList.add("active");
+          }
+          chip.addEventListener("click", () => {
+            selectPersonSource(person.id, source.id, { keepPanelOpen: true });
+          });
+          chip.addEventListener("dragstart", (event) => {
+            state.dragSource = {
+              personId: person.id,
+              sourceId: source.id
+            };
+            chip.classList.add("dragging");
+            event.dataTransfer.effectAllowed = "move";
+            event.dataTransfer.setData("text/plain", source.id);
+          });
+          chip.addEventListener("dragend", clearPeopleDragState);
+          chip.addEventListener("dragover", (event) => {
+            if (!state.dragSource || (state.dragSource.personId === person.id && state.dragSource.sourceId === source.id)) {
+              return;
+            }
+            event.preventDefault();
+            chip.classList.add("drop-target");
+          });
+          chip.addEventListener("dragleave", () => {
+            chip.classList.remove("drop-target");
+          });
+          chip.addEventListener("drop", (event) => {
+            event.preventDefault();
+            chip.classList.remove("drop-target");
+            const dragged = state.dragSource;
+            clearPeopleDragState();
+            if (!dragged) {
+              return;
+            }
+            mergeSourceIntoPerson(dragged.personId, dragged.sourceId, person.id);
+          });
+          if (sourceImageUrl) {
+            const image = document.createElement("img");
+            image.src = sourceImageUrl;
+            image.alt = getSourceDisplayLabel(source, index);
+            chip.appendChild(image);
+          } else {
+            const placeholder = document.createElement("span");
+            placeholder.className = "source-placeholder";
+            placeholder.textContent = "No image";
+            chip.appendChild(placeholder);
+          }
+          stack.appendChild(chip);
+        });
+
+        card.append(head, stack);
+        peopleList.appendChild(card);
+      });
+    }
+
+    function buildVisibleItems() {
+      syncActiveSourceState();
+      ensureFilterSelection();
+      const people = state.viewMode === "all"
+        ? state.people
+        : [getFilteredPerson()].filter(Boolean);
+      const items = [];
+      people.forEach((person) => {
+        person.sources.forEach((source) => {
+          source.results = cloneResults(source.results);
+          hydrateSourceImage(source, { render: true });
+        });
+        const promptCount = person.sources.reduce((maxCount, source) => (
+          Math.max(maxCount, source.results.length)
+        ), state.prompts.length || 0);
+        for (let promptIndex = 0; promptIndex < promptCount; promptIndex += 1) {
+          const variants = [];
+          const placeholders = [];
+          person.sources.forEach((source, sourceIndex) => {
+            const result = source.results[promptIndex];
+            if (!result) {
+              return;
+            }
+            ensureResultVersions(result);
+            const promptEnabled = state.prompts[promptIndex]?.enabled ?? true;
+            if (result.versions.length) {
+              result.versions.forEach((version, versionIndex) => {
+                variants.push({
+                  key: `${person.id}:${promptIndex}:${source.id}:${versionIndex}`,
+                  personId: person.id,
+                  personName: person.name,
+                  sourceId: source.id,
+                  sourceImage: getSourceImageUrl(source),
+                  sourceLabel: getSourceDisplayLabel(source, sourceIndex),
+                  promptIndex,
+                  promptEnabled,
+                  result,
+                  versionIndex,
+                  imageUrl: getVersionImageUrl(version),
+                  status: result.status
+                });
+              });
+              return;
+            }
+            if (result.status === "loading" || result.status === "error") {
+              placeholders.push({
+                key: `${person.id}:${promptIndex}:${source.id}:placeholder`,
+                personId: person.id,
+                personName: person.name,
+                sourceId: source.id,
+                sourceImage: getSourceImageUrl(source),
+                sourceLabel: getSourceDisplayLabel(source, sourceIndex),
+                promptIndex,
+                promptEnabled,
+                result,
+                versionIndex: -1,
+                imageUrl: "",
+                status: result.status
+              });
+            }
+          });
+          if (!variants.length && !placeholders.length) {
+            continue;
+          }
+          const selectionKey = `${person.id}:${promptIndex}`;
+          let currentVariantIndex = 0;
+          if (variants.length) {
+            const savedSelection = Number(state.variantSelections[selectionKey]);
+            if (Number.isInteger(savedSelection) && savedSelection >= 0 && savedSelection < variants.length) {
+              currentVariantIndex = savedSelection;
+            } else {
+              const activeVariantIndex = variants.findIndex((variant) => (
+                variant.sourceId === state.activeSourceId &&
+                variant.versionIndex === variant.result.currentVersion
+              ));
+              currentVariantIndex = activeVariantIndex >= 0 ? activeVariantIndex : Math.max(variants.length - 1, 0);
+            }
+            state.variantSelections[selectionKey] = currentVariantIndex;
+          } else {
+            delete state.variantSelections[selectionKey];
+          }
+          const currentVariant = variants.length ? variants[currentVariantIndex] : placeholders[0];
+          if (currentVariant.versionIndex >= 0) {
+            currentVariant.result.currentVersion = currentVariant.versionIndex;
+            currentVariant.result.imageUrl = getResultImageUrl(currentVariant.result);
+          }
+          items.push({
+            key: selectionKey,
+            personId: person.id,
+            personName: person.name,
+            sourceId: currentVariant.sourceId,
+            sourceImage: currentVariant.sourceImage,
+            sourceLabel: currentVariant.sourceLabel,
+            promptIndex,
+            promptEnabled: currentVariant.promptEnabled,
+            result: currentVariant.result,
+            status: currentVariant.status,
+            variants,
+            currentVariantIndex,
+            currentVariant
+          });
+        }
+      });
+      return items;
+    }
+
+    function renderWorkspace() {
+      renderGenerateCountOptions();
+      renderPrompts();
+      renderPromptEditor();
+      renderSourcePreview();
+      renderPeoplePanel();
+      renderResults();
+    }
+
+    function selectPersonSource(personId, sourceId, options = {}) {
+      syncActiveSourceState();
+      state.activePersonId = personId;
+      state.activeSourceId = sourceId;
+      state.peoplePanelOpen = Boolean(options.keepPanelOpen);
+      loadActiveSourceIntoState();
+      if (options.syncFilter) {
+        state.filterPersonId = personId;
+        state.viewMode = "people";
+      }
+      savePeople();
+      renderWorkspace();
+    }
+
+    function selectFilterPerson(personId, options = {}) {
+      if (!getPersonById(personId)) {
+        return;
+      }
+      state.filterPersonId = personId;
+      state.viewMode = "people";
+      state.peoplePanelOpen = !options.closePanel;
+      ensureFilterSelection();
+      savePeople();
+      renderWorkspace();
+    }
+
+    function activateItemContext(item, shouldRender = false) {
+      if (!item) {
+        return;
+      }
+      syncActiveSourceState();
+      state.activePersonId = item.personId;
+      state.activeSourceId = item.sourceId;
+      loadActiveSourceIntoState();
+      savePeople();
+      if (shouldRender) {
+        renderWorkspace();
+      }
+    }
+
+    function switchViewMode(mode) {
+      if (mode !== "all" && mode !== "people") {
+        return;
+      }
+      state.viewMode = mode;
+      if (mode === "all") {
+        state.peoplePanelOpen = false;
+      } else {
+        ensureFilterSelection();
+      }
+      savePeople();
+      renderPeoplePanel();
+      renderResults();
+    }
+
+    function toggleFiltersPanel() {
+      state.peoplePanelOpen = !state.peoplePanelOpen;
+      renderPeoplePanel();
+    }
+
+    function mergeSourceIntoPerson(fromPersonId, sourceId, toPersonId) {
+      if (!fromPersonId || !sourceId || !toPersonId || fromPersonId === toPersonId) {
+        return;
+      }
+      syncActiveSourceState();
+      const fromPerson = getPersonById(fromPersonId);
+      const toPerson = getPersonById(toPersonId);
+      if (!fromPerson || !toPerson) {
+        return;
+      }
+      const sourceIndex = fromPerson.sources.findIndex((source) => source.id === sourceId);
+      if (sourceIndex < 0) {
+        return;
+      }
+      const [movedSource] = fromPerson.sources.splice(sourceIndex, 1);
+      toPerson.sources.push(movedSource);
+      toPerson.updatedAt = Date.now();
+      const removedPerson = fromPerson.sources.length === 0;
+      if (!fromPerson.sources.length) {
+        state.people = state.people.filter((person) => person.id !== fromPersonId);
+      }
+      if (state.activeSourceId === sourceId) {
+        state.activePersonId = toPersonId;
+      }
+      if (removedPerson && state.filterPersonId === fromPersonId) {
+        state.filterPersonId = toPersonId;
+      }
+      ensureActiveSelection();
+      ensureFilterSelection();
+      savePeople();
+      renderWorkspace();
+      setStatus(`Merged ${movedSource.label || "source image"} into ${toPerson.name}.`);
+    }
+
+    function syncResultsToPrompts() {
+      state.results = state.prompts.map((prompt, index) => {
+        const existing = state.results[index];
+        return {
+          prompt: prompt.text,
+          status: existing ? existing.status : "idle",
+          imageUrl: existing ? existing.imageUrl : "",
+          versions: existing?.versions ? existing.versions.map(normalizeVersionEntry).filter(Boolean) : [],
+          currentVersion: Math.max(0, Math.min(existing?.currentVersion ?? 0, Math.max((existing?.versions?.length || 1) - 1, 0))),
+          error: existing ? existing.error : ""
+        };
+      });
+      renderResults();
+    }
+
+    function updateResultsSummary() {
+      const readyCount = state.visibleItems.filter((item) => getResultImageUrl(item.result)).length;
+      resultsSummary.textContent = `${readyCount} ready`;
+      resultsEmpty.style.display = state.visibleItems.length ? "none" : "block";
+      if (!state.visibleItems.length) {
+        resultsEmpty.textContent = state.viewMode === "all"
+          ? "No generated images yet. Generate from any person and they will appear here."
+          : "No generated images for this person yet. Generate from the active source on the left.";
+      }
+    }
+
+    function getResultImageUrl(result) {
+      if (!result) {
+        return "";
+      }
+      if (Array.isArray(result.versions) && result.versions.length) {
+        const activeVersion = result.versions[result.currentVersion];
+        return getVersionImageUrl(activeVersion);
+      }
+      return result.imageUrl || "";
+    }
+
+    function getVersionImageUrl(version) {
+      if (!version) {
+        return "";
+      }
+      if (version.blobKey && blobUrlCache.has(version.blobKey)) {
+        return blobUrlCache.get(version.blobKey) || version.remoteUrl || "";
+      }
+      return version.remoteUrl || "";
+    }
+
+    function getResultVersionCount(result) {
+      return Array.isArray(result?.versions) ? result.versions.length : (result?.imageUrl ? 1 : 0);
+    }
+
+    function ensureResultVersions(result) {
+      if (!Array.isArray(result.versions) || !result.versions.length) {
+        result.versions = result.imageUrl ? [normalizeVersionEntry(result.imageUrl)] : [];
+      }
+      result.currentVersion = Math.max(0, Math.min(result.currentVersion ?? 0, Math.max(result.versions.length - 1, 0)));
+      result.imageUrl = getResultImageUrl(result);
+    }
+
+    function hydrateVersionImage(version) {
+      if (!version?.blobKey || blobUrlCache.has(version.blobKey) || blobUrlLoads.has(version.blobKey)) {
+        return;
+      }
+      const blobKey = version.blobKey;
+      blobUrlLoads.add(blobKey);
+      getImageRecord(blobKey)
+        .then((record) => {
+          if (!record?.blob) {
+            version.blobKey = "";
+            saveResultsMetadata();
+            renderResults();
+            return;
+          }
+          const objectUrl = URL.createObjectURL(record.blob);
+          blobUrlCache.set(blobKey, objectUrl);
+          renderResults();
+        })
+        .catch(() => {
+          version.blobKey = "";
+          saveResultsMetadata();
+          renderResults();
+        })
+        .finally(() => {
+          blobUrlLoads.delete(blobKey);
+        });
+    }
+
+    function renderDots(container, total, activeIndex) {
+      container.innerHTML = "";
+      if (total <= 1) {
+        container.hidden = true;
+        return;
+      }
+      container.hidden = false;
+      for (let index = 0; index < total; index += 1) {
+        const dot = document.createElement("span");
+        dot.className = "carousel-dot";
+        if (index === activeIndex) {
+          dot.classList.add("active");
+        }
+        container.appendChild(dot);
+      }
+    }
+
+    function getLightboxItem() {
+      return state.visibleItems[state.lightboxIndex] || null;
+    }
+
+    function isLightboxShowingPrompt(index) {
+      const item = getLightboxItem();
+      return Boolean(item && item.personId === state.activePersonId && item.promptIndex === index);
+    }
+
+    function getResultBlobKeys(result) {
+      if (!Array.isArray(result?.versions)) {
+        return [];
+      }
+      return result.versions
+        .map((version) => version?.blobKey || "")
+        .filter(Boolean);
+    }
+
+    async function deleteBlobKeys(blobKeys) {
+      const uniqueKeys = [...new Set(blobKeys.filter(Boolean))];
+      await Promise.allSettled(uniqueKeys.map(async (blobKey) => {
+        revokeBlobUrl(blobKey);
+        try {
+          await deleteImageRecord(blobKey);
+        } catch (_error) {
+          // Ignore missing or already-evicted records.
+        }
+      }));
+    }
+
+    function resetResultImages(index) {
+      const result = state.results[index];
+      if (!result) {
+        return;
+      }
+      result.status = "idle";
+      result.error = "";
+      result.notice = "";
+      result.imageUrl = "";
+      result.versions = [];
+      result.currentVersion = 0;
+    }
+
+    function pruneBrokenCurrentVersion(index, reason = "Saved image expired.") {
+      const result = state.results[index];
+      if (!result) {
+        return false;
+      }
+      ensureResultVersions(result);
+      if (!result.versions.length) {
+        return false;
+      }
+      const currentVersion = result.versions[result.currentVersion];
+      if (currentVersion?.blobKey && !blobUrlCache.has(currentVersion.blobKey)) {
+        return false;
+      }
+      result.versions.splice(result.currentVersion, 1);
+      if (!result.versions.length) {
+        resetResultImages(index);
+        result.error = reason;
+        return true;
+      }
+      result.currentVersion = Math.min(result.currentVersion, result.versions.length - 1);
+      result.imageUrl = getResultImageUrl(result);
+      result.status = "success";
+      result.error = "";
+      result.notice = "";
+      return true;
+    }
+
+    function handleVisibleItemImageError(item) {
+      if (!item) {
+        return;
+      }
+      syncItemVariantContext(item);
+      const changed = pruneBrokenCurrentVersion(item.promptIndex);
+      if (!changed) {
+        return;
+      }
+      if (state.lightboxKey === item.key) {
+        closeLightbox();
+      }
+      saveResultsMetadata();
+      renderResults();
+    }
+
+    async function deleteResultImages(index) {
+      const result = state.results[index];
+      if (!result || state.isGenerating) {
+        return;
+      }
+      ensureResultVersions(result);
+      if (!result.versions.length) {
+        return;
+      }
+      const removedVersion = result.versions[result.currentVersion];
+      await deleteBlobKeys(removedVersion?.blobKey ? [removedVersion.blobKey] : []);
+      result.versions.splice(result.currentVersion, 1);
+      if (!result.versions.length) {
+        resetResultImages(index);
+        if (isLightboxShowingPrompt(index)) {
+          closeLightbox();
+        }
+        renderResults();
+        setStatus(`Deleted the last saved generation for variation ${index + 1}.`);
+        return;
+      }
+      result.currentVersion = Math.min(result.currentVersion, result.versions.length - 1);
+      result.imageUrl = getResultImageUrl(result);
+      result.status = "success";
+      result.error = "";
+      result.notice = "";
+      if (isLightboxShowingPrompt(index)) {
+        updateLightboxContent();
+      }
+      renderResults();
+      setStatus(`Deleted the current generation for variation ${index + 1}.`);
+    }
+
+    async function deleteAllGeneratedImages() {
+      if (state.isGenerating) {
+        return;
+      }
+      const blobKeys = state.results.flatMap((result) => getResultBlobKeys(result));
+      await deleteBlobKeys(blobKeys);
+      state.results.forEach((_, index) => resetResultImages(index));
+      closeLightbox();
+      renderResults();
+      setStatus("Deleted all generated images.");
+    }
+
+    async function removePromptAtIndex(index) {
+      if (index < 0 || index >= state.prompts.length || state.isGenerating) {
+        return;
+      }
+      const removedResult = state.results[index];
+      await deleteBlobKeys(getResultBlobKeys(removedResult));
+      state.prompts.splice(index, 1);
+      state.results.splice(index, 1);
+      if (state.lightboxIndex === index) {
+        closeLightbox();
+      } else if (state.lightboxIndex > index) {
+        state.lightboxIndex -= 1;
+      }
+      savePrompts();
+      renderGenerateCountOptions();
+      renderPrompts();
+      syncResultsToPrompts();
+    }
+
+    function stepResultVersion(index, direction) {
+      const result = state.results[index];
+      if (!result) {
+        return;
+      }
+      ensureResultVersions(result);
+      const versionCount = getResultVersionCount(result);
+      if (versionCount <= 1) {
+        return;
+      }
+      result.currentVersion = (result.currentVersion + direction + versionCount) % versionCount;
+      result.imageUrl = getResultImageUrl(result);
+      result.notice = "";
+      const lightboxItem = getLightboxItem();
+      if (lightboxItem && lightboxItem.personId === state.activePersonId && lightboxItem.sourceId === state.activeSourceId && lightboxItem.promptIndex === index) {
+        state.lightboxKey = lightboxItem.key;
+      }
+      renderResults();
+      if (isLightboxShowingPrompt(index)) {
+        updateLightboxContent();
+      }
+    }
+
+    function getVisibleItemVariantCount(item) {
+      return Array.isArray(item?.variants) && item.variants.length ? item.variants.length : 0;
+    }
+
+    function syncItemVariantContext(item) {
+      if (!item?.currentVariant) {
+        return;
+      }
+      activateItemContext(item.currentVariant, false);
+      if (item.currentVariant.versionIndex >= 0 && state.results[item.promptIndex]) {
+        state.results[item.promptIndex].currentVersion = item.currentVariant.versionIndex;
+        state.results[item.promptIndex].imageUrl = getResultImageUrl(state.results[item.promptIndex]);
+      }
+    }
+
+    function stepVisibleItemVariant(item, direction) {
+      const variantCount = getVisibleItemVariantCount(item);
+      if (!item || variantCount <= 1) {
+        return;
+      }
+      const selectionKey = item.key;
+      const nextIndex = (item.currentVariantIndex + direction + variantCount) % variantCount;
+      state.variantSelections[selectionKey] = nextIndex;
+      renderResults();
+      if (state.lightboxKey === item.key && state.lightboxIndex >= 0) {
+        updateLightboxContent();
+      }
+    }
+
+    function bindSwipeNavigation(element, onPrevious, onNext) {
+      let startX = 0;
+      let startY = 0;
+      let pointerActive = false;
+
+      element.addEventListener("pointerdown", (event) => {
+        pointerActive = true;
+        startX = event.clientX;
+        startY = event.clientY;
+      });
+
+      element.addEventListener("pointerup", (event) => {
+        if (!pointerActive) {
+          return;
+        }
+        pointerActive = false;
+        const deltaX = event.clientX - startX;
+        const deltaY = event.clientY - startY;
+        if (Math.abs(deltaX) < 40 || Math.abs(deltaX) < Math.abs(deltaY)) {
+          return;
+        }
+        if (deltaX < 0) {
+          onNext();
+        } else {
+          onPrevious();
+        }
+      });
+
+      element.addEventListener("pointercancel", () => {
+        pointerActive = false;
+      });
+    }
+
+    function clampNumber(value, min, max) {
+      return Math.max(min, Math.min(max, value));
+    }
+
+    function getLightboxImageMetrics() {
+      const stageWidth = lightboxStage.clientWidth || 0;
+      const stageHeight = lightboxStage.clientHeight || 0;
+      const naturalWidth = lightboxImage.naturalWidth || 0;
+      const naturalHeight = lightboxImage.naturalHeight || 0;
+      if (!stageWidth || !stageHeight || !naturalWidth || !naturalHeight) {
+        return {
+          stageWidth,
+          stageHeight,
+          baseWidth: 0,
+          baseHeight: 0
+        };
+      }
+      const containScale = Math.min(stageWidth / naturalWidth, stageHeight / naturalHeight);
+      return {
+        stageWidth,
+        stageHeight,
+        baseWidth: naturalWidth * containScale,
+        baseHeight: naturalHeight * containScale
+      };
+    }
+
+    function clampLightboxPan(panX = state.lightboxPanX, panY = state.lightboxPanY, zoom = state.lightboxZoom) {
+      const metrics = getLightboxImageMetrics();
+      const maxPanX = Math.max(0, ((metrics.baseWidth * zoom) - metrics.stageWidth) / 2);
+      const maxPanY = Math.max(0, ((metrics.baseHeight * zoom) - metrics.stageHeight) / 2);
+      return {
+        panX: clampNumber(panX, -maxPanX, maxPanX),
+        panY: clampNumber(panY, -maxPanY, maxPanY)
+      };
+    }
+
+    function applyLightboxTransform() {
+      const nextZoom = clampNumber(Number(state.lightboxZoom) || 1, 1, 4);
+      state.lightboxZoom = nextZoom;
+      const nextPan = nextZoom <= 1
+        ? { panX: 0, panY: 0 }
+        : clampLightboxPan(state.lightboxPanX, state.lightboxPanY, nextZoom);
+      state.lightboxPanX = nextPan.panX;
+      state.lightboxPanY = nextPan.panY;
+      lightboxImage.style.transform = `translate(${state.lightboxPanX}px, ${state.lightboxPanY}px) scale(${state.lightboxZoom})`;
+      lightboxStage.classList.toggle("is-zoomed", state.lightboxZoom > 1.01);
+      lightboxImage.classList.toggle("dragging", false);
+    }
+
+    function resetLightboxZoom() {
+      state.lightboxZoom = 1;
+      state.lightboxPanX = 0;
+      state.lightboxPanY = 0;
+      applyLightboxTransform();
+    }
+
+    function setLightboxZoom(zoom, options = {}) {
+      state.lightboxZoom = clampNumber(zoom, 1, 4);
+      if (!options.keepPan || state.lightboxZoom <= 1.01) {
+        state.lightboxPanX = 0;
+        state.lightboxPanY = 0;
+      }
+      applyLightboxTransform();
+    }
+
+    function renderGenerateCountOptions() {
+      const maxCount = Math.max(1, state.prompts.length || 1);
+      const selectedValue = getClampedGenerateCount();
+      generateCountSelect.innerHTML = "";
+      for (let value = 1; value <= maxCount; value += 1) {
+        const option = document.createElement("option");
+        option.value = String(value);
+        option.textContent = String(value);
+        option.selected = value === selectedValue;
+        generateCountSelect.appendChild(option);
+      }
+      state.generateCount = selectedValue;
+      saveGenerateCount();
+    }
+
+    function renderResults() {
+      state.visibleItems = buildVisibleItems();
+      if (state.lightboxKey) {
+        const nextLightboxIndex = state.visibleItems.findIndex((item) => item.key === state.lightboxKey);
+        if (nextLightboxIndex >= 0) {
+          state.lightboxIndex = nextLightboxIndex;
+        } else {
+          closeLightbox();
+        }
+      }
+      resultsGrid.innerHTML = "";
+      state.visibleItems.forEach((item, visibleIndex) => {
+        const result = item.result;
+        const index = item.promptIndex;
+        const card = document.createElement("article");
+        card.className = "result-card";
+        ensureResultVersions(result);
+        result.versions.forEach(hydrateVersionImage);
+        const activeImageUrl = getResultImageUrl(result);
+        const variantCount = getVisibleItemVariantCount(item) || getResultVersionCount(result);
+
+        const frame = document.createElement("div");
+        frame.className = "result-frame";
+        const regenerateButton = document.createElement("button");
+        regenerateButton.className = "ghost-btn mini-icon-btn result-regenerate";
+        regenerateButton.type = "button";
+        regenerateButton.title = `Regenerate variation ${index + 1}`;
+        regenerateButton.setAttribute("aria-label", `Regenerate variation ${index + 1}`);
+        regenerateButton.classList.toggle("is-busy", state.isGenerating);
+        regenerateButton.setAttribute("aria-disabled", state.isGenerating ? "true" : "false");
+        regenerateButton.innerHTML = `
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 5a7 7 0 0 1 6.36 4.08l1.83-.8A9 9 0 0 0 12 3a9 9 0 0 0-8.77 11h2.1A7 7 0 0 1 12 5Zm0 14a7 7 0 0 1-6.36-4.08l-1.83.8A9 9 0 0 0 12 21a9 9 0 0 0 8.77-11h-2.1A7 7 0 0 1 12 19Z"/>
+            <path d="M12 1.5 8.75 4.75 12 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="m12 16 3.25 3.25L12 22.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        `;
+        regenerateButton.addEventListener("click", (event) => {
+          event.stopPropagation();
+          if (state.isGenerating) {
+            setStatus("Wait for the current generation run to finish.");
+            return;
+          }
+          syncItemVariantContext(item);
+          renderWorkspace();
+          generatePromptAtIndex(index).catch((error) => {
+            setStatus(error.message || `Could not regenerate prompt ${index + 1}.`);
+          });
+        });
+        if (activeImageUrl) {
+          frame.classList.add("clickable");
+          const image = document.createElement("img");
+          image.src = addCacheBuster(activeImageUrl);
+          image.alt = `Generated variation ${index + 1}`;
+          image.addEventListener("error", () => {
+            handleVisibleItemImageError(item);
+          }, { once: true });
+          frame.appendChild(image);
+          frame.addEventListener("click", () => {
+            syncItemVariantContext(item);
+            openLightbox(visibleIndex);
+          });
+          bindSwipeNavigation(
+            frame,
+            () => {
+              stepVisibleItemVariant(item, -1);
+            },
+            () => {
+              stepVisibleItemVariant(item, 1);
+            }
+          );
+        } else if (result.status === "loading") {
+          frame.textContent = "Generating image...";
+        } else if (result.status === "error") {
+          frame.textContent = "Generation failed.";
+        } else if (result.notice) {
+          frame.textContent = "Moderated.";
+        } else {
+          frame.textContent = "Waiting to generate.";
+        }
+        if (variantCount > 0) {
+          const deleteButton = document.createElement("button");
+          deleteButton.className = "ghost-btn mini-icon-btn result-delete";
+          deleteButton.type = "button";
+          deleteButton.title = `Delete current generation for variation ${index + 1}`;
+          deleteButton.setAttribute("aria-label", `Delete current generation for variation ${index + 1}`);
+          deleteButton.innerHTML = `
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M9 3h6l1 2h4v2H4V5h4l1-2Zm-2 6h2v9H7V9Zm4 0h2v9h-2V9Zm4 0h2v9h-2V9ZM6 21a2 2 0 0 1-2-2V7h16v12a2 2 0 0 1-2 2H6Z"/>
+            </svg>
+          `;
+          deleteButton.addEventListener("click", (event) => {
+            event.stopPropagation();
+            syncItemVariantContext(item);
+            deleteResultImages(index).catch((error) => {
+              setStatus(error.message || `Could not delete the current generation for variation ${index + 1}.`);
+            });
+          });
+          frame.appendChild(deleteButton);
+        }
+        if (variantCount > 1) {
+          const previousButton = document.createElement("button");
+          previousButton.className = "ghost-btn mini-icon-btn result-version-nav prev";
+          previousButton.type = "button";
+          previousButton.title = `Previous image for variation ${index + 1}`;
+          previousButton.setAttribute("aria-label", `Previous image for variation ${index + 1}`);
+          previousButton.innerHTML = `
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+            </svg>
+          `;
+          previousButton.addEventListener("click", (event) => {
+            event.stopPropagation();
+            stepVisibleItemVariant(item, -1);
+          });
+
+          const nextButton = document.createElement("button");
+          nextButton.className = "ghost-btn mini-icon-btn result-version-nav next";
+          nextButton.type = "button";
+          nextButton.title = `Next image for variation ${index + 1}`;
+          nextButton.setAttribute("aria-label", `Next image for variation ${index + 1}`);
+          nextButton.innerHTML = `
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="m8.59 16.59 1.41 1.41 6-6-6-6-1.41 1.41L13.17 12z"/>
+            </svg>
+          `;
+          nextButton.addEventListener("click", (event) => {
+            event.stopPropagation();
+            stepVisibleItemVariant(item, 1);
+          });
+
+          frame.append(previousButton, nextButton);
+        }
+        frame.appendChild(regenerateButton);
+
+        const meta = document.createElement("div");
+        meta.className = "result-meta";
+        const personLabel = document.createElement("div");
+        personLabel.className = "result-person-label";
+        const personThumb = document.createElement("span");
+        personThumb.className = "result-person-thumb";
+        if (item.sourceImage) {
+          const thumbImage = document.createElement("img");
+          thumbImage.src = item.sourceImage;
+          thumbImage.alt = item.personName;
+          personThumb.appendChild(thumbImage);
+        } else {
+          personThumb.textContent = "P";
+        }
+        const personText = document.createElement("span");
+        personText.textContent = state.viewMode === "all"
+          ? `${item.personName} • ${item.sourceLabel}`
+          : item.sourceLabel;
+        personLabel.append(personThumb, personText);
+        const title = document.createElement("strong");
+        title.textContent = `Variation ${index + 1}`;
+        const versionLabel = document.createElement("div");
+        versionLabel.className = "result-version-label";
+        versionLabel.textContent = variantCount > 1
+          ? `Image ${item.currentVariantIndex + 1} of ${variantCount}`
+          : "Latest image";
+        const status = document.createElement("div");
+        status.className = "result-status";
+        if (result.notice) {
+          status.classList.add("notice");
+          status.textContent = result.notice;
+        } else if (result.status === "success") {
+          status.classList.add("success");
+          status.textContent = "Ready";
+        } else if (result.status === "error") {
+          status.classList.add("error");
+          status.textContent = result.error || "Failed";
+        } else if (result.status === "loading") {
+          status.textContent = "Generating...";
+        } else if (!item.promptEnabled) {
+          status.textContent = "Disabled";
+        } else {
+          status.textContent = "Idle";
+        }
+
+        meta.append(personLabel, title, versionLabel, status);
+        card.append(frame, meta);
+        resultsGrid.appendChild(card);
+      });
+
+      updateResultsSummary();
+      saveResultsMetadata();
+    }
+
+    function updateLightboxNav() {
+      const item = getLightboxItem();
+      const hasMultiplePrompts = state.visibleItems.length > 1;
+      const hasMultipleImages = getVisibleItemVariantCount(item) > 1;
+      lightboxPrevButton.disabled = !hasMultipleImages;
+      lightboxNextButton.disabled = !hasMultipleImages;
+      lightboxUpButton.disabled = !hasMultiplePrompts;
+      lightboxDownButton.disabled = !hasMultiplePrompts;
+    }
+
+    function updateLightboxContent() {
+      const item = getLightboxItem();
+      const result = item?.result;
+      const imageUrl = getResultImageUrl(result);
+      if (!imageUrl) {
+        return;
+      }
+      result?.versions?.forEach(hydrateVersionImage);
+      resetLightboxZoom();
+      lightboxImage.src = addCacheBuster(imageUrl);
+      lightboxImage.alt = `Full size generated variation ${item.promptIndex + 1}`;
+      lightboxImage.onload = () => {
+        applyLightboxTransform();
+      };
+      lightboxImage.onerror = () => {
+        handleVisibleItemImageError(item);
+      };
+      lightboxTitle.textContent = state.visibleItems.length > 1
+        ? `Prompt ${state.lightboxIndex + 1} of ${state.visibleItems.length}`
+        : "Prompt 1";
+      lightboxVersionLabel.textContent = getVisibleItemVariantCount(item) > 1
+        ? `${item.personName} • ${item.sourceLabel} • variation ${item.promptIndex + 1}, image ${item.currentVariantIndex + 1} of ${getVisibleItemVariantCount(item)}`
+        : `${item.personName} • ${item.sourceLabel} • variation ${item.promptIndex + 1}`;
+      renderDots(lightboxDots, getVisibleItemVariantCount(item), item.currentVariantIndex);
+      updateLightboxNav();
+    }
+
+    function openLightbox(index) {
+      state.lightboxIndex = index;
+      state.lightboxKey = state.visibleItems[index]?.key || "";
+      updateLightboxContent();
+      lightbox.classList.add("open");
+      lightbox.setAttribute("aria-hidden", "false");
+      lightboxCloseButton.focus();
+    }
+
+    function closeLightbox() {
+      if (state.lightboxIndex < 0) {
+        return;
+      }
+      resetLightboxZoom();
+      state.lightboxIndex = -1;
+      state.lightboxKey = "";
+      lightbox.classList.remove("open");
+      lightbox.setAttribute("aria-hidden", "true");
+      lightboxImage.removeAttribute("src");
+      lightboxDots.innerHTML = "";
+    }
+
+    function stepLightboxVersion(direction) {
+      const item = getLightboxItem();
+      if (!item) {
+        return;
+      }
+      stepVisibleItemVariant(item, direction);
+    }
+
+    function stepLightboxPrompt(direction) {
+      if (state.lightboxIndex < 0 || state.visibleItems.length <= 1) {
+        return;
+      }
+      const nextPosition = (state.lightboxIndex + direction + state.visibleItems.length) % state.visibleItems.length;
+      const item = state.visibleItems[nextPosition];
+      syncItemVariantContext(item);
+      state.lightboxIndex = nextPosition;
+      state.lightboxKey = item.key;
+      updateLightboxContent();
+    }
+
+    function bindGridSwipeNavigation(element, onPreviousVersion, onNextVersion, onPreviousPrompt, onNextPrompt) {
+      const pointers = new Map();
+      let gestureMode = "";
+      let swipeStartX = 0;
+      let swipeStartY = 0;
+      let panStartX = 0;
+      let panStartY = 0;
+      let panOriginX = 0;
+      let panOriginY = 0;
+      let pinchStartDistance = 0;
+      let pinchStartZoom = 1;
+      let lastTapAt = 0;
+
+      function getPointerDistance() {
+        const activePointers = [...pointers.values()];
+        if (activePointers.length < 2) {
+          return 0;
+        }
+        const [first, second] = activePointers;
+        return Math.hypot(second.x - first.x, second.y - first.y);
+      }
+
+      element.addEventListener("dblclick", (event) => {
+        event.preventDefault();
+        if (state.lightboxZoom > 1.01) {
+          resetLightboxZoom();
+        } else {
+          setLightboxZoom(2.5);
+        }
+      });
+
+      element.addEventListener("pointerdown", (event) => {
+        if (event.pointerType !== "touch" && event.button !== 0) {
+          return;
+        }
+        pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+        element.setPointerCapture?.(event.pointerId);
+        if (pointers.size >= 2) {
+          gestureMode = "pinch";
+          pinchStartDistance = getPointerDistance();
+          pinchStartZoom = state.lightboxZoom;
+          lightboxImage.classList.remove("dragging");
+          return;
+        }
+        if (state.lightboxZoom > 1.01) {
+          gestureMode = "pan";
+          panStartX = event.clientX;
+          panStartY = event.clientY;
+          panOriginX = state.lightboxPanX;
+          panOriginY = state.lightboxPanY;
+          lightboxImage.classList.add("dragging");
+          return;
+        }
+        gestureMode = "swipe";
+        swipeStartX = event.clientX;
+        swipeStartY = event.clientY;
+      });
+
+      element.addEventListener("pointermove", (event) => {
+        if (!pointers.has(event.pointerId)) {
+          return;
+        }
+        pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+        if (gestureMode === "pinch" && pointers.size >= 2) {
+          const distance = getPointerDistance();
+          if (!pinchStartDistance) {
+            pinchStartDistance = distance;
+          }
+          if (!pinchStartDistance) {
+            return;
+          }
+          state.lightboxZoom = clampNumber(pinchStartZoom * (distance / pinchStartDistance), 1, 4);
+          if (state.lightboxZoom <= 1.01) {
+            state.lightboxPanX = 0;
+            state.lightboxPanY = 0;
+          }
+          applyLightboxTransform();
+          return;
+        }
+        if (gestureMode === "pan" && state.lightboxZoom > 1.01) {
+          state.lightboxPanX = panOriginX + (event.clientX - panStartX);
+          state.lightboxPanY = panOriginY + (event.clientY - panStartY);
+          applyLightboxTransform();
+        }
+      });
+
+      element.addEventListener("pointerup", (event) => {
+        if (!pointers.has(event.pointerId)) {
+          return;
+        }
+        const endX = event.clientX;
+        const endY = event.clientY;
+        const hadSinglePointer = pointers.size === 1;
+        pointers.delete(event.pointerId);
+        element.releasePointerCapture?.(event.pointerId);
+
+        if (gestureMode === "pinch") {
+          if (pointers.size === 1 && state.lightboxZoom > 1.01) {
+            const [remainingPointer] = [...pointers.values()];
+            gestureMode = "pan";
+            panStartX = remainingPointer.x;
+            panStartY = remainingPointer.y;
+            panOriginX = state.lightboxPanX;
+            panOriginY = state.lightboxPanY;
+            lightboxImage.classList.add("dragging");
+          } else if (!pointers.size) {
+            gestureMode = "";
+          }
+          return;
+        }
+
+        if (gestureMode === "pan") {
+          lightboxImage.classList.remove("dragging");
+          if (!pointers.size) {
+            gestureMode = "";
+          }
+          return;
+        }
+
+        if (gestureMode === "swipe" && hadSinglePointer && state.lightboxZoom <= 1.01) {
+          const deltaX = endX - swipeStartX;
+          const deltaY = endY - swipeStartY;
+          const now = Date.now();
+          if (Math.abs(deltaX) < 12 && Math.abs(deltaY) < 12) {
+            if (now - lastTapAt < 280) {
+              setLightboxZoom(state.lightboxZoom > 1.01 ? 1 : 2.5);
+              lastTapAt = 0;
+            } else {
+              lastTapAt = now;
+            }
+            gestureMode = "";
+            return;
+          }
+          if (Math.abs(deltaX) >= 40 || Math.abs(deltaY) >= 40) {
+            if (Math.abs(deltaX) > Math.abs(deltaY)) {
+              if (deltaX < 0) {
+                onNextVersion();
+              } else {
+                onPreviousVersion();
+              }
+            } else if (deltaY < 0) {
+              onNextPrompt();
+            } else {
+              onPreviousPrompt();
+            }
+          }
+        }
+
+        if (!pointers.size) {
+          gestureMode = "";
+        }
+      });
+
+      element.addEventListener("pointercancel", (event) => {
+        pointers.delete(event.pointerId);
+        lightboxImage.classList.remove("dragging");
+        if (!pointers.size) {
+          gestureMode = "";
+        }
+      });
+    }
+
+    function renderPrompts() {
+      promptList.innerHTML = "";
+      state.prompts.forEach((prompt, index) => {
+        const row = document.createElement("div");
+        row.className = "prompt-row";
+        row.dataset.index = String(index);
+        row.addEventListener("dragover", (event) => {
+          event.preventDefault();
+          if (state.dragIndex >= 0 && state.dragIndex !== index) {
+            row.classList.add("drop-target");
+          }
+        });
+        row.addEventListener("dragleave", () => {
+          row.classList.remove("drop-target");
+        });
+        row.addEventListener("drop", (event) => {
+          event.preventDefault();
+          row.classList.remove("drop-target");
+          movePrompt(state.dragIndex, index);
+        });
+
+        const dragHandle = document.createElement("div");
+        dragHandle.className = "drag-handle";
+        dragHandle.textContent = ":::";
+        dragHandle.draggable = !state.isGenerating;
+        dragHandle.title = "Drag to reorder prompt";
+        dragHandle.addEventListener("dragstart", (event) => {
+          state.dragIndex = index;
+          row.classList.add("dragging");
+          event.dataTransfer.effectAllowed = "move";
+          event.dataTransfer.setData("text/plain", String(index));
+        });
+        dragHandle.addEventListener("dragend", () => {
+          state.dragIndex = -1;
+          row.classList.remove("dragging");
+          document.querySelectorAll(".prompt-row.drop-target").forEach((element) => {
+            element.classList.remove("drop-target");
+          });
+        });
+
+        const textarea = document.createElement("textarea");
+        textarea.value = prompt.text;
+        textarea.spellcheck = false;
+        textarea.id = `prompt-${index + 1}`;
+        textarea.name = `prompt-${index + 1}`;
+        textarea.setAttribute("aria-label", `Prompt ${index + 1}`);
+        textarea.addEventListener("input", () => {
+          state.prompts[index].text = textarea.value;
+          if (state.results[index]) {
+            state.results[index].prompt = textarea.value;
+          }
+          savePrompts();
+          renderResults();
+        });
+
+        const tools = document.createElement("div");
+        tools.className = "prompt-tools";
+
+        const badge = document.createElement("div");
+        badge.className = "prompt-badge";
+        badge.textContent = `#${index + 1}`;
+
+        const enabledLabel = document.createElement("label");
+        enabledLabel.className = "toggle-row";
+        enabledLabel.htmlFor = `prompt-enabled-${index + 1}`;
+
+        const enabledInput = document.createElement("input");
+        enabledInput.type = "checkbox";
+        enabledInput.id = `prompt-enabled-${index + 1}`;
+        enabledInput.checked = prompt.enabled;
+        enabledInput.disabled = state.isGenerating;
+        enabledInput.addEventListener("change", () => {
+          state.prompts[index].enabled = enabledInput.checked;
+          savePrompts();
+          refreshButtons();
+          renderResults();
+        });
+
+        const enabledText = document.createElement("span");
+        enabledText.textContent = "Enabled";
+        enabledLabel.append(enabledInput, enabledText);
+
+        const runButton = document.createElement("button");
+        runButton.className = "ghost-btn tiny-btn";
+        runButton.type = "button";
+        runButton.textContent = "Run";
+        runButton.disabled = state.isGenerating;
+        runButton.addEventListener("click", () => {
+          generatePromptAtIndex(index).catch((error) => {
+            setStatus(error.message || `Could not generate prompt ${index + 1}.`);
+          });
+        });
+
+        const removeButton = document.createElement("button");
+        removeButton.className = "danger-btn tiny-btn";
+        removeButton.type = "button";
+        removeButton.textContent = "Remove";
+        removeButton.disabled = state.prompts.length <= 1 || state.isGenerating;
+        removeButton.addEventListener("click", () => {
+          removePromptAtIndex(index).catch((error) => {
+            setStatus(error.message || `Could not remove prompt ${index + 1}.`);
+          });
+        });
+
+        tools.append(badge, enabledLabel, runButton, removeButton);
+        row.append(dragHandle, textarea, tools);
+        promptList.appendChild(row);
+      });
+    }
+
+    function movePrompt(fromIndex, toIndex) {
+      if (fromIndex < 0 || toIndex < 0 || fromIndex === toIndex) {
+        return;
+      }
+      const movedPrompt = state.prompts.splice(fromIndex, 1)[0];
+      state.prompts.splice(toIndex, 0, movedPrompt);
+      const movedResult = state.results.splice(fromIndex, 1)[0];
+      state.results.splice(toIndex, 0, movedResult);
+      savePrompts();
+      renderGenerateCountOptions();
+      renderPrompts();
+      syncResultsToPrompts();
+    }
+
+    function renderPromptEditor() {
+      promptEditor.classList.toggle("open", state.promptEditorOpen);
+      togglePromptsButton.setAttribute("aria-expanded", String(state.promptEditorOpen));
+      togglePromptsButton.classList.toggle("active", state.promptEditorOpen);
+    }
+
+    function togglePromptEditor() {
+      state.promptEditorOpen = !state.promptEditorOpen;
+      renderPromptEditor();
+    }
+
+    function refreshButtons() {
+      const hasSource = Boolean(state.source);
+      generateAllButton.disabled = !hasSource || state.isGenerating || !getEnabledPromptIndices().length;
+      generateCountSelect.disabled = state.isGenerating;
+      clearSourceButton.disabled = !hasSource || state.isGenerating;
+      pickImageButton.classList.toggle("is-busy", state.isGenerating);
+      cameraImageButton.classList.toggle("is-busy", state.isGenerating);
+      pickImageButton.setAttribute("aria-disabled", state.isGenerating ? "true" : "false");
+      cameraImageButton.setAttribute("aria-disabled", state.isGenerating ? "true" : "false");
+      addPromptButton.disabled = state.isGenerating;
+      resetPromptsButton.disabled = state.isGenerating;
+      deleteAllImagesButton.disabled = state.isGenerating || !state.results.some((result) => getResultImageUrl(result));
+    }
+
+    function renderSourcePreview() {
+      if (!state.source) {
+        const activeSource = getActiveSource();
+        if (activeSource?.imageBlobKey) {
+          hydrateSourceImage(activeSource, { updateActiveSource: true });
+        }
+        sourcePreview.classList.remove("open");
+        pasteTarget.classList.remove("ready");
+        pasteTarget.textContent = "Click here, then press Cmd+V to paste a person photo or image URL";
+        sourceImage.removeAttribute("src");
+        refreshButtons();
+        return;
+      }
+
+      sourcePreview.classList.add("open");
+      pasteTarget.classList.add("ready");
+      pasteTarget.textContent = "Source image saved locally and ready to use";
+      sourceImage.src = state.sourcePreviewUrl || state.source;
+      sourceTitle.textContent = getActivePerson()?.name || "Source image loaded";
+      sourceDescription.textContent = state.sourceLabel || "active source image";
+      refreshButtons();
+    }
+
+    async function setSource(source, label, previewUrl = source) {
+      logSourceDebug("set:start", {
+        label,
+        sourceType: isDataImageUrl(source) ? "data-url" : (isHttpUrl(source) ? "url" : typeof source),
+        sourceLength: typeof source === "string" ? source.length : 0
+      });
+      clearPreparedSourceCache();
+      if (previewUrl !== state.objectPreviewUrl) {
+        releaseObjectPreviewUrl();
+      }
+      const existing = isHttpUrl(source) ? findSourceLocationByImage(source) : null;
+      if (existing) {
+        logSourceDebug("set:existing_source", existing);
+        selectPersonSource(existing.personId, existing.sourceId);
+        state.sourcePreviewUrl = previewUrl;
+        renderSourcePreview();
+        setStatus("Selected an existing person source.");
+        return;
+      }
+
+      let storedSource = source;
+      let storedPreviewUrl = previewUrl;
+      let sourceBlobKey = "";
+      if (isDataImageUrl(source)) {
+        const persisted = await persistLocalSourceImage(source);
+        storedSource = persisted.runtimeUrl;
+        storedPreviewUrl = persisted.runtimeUrl;
+        sourceBlobKey = persisted.imageBlobKey;
+      }
+
+      syncActiveSourceState();
+      const activeSource = getActiveSource();
+      if (activeSource && !sourceHasAnyState(activeSource)) {
+        logSourceDebug("set:reuse_empty_active_source", {
+          activePersonId: state.activePersonId,
+          activeSourceId: state.activeSourceId
+        });
+        if (activeSource.imageBlobKey && activeSource.imageBlobKey !== sourceBlobKey) {
+          revokeSourceBlobUrl(activeSource.imageBlobKey);
+          await deleteSourceImageRecord(activeSource.imageBlobKey).catch(() => {});
+        }
+        state.source = storedSource;
+        state.sourcePreviewUrl = storedPreviewUrl;
+        state.sourceBlobKey = sourceBlobKey;
+        state.sourceLabel = label;
+        saveSource();
+        renderWorkspace();
+        setStatus("Source image ready. Edit prompts or generate the full set.");
+        return;
+      }
+
+      const nextSource = makeDraftSourceEntry(storedSource, label);
+      nextSource.imageBlobKey = sourceBlobKey;
+      const nextPerson = makePersonEntry({
+        name: `Person ${state.people.length + 1}`,
+        sources: [nextSource]
+      });
+      logSourceDebug("set:create_new_person_source", {
+        nextPersonId: nextPerson.id,
+        nextSourceId: nextSource.id
+      });
+      state.people.push(nextPerson);
+      state.activePersonId = nextPerson.id;
+      state.activeSourceId = nextSource.id;
+      loadActiveSourceIntoState();
+      state.sourcePreviewUrl = storedPreviewUrl;
+      savePeople();
+      renderWorkspace();
+      setStatus("Source image ready. Edit prompts or generate the full set.");
+    }
+
+    async function clearSource() {
+      logSourceDebug("clear:start", {
+        activePersonId: state.activePersonId,
+        activeSourceId: state.activeSourceId,
+        hasSource: Boolean(state.source)
+      });
+      clearPreparedSourceCache();
+      releaseObjectPreviewUrl();
+      const activeSource = getActiveSource();
+      if (activeSource && sourceHasAnyState(activeSource)) {
+        const nextSource = makeDraftSourceEntry("", "");
+        const nextPerson = makePersonEntry({
+          name: `Person ${state.people.length + 1}`,
+          sources: [nextSource]
+        });
+        state.people.push(nextPerson);
+        state.activePersonId = nextPerson.id;
+        state.activeSourceId = nextSource.id;
+        logSourceDebug("clear:created_blank_draft_source", {
+          nextPersonId: nextPerson.id,
+          nextSourceId: nextSource.id
+        });
+        loadActiveSourceIntoState();
+      } else {
+        if (activeSource?.imageBlobKey) {
+          revokeSourceBlobUrl(activeSource.imageBlobKey);
+          await deleteSourceImageRecord(activeSource.imageBlobKey).catch(() => {});
+          activeSource.imageBlobKey = "";
+          activeSource.image = "";
+        }
+        state.source = "";
+        state.sourcePreviewUrl = "";
+        state.sourceBlobKey = "";
+        state.sourceLabel = "";
+        logSourceDebug("clear:cleared_active_source", {});
+      }
+      savePeople();
+      renderWorkspace();
+      pasteTarget.focus();
+      logSourceDebug("clear:complete", {
+        activePersonId: state.activePersonId,
+        activeSourceId: state.activeSourceId,
+        hasSource: Boolean(state.source)
+      });
+      setStatus("Source image cleared.");
+    }
+
+    async function handlePaste(event) {
+      const clipboardData = event.clipboardData;
+      if (!clipboardData || state.isGenerating) {
+        logSourceDebug("paste:ignored", {
+          hasClipboardData: Boolean(clipboardData),
+          isGenerating: state.isGenerating
+        });
+        return;
+      }
+
+      const items = Array.from(clipboardData.items || []);
+      logSourceDebug("paste:received", {
+        targetTag: event.target instanceof Element ? event.target.tagName : "",
+        itemTypes: items.map((item) => item.type)
+      });
+
+      const imageItem = items.find((item) => item.type.startsWith("image/"));
+      if (imageItem) {
+        event.preventDefault();
+        const blob = imageItem.getAsFile();
+        if (!blob) {
+          logSourceDebug("paste:image_missing_blob", {});
+          setStatus("Could not read the pasted image.");
+          return;
+        }
+        logSourceDebug("paste:image", {
+          type: blob.type,
+          size: blob.size
+        });
+        const dataUrl = await blobToDataUrl(blob);
+        await setSource(dataUrl, "pasted image");
+        return;
+      }
+
+      const pastedText = clipboardData.getData("text/plain").trim();
+      if (isHttpUrl(pastedText)) {
+        event.preventDefault();
+        logSourceDebug("paste:url", {
+          length: pastedText.length
+        });
+        await setSource(pastedText, "pasted image URL");
+        return;
+      }
+
+      logSourceDebug("paste:unsupported", {
+        textLength: pastedText.length
+      });
+      setStatus("Paste an image or an http(s) image URL.");
+    }
+
+    async function requestImage(prompt) {
+      const token = tokenInput.value.trim();
+      if (!token) {
+        throw new Error("Enter an xAI API key first.");
+      }
+      persistTokenIfNeeded();
+      const preparedSource = await buildPreparedSource();
+      const apiPrompt = buildApiPrompt(prompt);
+      const requestPayload = {
+        model: "grok-imagine-image",
+        prompt: apiPrompt,
+        response_format: "b64_json",
+        resolution: "2k",
+        image: {
+          url: preparedSource,
+          type: "image_url"
+        }
+      };
+
+      let response;
+      try {
+        response = await fetch("https://api.x.ai/v1/images/edits", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          },
+          body: JSON.stringify(requestPayload)
+        });
+      } catch (_error) {
+        throw new Error("Direct browser request failed before completion. This is usually CORS, network, or browser policy.");
+      }
+
+      let data;
+      try {
+        data = await response.json();
+      } catch (_parseError) {
+        throw new Error("xAI returned an invalid response.");
+      }
+
+      if (!response.ok) {
+        if (isModerationMessage(data?.error || data?.error?.message || data?.message)) {
+          return {
+            edited_url: "",
+            is_moderated: true
+          };
+        }
+        const errorMessage = typeof data?.error === "string"
+          ? data.error
+          : (data?.error?.message || data?.message || `Image generation failed (${response.status}).`);
+        throw new Error(errorMessage);
+      }
+
+      const imageData = data?.data?.[0];
+      const base64Image = imageData?.b64_json;
+      const mimeType = typeof imageData?.mime_type === "string" && imageData.mime_type
+        ? imageData.mime_type
+        : "image/png";
+      if (typeof base64Image === "string" && base64Image) {
+        return {
+          edited_url: `data:${mimeType};base64,${base64Image}`,
+          is_moderated: false
+        };
+      }
+      throw new Error("xAI did not return b64_json for the edit response.");
+    }
+
+    async function generatePromptAtIndex(index, options = {}) {
+      const allowWhileGenerating = Boolean(options.allowWhileGenerating);
+      if (state.isGenerating && !allowWhileGenerating && state.results[index]?.status !== "loading") {
+        return;
+      }
+      if (!isSupportedImageSource(state.source)) {
+        throw new Error("Paste a source image first.");
+      }
+
+      const prompt = (state.prompts[index]?.text || "").trim();
+      if (!prompt) {
+        throw new Error(`Prompt ${index + 1} is empty.`);
+      }
+      const previousResult = state.results[index];
+      const canReusePrevious = !isModerationOnlyResult(previousResult);
+      const previousImageUrl = canReusePrevious ? (previousResult?.imageUrl || "") : "";
+      const previousVersions = canReusePrevious
+        ? (Array.isArray(previousResult?.versions) ? [...previousResult.versions] : (previousImageUrl ? [previousImageUrl] : []))
+        : [];
+      const previousVersionIndex = canReusePrevious
+        ? (previousResult?.currentVersion ?? Math.max(previousVersions.length - 1, 0))
+        : 0;
+      const selectionKey = `${state.activePersonId}:${index}`;
+
+      state.results[index] = {
+        prompt,
+        status: "loading",
+        imageUrl: previousImageUrl,
+        versions: previousVersions,
+        currentVersion: previousVersionIndex,
+        error: "",
+        notice: ""
+      };
+      renderResults();
+
+      try {
+        const data = await requestImage(prompt);
+        const storedVersion = data.is_moderated ? null : await persistGeneratedVersion(data.edited_url);
+        const nextVersions = data.is_moderated
+          ? previousVersions
+          : [...previousVersions, storedVersion].filter(Boolean);
+        state.results[index] = {
+          prompt,
+          status: data.is_moderated
+            ? (nextVersions.length ? "success" : "idle")
+            : "success",
+          imageUrl: data.is_moderated ? previousImageUrl : getResultImageUrl({
+            versions: nextVersions,
+            currentVersion: Math.max(nextVersions.length - 1, 0),
+            imageUrl: data.edited_url
+          }),
+          versions: nextVersions,
+          currentVersion: data.is_moderated
+            ? previousVersionIndex
+            : Math.max(nextVersions.length - 1, 0),
+          error: "",
+          notice: data.is_moderated
+            ? (previousImageUrl ? "Moderated, kept previous image." : "Moderated.")
+            : ""
+        };
+        delete state.variantSelections[selectionKey];
+        renderResults();
+        if (data.is_moderated) {
+          setStatus(previousImageUrl
+            ? `Prompt ${index + 1} was moderated. Kept the previous image.`
+            : `Prompt ${index + 1} was moderated.`);
+          return {
+            isModerated: true,
+            generated: false
+          };
+        } else {
+          setStatus(`Generated prompt ${index + 1} of ${state.prompts.length}.`);
+          return {
+            isModerated: false,
+            generated: true
+          };
+        }
+      } catch (error) {
+        if (isModerationMessage(error.message)) {
+          state.results[index] = {
+            prompt,
+            status: previousVersions.length ? "success" : "idle",
+            imageUrl: previousImageUrl,
+            versions: previousVersions,
+            currentVersion: previousVersionIndex,
+            error: "",
+            notice: previousVersions.length ? "Moderated, kept previous image." : "Moderated."
+          };
+          delete state.variantSelections[selectionKey];
+          renderResults();
+          setStatus(previousVersions.length
+            ? `Prompt ${index + 1} was moderated. Kept the previous image.`
+            : `Prompt ${index + 1} was moderated.`);
+          return {
+            isModerated: true,
+            generated: false
+          };
+        }
+        state.results[index] = {
+          prompt,
+          status: "error",
+          imageUrl: previousImageUrl,
+          versions: previousVersions,
+          currentVersion: previousVersionIndex,
+          error: error.message || "Failed",
+          notice: ""
+        };
+        renderResults();
+        throw error;
+      }
+    }
+
+    async function generateAll() {
+      if (state.isGenerating) {
+        return;
+      }
+      if (!isSupportedImageSource(state.source)) {
+        setStatus("Paste a source image first.");
+        return;
+      }
+      const enabledIndices = getEnabledPromptIndices();
+      if (!enabledIndices.length) {
+        setStatus("Enable at least one prompt first.");
+        return;
+      }
+      const targetCount = Math.min(getClampedGenerateCount(), enabledIndices.length);
+      if (!targetCount) {
+        setStatus("Choose at least one image to generate.");
+        return;
+      }
+
+      state.isGenerating = true;
+      refreshButtons();
+      renderPrompts();
+      setStatus(`Generating up to ${targetCount} images from the enabled prompts...`);
+
+      const settledResults = [];
+      let successCount = 0;
+      let moderatedCount = 0;
+      let activeCount = 0;
+      let nextCursor = 0;
+      let stopLaunching = false;
+
+      const runScheduler = await new Promise((resolve) => {
+        function launchNext() {
+          while (
+            !stopLaunching &&
+            activeCount < Math.min(maxParallelGenerations, Math.max(targetCount - successCount, 1)) &&
+            nextCursor < enabledIndices.length &&
+            successCount < targetCount
+          ) {
+            const promptIndex = enabledIndices[nextCursor];
+            nextCursor += 1;
+            activeCount += 1;
+
+            generatePromptAtIndex(promptIndex, { allowWhileGenerating: true })
+              .then((result) => {
+                if (result?.isModerated) {
+                  moderatedCount += 1;
+                  settledResults.push({ status: "moderated", index: promptIndex });
+                  return;
+                }
+                successCount += 1;
+                settledResults.push({ status: "fulfilled", index: promptIndex });
+              })
+              .catch((error) => {
+                settledResults.push({
+                  status: "rejected",
+                  index: promptIndex,
+                  error: error?.message || "Failed"
+                });
+              })
+              .finally(() => {
+                activeCount -= 1;
+                if (successCount >= targetCount) {
+                  stopLaunching = true;
+                }
+                if ((stopLaunching || nextCursor >= enabledIndices.length) && activeCount === 0) {
+                  resolve();
+                  return;
+                }
+                launchNext();
+              });
+          }
+
+          if ((stopLaunching || nextCursor >= enabledIndices.length) && activeCount === 0) {
+            resolve();
+          }
+        }
+
+        launchNext();
+      });
+
+      state.isGenerating = false;
+      refreshButtons();
+      renderPrompts();
+      void runScheduler;
+      const failedCount = settledResults.filter((result) => result.status === "rejected").length;
+      const firstFailure = settledResults.find((result) => result.status === "rejected");
+      if (!successCount && moderatedCount && !failedCount) {
+        setStatus(moderatedCount === 1
+          ? "1 prompt was moderated."
+          : `${moderatedCount} prompts were moderated.`);
+        return;
+      }
+      if (successCount >= targetCount) {
+        const moderatedNote = moderatedCount ? ` ${moderatedCount} prompt${moderatedCount === 1 ? " was" : "s were"} moderated.` : "";
+        setStatus(`Finished generating ${successCount}/${targetCount} requested images.${moderatedNote}`);
+      } else if (failedCount) {
+        const failureNote = firstFailure?.error ? ` First failure: ${firstFailure.error}` : "";
+        const moderatedNote = moderatedCount ? ` ${moderatedCount} prompt${moderatedCount === 1 ? " was" : "s were"} moderated.` : "";
+        setStatus(`Generated ${successCount}/${targetCount} requested images. ${failedCount} prompts failed before the list ran out.${failureNote}${moderatedNote}`);
+      } else {
+        const moderatedNote = moderatedCount ? ` ${moderatedCount} prompt${moderatedCount === 1 ? " was" : "s were"} moderated.` : "";
+        setStatus(`Generated ${successCount}/${targetCount} requested images.${moderatedNote}`);
+      }
+    }
+
+    function addPrompt() {
+      state.prompts.push(
+        makePromptEntry(
+          "Turn this person into a dead-serious action hero in a ridiculous everyday situation, photorealistic and funny.",
+          true
+        )
+      );
+      savePrompts();
+      renderGenerateCountOptions();
+      renderPrompts();
+      syncResultsToPrompts();
+    }
+
+    function resetPrompts() {
+      state.prompts = defaultPrompts.map((prompt) => makePromptEntry(prompt, true));
+      state.results = [];
+      savePrompts();
+      renderGenerateCountOptions();
+      renderPrompts();
+      syncResultsToPrompts();
+      setStatus("Funny default prompts restored.");
+    }
+
+    async function initialize() {
+      state.people = loadPeople();
+      loadSavedToken();
+      loadViewMode();
+      loadActiveSelection();
+      loadActiveSourceIntoState();
+      state.prompts = resolveInitialPrompts();
+      await migrateInlineSourceImages();
+      renderWorkspace();
+      if (state.source) {
+        setStatus("Saved people and source images restored locally.");
+      }
+    }
+
+    togglePromptsButton.addEventListener("click", togglePromptEditor);
+    toggleFiltersButton.addEventListener("click", toggleFiltersPanel);
+    showAllImagesButton.addEventListener("click", () => switchViewMode("all"));
+    addPromptButton.addEventListener("click", addPrompt);
+    resetPromptsButton.addEventListener("click", resetPrompts);
+    deleteAllImagesButton.addEventListener("click", () => {
+      deleteAllGeneratedImages().catch((error) => {
+        setStatus(error.message || "Could not delete generated images.");
+      });
+    });
+    generateCountSelect.addEventListener("change", () => {
+      state.generateCount = Number(generateCountSelect.value) || 1;
+      saveGenerateCount();
+    });
+    generateAllButton.addEventListener("click", () => {
+      generateAll().catch((error) => {
+        state.isGenerating = false;
+        refreshButtons();
+        renderPrompts();
+        setStatus(error.message || "Could not generate images.");
+      });
+    });
+    clearSourceButton.addEventListener("click", () => {
+      clearSource().catch((error) => {
+        setStatus(error.message || "Could not clear the source image.");
+      });
+    });
+    clearTokenButton.addEventListener("click", () => {
+      localStorage.removeItem(tokenStorageKey);
+      tokenInput.value = "";
+      saveTokenCheckbox.checked = false;
+      setStatus("Saved token cleared.");
+    });
+    saveTokenCheckbox.addEventListener("change", persistTokenIfNeeded);
+    tokenInput.addEventListener("input", () => {
+      if (!saveTokenCheckbox.checked) {
+        localStorage.removeItem(tokenStorageKey);
+      }
+    });
+    pickImageButton.addEventListener("click", (event) => {
+      if (state.isGenerating) {
+        event.preventDefault();
+        setStatus("Wait for the current generation run to finish.");
+      }
+    });
+    cameraImageButton.addEventListener("click", (event) => {
+      if (state.isGenerating) {
+        event.preventDefault();
+        setStatus("Wait for the current generation run to finish.");
+      }
+    });
+    pickImageInput.addEventListener("change", (event) => {
+      const file = event.target.files?.[0];
+      loadSelectedFile(file, "selected image").catch((error) => {
+        setStatus(error.message || "Could not load selected image.");
+      });
+      pickImageInput.value = "";
+    });
+    cameraImageInput.addEventListener("change", (event) => {
+      const file = event.target.files?.[0];
+      loadSelectedFile(file, "camera image").catch((error) => {
+        setStatus(error.message || "Could not load camera image.");
+      });
+      cameraImageInput.value = "";
+    });
+    pasteTarget.addEventListener("click", () => pasteTarget.focus());
+    pasteTarget.addEventListener("paste", (event) => {
+      handlePaste(event).catch((error) => {
+        logSourceDebug("paste:error", {
+          message: error?.message || String(error)
+        });
+        setStatus(error.message || "Could not read pasted content.");
+      });
+    });
+    document.addEventListener("paste", (event) => {
+      if (event.defaultPrevented) {
+        return;
+      }
+      if (isEditableElement(event.target) && event.target !== pasteTarget) {
+        logSourceDebug("paste:document_ignored_editable_target", {
+          targetTag: event.target instanceof Element ? event.target.tagName : ""
+        });
+        return;
+      }
+      handlePaste(event).catch((error) => {
+        logSourceDebug("paste:document_error", {
+          message: error?.message || String(error)
+        });
+        setStatus(error.message || "Could not read pasted content.");
+      });
+    });
+    lightbox.addEventListener("click", (event) => {
+      if (event.target === lightbox) {
+        closeLightbox();
+      }
+    });
+    lightboxPrevButton.addEventListener("click", () => stepLightboxVersion(-1));
+    lightboxNextButton.addEventListener("click", () => stepLightboxVersion(1));
+    lightboxUpButton.addEventListener("click", () => stepLightboxPrompt(-1));
+    lightboxDownButton.addEventListener("click", () => stepLightboxPrompt(1));
+    lightboxCloseButton.addEventListener("click", closeLightbox);
+    bindGridSwipeNavigation(
+      lightboxStage,
+      () => stepLightboxVersion(-1),
+      () => stepLightboxVersion(1),
+      () => stepLightboxPrompt(-1),
+      () => stepLightboxPrompt(1)
+    );
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        closeLightbox();
+      } else if (state.lightboxIndex >= 0 && event.key === "ArrowLeft") {
+        stepLightboxVersion(-1);
+      } else if (state.lightboxIndex >= 0 && event.key === "ArrowRight") {
+        stepLightboxVersion(1);
+      } else if (state.lightboxIndex >= 0 && event.key === "ArrowUp") {
+        event.preventDefault();
+        stepLightboxPrompt(-1);
+      } else if (state.lightboxIndex >= 0 && event.key === "ArrowDown") {
+        event.preventDefault();
+        stepLightboxPrompt(1);
+      }
+    });
+    window.addEventListener("resize", () => {
+      if (state.lightboxIndex >= 0) {
+        applyLightboxTransform();
+      }
+    });
+    window.addEventListener("beforeunload", () => {
+      blobUrlCache.forEach((value) => URL.revokeObjectURL(value));
+      blobUrlCache.clear();
+      sourceBlobUrlCache.forEach((value) => URL.revokeObjectURL(value));
+      sourceBlobUrlCache.clear();
+    });
+
+    initialize().catch((error) => {
+      setStatus(error.message || "Could not initialize saved data.");
+    });
+    pasteTarget.focus();
+  </script>
+</body>
+</html>
