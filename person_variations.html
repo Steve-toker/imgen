@@ -172,6 +172,15 @@
       overflow-wrap: anywhere;
     }
 
+    .source-warning {
+      display: none;
+      color: #ffb67d;
+    }
+
+    .source-warning.visible {
+      display: block;
+    }
+
     .token-panel {
       display: grid;
       gap: 12px;
@@ -1089,6 +1098,7 @@
             <div class="source-copy">
               <strong id="source-title">Ready to generate</strong>
               <span id="source-description"></span>
+              <span id="source-warning" class="source-warning"></span>
               <div class="controls">
                 <label class="field-inline" for="generate-count-select">
                   <span class="field-label">Images</span>
@@ -1237,6 +1247,7 @@
     const sourceImage = document.getElementById("source-image");
     const sourceTitle = document.getElementById("source-title");
     const sourceDescription = document.getElementById("source-description");
+    const sourceWarning = document.getElementById("source-warning");
     const pasteClipboardButton = document.getElementById("paste-clipboard-btn");
     const mobilePasteField = document.getElementById("mobile-paste-field");
     const pickImageButton = document.getElementById("pick-image-btn");
@@ -2653,12 +2664,16 @@
       renderResults();
     }
 
-    function clearResultFiltersForGeneration() {
-      if (state.viewMode === "all" && !state.filterPersonId) {
+    function focusResultsOnActivePersonForGeneration() {
+      const activePersonId = state.activePersonId;
+      if (!activePersonId) {
         return;
       }
-      state.viewMode = "all";
-      state.filterPersonId = "";
+      if (state.viewMode === "people" && state.filterPersonId === activePersonId && !state.peoplePanelOpen) {
+        return;
+      }
+      state.viewMode = "people";
+      state.filterPersonId = activePersonId;
       state.peoplePanelOpen = false;
       savePeople();
       renderPeoplePanel();
@@ -3715,6 +3730,8 @@
         pasteTarget.classList.remove("ready");
         pasteTarget.textContent = "Click here, then press Cmd+V to paste a person photo or image URL";
         sourceImage.removeAttribute("src");
+        sourceWarning.textContent = "";
+        sourceWarning.classList.remove("visible");
         refreshButtons();
         return;
       }
@@ -3725,6 +3742,13 @@
       sourceImage.src = state.sourcePreviewUrl || state.source;
       sourceTitle.textContent = getActivePerson()?.name || "Source image loaded";
       sourceDescription.textContent = state.sourceLabel || "active source image";
+      if (isHttpUrl(state.source)) {
+        sourceWarning.textContent = "Using a remote image URL. 9:16 reframing is skipped, so generation may keep the original square or wide ratio.";
+        sourceWarning.classList.add("visible");
+      } else {
+        sourceWarning.textContent = "";
+        sourceWarning.classList.remove("visible");
+      }
       refreshButtons();
     }
 
@@ -4047,7 +4071,7 @@
       if (!prompt) {
         throw new Error(`Prompt ${index + 1} is empty.`);
       }
-      clearResultFiltersForGeneration();
+      focusResultsOnActivePersonForGeneration();
       const previousResult = state.results[index];
       const canReusePrevious = !isModerationOnlyResult(previousResult);
       const previousImageUrl = canReusePrevious ? (previousResult?.imageUrl || "") : "";
