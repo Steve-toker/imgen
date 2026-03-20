@@ -1044,6 +1044,7 @@
           >Click here, then press Cmd+V to paste a person photo or image URL</div>
 
           <div class="source-actions">
+            <button id="paste-clipboard-btn" class="ghost-btn" type="button">Paste From Clipboard</button>
             <label for="pick-image-input" id="pick-image-btn" class="ghost-btn source-picker-label">Choose Image</label>
             <label for="camera-image-input" id="camera-image-btn" class="ghost-btn source-picker-label">Use Camera</label>
             <input id="pick-image-input" type="file" accept="image/*" hidden />
@@ -1203,6 +1204,7 @@
     const sourceImage = document.getElementById("source-image");
     const sourceTitle = document.getElementById("source-title");
     const sourceDescription = document.getElementById("source-description");
+    const pasteClipboardButton = document.getElementById("paste-clipboard-btn");
     const pickImageButton = document.getElementById("pick-image-btn");
     const cameraImageButton = document.getElementById("camera-image-btn");
     const pickImageInput = document.getElementById("pick-image-input");
@@ -3796,6 +3798,77 @@
       setStatus("Paste an image or an http(s) image URL.");
     }
 
+    async function pasteFromClipboard() {
+      if (state.isGenerating) {
+        setStatus("Wait for the current generation run to finish.");
+        return;
+      }
+      if (!navigator.clipboard) {
+        setStatus("Clipboard access is not available here. Long-press the paste area and use Paste.");
+        return;
+      }
+
+      logSourceDebug("clipboard:button_start", {
+        hasRead: typeof navigator.clipboard.read === "function",
+        hasReadText: typeof navigator.clipboard.readText === "function"
+      });
+
+      if (typeof navigator.clipboard.read === "function") {
+        try {
+          const items = await navigator.clipboard.read();
+          logSourceDebug("clipboard:read_items", {
+            itemCount: items.length,
+            itemTypes: items.flatMap((item) => item.types || [])
+          });
+          for (const item of items) {
+            const imageType = (item.types || []).find((type) => type.startsWith("image/"));
+            if (imageType) {
+              const blob = await item.getType(imageType);
+              const dataUrl = await blobToDataUrl(blob);
+              await setSource(dataUrl, "clipboard image");
+              setStatus("Clipboard image loaded.");
+              return;
+            }
+            if ((item.types || []).includes("text/plain")) {
+              const textBlob = await item.getType("text/plain");
+              const pastedText = (await textBlob.text()).trim();
+              if (isHttpUrl(pastedText)) {
+                await setSource(pastedText, "clipboard image URL");
+                setStatus("Clipboard image URL loaded.");
+                return;
+              }
+            }
+          }
+        } catch (error) {
+          logSourceDebug("clipboard:read_error", {
+            message: error?.message || String(error),
+            name: error?.name || ""
+          });
+        }
+      }
+
+      if (typeof navigator.clipboard.readText === "function") {
+        try {
+          const pastedText = (await navigator.clipboard.readText()).trim();
+          logSourceDebug("clipboard:read_text", {
+            textLength: pastedText.length
+          });
+          if (isHttpUrl(pastedText)) {
+            await setSource(pastedText, "clipboard image URL");
+            setStatus("Clipboard image URL loaded.");
+            return;
+          }
+        } catch (error) {
+          logSourceDebug("clipboard:read_text_error", {
+            message: error?.message || String(error),
+            name: error?.name || ""
+          });
+        }
+      }
+
+      setStatus("No image found in the clipboard. On iPhone, tap Paste From Clipboard after copying the image.");
+    }
+
     async function requestImage(prompt) {
       const token = tokenInput.value.trim();
       if (!token) {
@@ -4143,6 +4216,14 @@
     clearSourceButton.addEventListener("click", () => {
       clearSource().catch((error) => {
         setStatus(error.message || "Could not clear the source image.");
+      });
+    });
+    pasteClipboardButton.addEventListener("click", () => {
+      pasteFromClipboard().catch((error) => {
+        logSourceDebug("clipboard:button_error", {
+          message: error?.message || String(error)
+        });
+        setStatus(error.message || "Could not read the clipboard.");
       });
     });
     clearTokenButton.addEventListener("click", () => {
