@@ -1309,7 +1309,9 @@
       preparedSourceKey: "",
       preparedSourceDataUrl: "",
       preparedSourcePromise: null,
-      storageQuotaExceeded: false
+      storageQuotaExceeded: false,
+      pendingRevealKey: "",
+      pendingRevealBehavior: "smooth"
     };
 
     function makePromptEntry(text, enabled = true) {
@@ -1333,6 +1335,46 @@
 
     function setStatus(message) {
       statusEl.textContent = message;
+    }
+
+    function queueResultCardReveal(personId, promptIndex, behavior = "smooth") {
+      if (!personId || !Number.isInteger(promptIndex) || promptIndex < 0) {
+        return;
+      }
+      state.pendingRevealKey = `${personId}:${promptIndex}`;
+      state.pendingRevealBehavior = behavior;
+    }
+
+    function flushQueuedResultCardReveal() {
+      if (!state.pendingRevealKey) {
+        return;
+      }
+      const revealKey = state.pendingRevealKey;
+      const behavior = state.pendingRevealBehavior || "smooth";
+      state.pendingRevealKey = "";
+      state.pendingRevealBehavior = "smooth";
+      requestAnimationFrame(() => {
+        const card = Array.from(resultsGrid.querySelectorAll(".result-card")).find((element) => element.dataset.itemKey === revealKey);
+        if (!card) {
+          return;
+        }
+        if (typeof card.scrollIntoView === "function") {
+          card.scrollIntoView({
+            behavior,
+            block: "center",
+            inline: "nearest"
+          });
+        }
+        if (typeof card.focus === "function") {
+          try {
+            card.focus({
+              preventScroll: true
+            });
+          } catch (_error) {
+            card.focus();
+          }
+        }
+      });
     }
 
     function loadSavedToken() {
@@ -3085,6 +3127,8 @@
         const index = item.promptIndex;
         const card = document.createElement("article");
         card.className = "result-card";
+        card.dataset.itemKey = item.key;
+        card.tabIndex = -1;
         ensureResultVersions(result);
         result.versions.forEach(hydrateVersionImage);
         const activeImageUrl = getResultImageUrl(result);
@@ -3256,6 +3300,7 @@
 
       updateResultsSummary();
       saveResultsMetadata();
+      flushQueuedResultCardReveal();
     }
 
     function updateLightboxNav() {
@@ -4010,6 +4055,7 @@
         error: "",
         notice: ""
       };
+      queueResultCardReveal(state.activePersonId, index);
       renderResults();
 
       try {
@@ -4038,6 +4084,7 @@
             : ""
         };
         delete state.variantSelections[selectionKey];
+        queueResultCardReveal(state.activePersonId, index);
         renderResults();
         if (data.is_moderated) {
           setStatus(previousImageUrl
@@ -4066,6 +4113,7 @@
             notice: previousVersions.length ? "Moderated, kept previous image." : "Moderated."
           };
           delete state.variantSelections[selectionKey];
+          queueResultCardReveal(state.activePersonId, index);
           renderResults();
           setStatus(previousVersions.length
             ? `Prompt ${index + 1} was moderated. Kept the previous image.`
@@ -4084,6 +4132,7 @@
           error: error.message || "Failed",
           notice: ""
         };
+        queueResultCardReveal(state.activePersonId, index);
         renderResults();
         throw error;
       }
