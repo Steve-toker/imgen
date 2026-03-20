@@ -229,6 +229,25 @@
       gap: 10px;
     }
 
+    .mobile-paste-field {
+      display: none;
+      width: 100%;
+      min-height: 52px;
+      border-radius: 14px;
+      border: 1px dashed #51637f;
+      background: rgba(15, 19, 27, 0.96);
+      color: var(--text);
+      padding: 12px 14px;
+      font: inherit;
+      resize: none;
+    }
+
+    .mobile-paste-field:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-soft);
+    }
+
     .source-picker-label {
       display: inline-flex;
       align-items: center;
@@ -989,6 +1008,10 @@
         padding: 14px;
       }
 
+      .mobile-paste-field {
+        display: block;
+      }
+
       .source-preview {
         grid-template-columns: 1fr;
       }
@@ -1050,6 +1073,16 @@
             <input id="pick-image-input" type="file" accept="image/*" hidden />
             <input id="camera-image-input" type="file" accept="image/*" capture="environment" hidden />
           </div>
+          <textarea
+            id="mobile-paste-field"
+            class="mobile-paste-field"
+            rows="2"
+            autocapitalize="off"
+            autocomplete="off"
+            spellcheck="false"
+            placeholder="On iPhone: tap here, then tap Paste from the native menu."
+            aria-label="Tap and paste an image on mobile"
+          ></textarea>
 
           <div id="source-preview" class="source-preview">
             <img id="source-image" alt="Pasted source preview" />
@@ -1205,6 +1238,7 @@
     const sourceTitle = document.getElementById("source-title");
     const sourceDescription = document.getElementById("source-description");
     const pasteClipboardButton = document.getElementById("paste-clipboard-btn");
+    const mobilePasteField = document.getElementById("mobile-paste-field");
     const pickImageButton = document.getElementById("pick-image-btn");
     const cameraImageButton = document.getElementById("camera-image-btn");
     const pickImageInput = document.getElementById("pick-image-input");
@@ -1364,6 +1398,13 @@
         return false;
       }
       return Boolean(target.closest("input, textarea, [contenteditable='true'], [contenteditable=''], select"));
+    }
+
+    function isMobilePasteFieldVisible() {
+      if (!mobilePasteField) {
+        return false;
+      }
+      return window.getComputedStyle(mobilePasteField).display !== "none";
     }
 
     function normalizeVersionEntry(value) {
@@ -4219,6 +4260,19 @@
       });
     });
     pasteClipboardButton.addEventListener("click", () => {
+      if (isMobilePasteFieldVisible()) {
+        logSourceDebug("clipboard:button_mobile_focus", {});
+        mobilePasteField.value = "";
+        try {
+          mobilePasteField.focus({
+            preventScroll: true
+          });
+        } catch (_error) {
+          mobilePasteField.focus();
+        }
+        setStatus("On iPhone: tap and hold in the paste field, then tap Paste.");
+        return;
+      }
       pasteFromClipboard().catch((error) => {
         logSourceDebug("clipboard:button_error", {
           message: error?.message || String(error)
@@ -4273,6 +4327,55 @@
         setStatus(error.message || "Could not read pasted content.");
       });
     });
+    if (mobilePasteField) {
+      mobilePasteField.addEventListener("focus", () => {
+        logSourceDebug("paste:mobile_focus", {});
+        setStatus("On iPhone: tap and hold in the field, then tap Paste.");
+      });
+      mobilePasteField.addEventListener("paste", (event) => {
+        handlePaste(event).then(() => {
+          mobilePasteField.value = "";
+        }).catch((error) => {
+          logSourceDebug("paste:mobile_error", {
+            message: error?.message || String(error)
+          });
+          setStatus(error.message || "Could not read pasted content.");
+        });
+      });
+      mobilePasteField.addEventListener("input", () => {
+        const rawValue = mobilePasteField.value || "";
+        const trimmedValue = rawValue.trim();
+        logSourceDebug("paste:mobile_input", {
+          length: trimmedValue.length
+        });
+        if (!trimmedValue) {
+          return;
+        }
+        mobilePasteField.value = "";
+        if (isHttpUrl(trimmedValue)) {
+          setSource(trimmedValue, "pasted image URL").then(() => {
+            setStatus("Clipboard image URL loaded.");
+          }).catch((error) => {
+            logSourceDebug("paste:mobile_input_error", {
+              message: error?.message || String(error)
+            });
+            setStatus(error.message || "Could not read pasted content.");
+          });
+          return;
+        }
+        if (trimmedValue.startsWith("data:image/")) {
+          setSource(trimmedValue, "pasted image").then(() => {
+            setStatus("Clipboard image loaded.");
+          }).catch((error) => {
+            logSourceDebug("paste:mobile_input_error", {
+              message: error?.message || String(error)
+            });
+            setStatus(error.message || "Could not read pasted content.");
+          });
+          return;
+        }
+      });
+    }
     document.addEventListener("paste", (event) => {
       if (event.defaultPrevented) {
         return;
