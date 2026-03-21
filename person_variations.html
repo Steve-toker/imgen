@@ -147,12 +147,30 @@
       display: grid;
     }
 
+    .source-preview.no-image {
+      grid-template-columns: 1fr;
+    }
+
     .source-preview img {
       width: 100%;
       aspect-ratio: 1 / 1;
       object-fit: cover;
       border-radius: 14px;
       background: #0d1016;
+    }
+
+    .source-preview.no-image img {
+      display: none;
+    }
+
+    .source-preview.deferred .source-copy strong,
+    .source-preview.deferred #source-description,
+    .source-preview.deferred #source-warning {
+      display: none;
+    }
+
+    .source-preview.deferred .source-copy {
+      gap: 0;
     }
 
     .source-copy {
@@ -179,6 +197,13 @@
 
     .source-warning.visible {
       display: block;
+    }
+
+    .source-controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: end;
+      gap: 12px;
     }
 
     .token-panel {
@@ -316,6 +341,12 @@
       fill: currentColor;
     }
 
+    .icon-btn.active {
+      border-color: rgba(255, 138, 76, 0.28);
+      background: rgba(255, 138, 76, 0.14);
+      color: #fff2ea;
+    }
+
     .danger-btn {
       background: rgba(255, 123, 123, 0.14);
       border: 1px solid rgba(255, 123, 123, 0.28);
@@ -439,6 +470,10 @@
       align-items: center;
       gap: 10px;
       margin-left: auto;
+    }
+
+    .archive-panel[hidden] {
+      display: none;
     }
 
     .filter-icon-btn.active {
@@ -1099,9 +1134,9 @@
 <body>
   <div class="wrap">
     <section class="hero">
-      <h1>Funny Person Variations</h1>
+      <h1>Character Lab</h1>
       <p>Paste a photo of one person, adjust the prompts, then generate a full set of variations that keep that same person in the scene.</p>
-      <p class="status" id="status">Run <code>.venv/bin/python image_edit_server.py</code>, open <code>http://127.0.0.1:8765/</code>, click the paste area, then press <code>Cmd+V</code>.</p>
+      <p class="status" id="status">Paste, upload, or choose a saved person source to start generating.</p>
     </section>
 
     <section class="layout">
@@ -1132,7 +1167,7 @@
             tabindex="0"
             role="button"
             aria-label="Paste image or image URL here"
-          >Click here, then press Cmd+V to paste a person photo or image URL</div>
+          >Tap or click here to paste a person photo or image URL</div>
 
           <div class="source-actions">
             <button id="paste-clipboard-btn" class="ghost-btn" type="button">Paste From Clipboard</button>
@@ -1158,15 +1193,16 @@
               <strong id="source-title">Ready to generate</strong>
               <span id="source-description"></span>
               <span id="source-warning" class="source-warning"></span>
-              <div class="controls">
-                <label class="field-inline" for="generate-count-select">
-                  <span class="field-label">Images</span>
-                  <select id="generate-count-select" aria-label="Number of images to generate"></select>
-                </label>
-                <button id="generate-all-btn" type="button">Generate</button>
-                <button id="clear-source-btn" class="ghost-btn" type="button">Clear Source</button>
-              </div>
             </div>
+          </div>
+
+          <div class="source-controls">
+            <label class="field-inline" for="generate-count-select">
+              <span class="field-label">Images</span>
+              <select id="generate-count-select" aria-label="Number of images to generate"></select>
+            </label>
+            <button id="generate-all-btn" type="button">Generate</button>
+            <button id="clear-source-btn" class="ghost-btn" type="button">Clear Source</button>
           </div>
 
           <form id="token-form" class="token-panel">
@@ -1192,17 +1228,30 @@
 
             <div id="prompt-list" class="prompt-list" aria-live="polite"></div>
           </div>
-
-          <p class="footer-note status">The old compare tool is still available at <a href="./edited_image_compare.html">/edited_image_compare.html</a>.</p>
         </div>
       </div>
 
       <div class="panel">
         <div class="panel-head">
-          <strong>Generated Images</strong>
+          <div class="head-group">
+            <strong>Archive</strong>
+            <button
+              id="toggle-archive-btn"
+              class="ghost-btn icon-btn"
+              type="button"
+              title="Open archive"
+              aria-label="Open archive"
+              aria-expanded="false"
+              aria-controls="archive-panel"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M4 4h16v4H4V4Zm1 6h14v9a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-9Zm4 2v2h6v-2H9Z"/>
+              </svg>
+            </button>
+          </div>
           <span id="results-summary">0 ready</span>
         </div>
-        <div class="panel-body">
+        <div id="archive-panel" class="panel-body archive-panel" hidden>
           <div class="results-toolbar">
             <div class="toolbar-actions">
               <div id="filter-pill" class="filter-pill" hidden></div>
@@ -1325,6 +1374,8 @@
     const generateCountSelect = document.getElementById("generate-count-select");
     const generateAllButton = document.getElementById("generate-all-btn");
     const clearSourceButton = document.getElementById("clear-source-btn");
+    const toggleArchiveButton = document.getElementById("toggle-archive-btn");
+    const archivePanel = document.getElementById("archive-panel");
     const toggleFiltersButton = document.getElementById("toggle-filters-btn");
     const showAllImagesButton = document.getElementById("show-all-images-btn");
     const filterPill = document.getElementById("filter-pill");
@@ -1381,7 +1432,10 @@
       preparedSourcePromise: null,
       storageQuotaExceeded: false,
       pendingRevealKey: "",
-      pendingRevealBehavior: "smooth"
+      pendingRevealBehavior: "smooth",
+      archiveOpen: false,
+      deferSourceImageReveal: false,
+      sourcePreviewUnlocked: true
     };
 
     function makePromptEntry(text, enabled = true) {
@@ -1405,6 +1459,14 @@
 
     function setStatus(message) {
       statusEl.textContent = message;
+    }
+
+    function renderArchivePanel() {
+      archivePanel.hidden = !state.archiveOpen;
+      toggleArchiveButton.setAttribute("aria-expanded", String(state.archiveOpen));
+      toggleArchiveButton.classList.toggle("active", state.archiveOpen);
+      toggleArchiveButton.title = state.archiveOpen ? "Hide archive" : "Open archive";
+      toggleArchiveButton.setAttribute("aria-label", state.archiveOpen ? "Hide archive" : "Open archive");
     }
 
     function queueResultCardReveal(personId, promptIndex, behavior = "smooth") {
@@ -2159,7 +2221,9 @@
           state.sourceBlobKey = source.imageBlobKey;
           state.source = objectUrl;
           state.sourcePreviewUrl = objectUrl;
-          renderSourcePreview();
+          if (!options.silent) {
+            renderSourcePreview();
+          }
         } else if (options.render) {
           renderWorkspace();
         }
@@ -2664,6 +2728,7 @@
       renderPrompts();
       renderPromptEditor();
       renderSourcePreview();
+      renderArchivePanel();
       renderPeoplePanel();
       renderResults();
     }
@@ -2672,6 +2737,8 @@
       syncActiveSourceState();
       state.activePersonId = personId;
       state.activeSourceId = sourceId;
+      state.deferSourceImageReveal = false;
+      state.sourcePreviewUnlocked = true;
       state.peoplePanelOpen = Boolean(options.keepPanelOpen);
       loadActiveSourceIntoState();
       if (options.syncFilter) {
@@ -2728,15 +2795,23 @@
       if (!activePersonId) {
         return;
       }
+      state.archiveOpen = true;
       if (state.viewMode === "people" && state.filterPersonId === activePersonId && !state.peoplePanelOpen) {
+        renderArchivePanel();
         return;
       }
       state.viewMode = "people";
       state.filterPersonId = activePersonId;
       state.peoplePanelOpen = false;
       savePeople();
+      renderArchivePanel();
       renderPeoplePanel();
       renderResults();
+    }
+
+    function toggleArchivePanel() {
+      state.archiveOpen = !state.archiveOpen;
+      renderArchivePanel();
     }
 
     function toggleFiltersPanel() {
@@ -3783,11 +3858,15 @@
       if (!state.source) {
         const activeSource = getActiveSource();
         if (activeSource?.imageBlobKey) {
-          hydrateSourceImage(activeSource, { updateActiveSource: true });
+          hydrateSourceImage(activeSource, {
+            updateActiveSource: true,
+            silent: !state.sourcePreviewUnlocked
+          });
         }
         sourcePreview.classList.remove("open");
+        sourcePreview.classList.remove("no-image");
         pasteTarget.classList.remove("ready");
-        pasteTarget.textContent = "Click here, then press Cmd+V to paste a person photo or image URL";
+        pasteTarget.textContent = "Tap or click here to paste a person photo or image URL";
         sourceImage.removeAttribute("src");
         sourceWarning.textContent = "";
         sourceWarning.classList.remove("visible");
@@ -3795,7 +3874,22 @@
         return;
       }
 
+      const hideSavedPreview = !state.sourcePreviewUnlocked;
+      if (hideSavedPreview) {
+        sourcePreview.classList.remove("open");
+        sourcePreview.classList.remove("no-image");
+        sourcePreview.classList.remove("deferred");
+        sourceImage.removeAttribute("src");
+        pasteTarget.classList.add("ready");
+        pasteTarget.textContent = "Saved source ready. Paste a new image or pick one to replace it.";
+        sourceWarning.textContent = "";
+        sourceWarning.classList.remove("visible");
+        refreshButtons();
+        return;
+      }
       sourcePreview.classList.add("open");
+      sourcePreview.classList.remove("no-image");
+      sourcePreview.classList.remove("deferred");
       pasteTarget.classList.add("ready");
       pasteTarget.textContent = "Source image saved locally and ready to use";
       sourceImage.src = state.sourcePreviewUrl || state.source;
@@ -3812,6 +3906,8 @@
     }
 
     async function setSource(source, label, previewUrl = source) {
+      state.deferSourceImageReveal = false;
+      state.sourcePreviewUnlocked = true;
       logSourceDebug("set:start", {
         label,
         sourceType: isDataImageUrl(source) ? "data-url" : (isHttpUrl(source) ? "url" : typeof source),
@@ -3883,6 +3979,8 @@
     }
 
     async function clearSource() {
+      state.deferSourceImageReveal = false;
+      state.sourcePreviewUnlocked = true;
       logSourceDebug("clear:start", {
         activePersonId: state.activePersonId,
         activeSourceId: state.activeSourceId,
@@ -4369,15 +4467,23 @@
       loadViewMode();
       loadActiveSelection();
       loadActiveSourceIntoState();
+      state.deferSourceImageReveal = Boolean(state.source);
+      {
+        const activeSource = getActiveSource();
+        const hasRestoredSource = Boolean(activeSource?.image || activeSource?.imageBlobKey);
+        state.sourcePreviewUnlocked = !hasRestoredSource;
+      }
+      state.archiveOpen = false;
       state.prompts = resolveInitialPrompts();
       await migrateInlineSourceImages();
       renderWorkspace();
       if (state.source) {
-        setStatus("Saved people and source images restored locally.");
+        setStatus("Saved people restored locally.");
       }
     }
 
     togglePromptsButton.addEventListener("click", togglePromptEditor);
+    toggleArchiveButton.addEventListener("click", toggleArchivePanel);
     toggleFiltersButton.addEventListener("click", toggleFiltersPanel);
     showAllImagesButton.addEventListener("click", () => switchViewMode("all"));
     addPromptButton.addEventListener("click", addPrompt);
