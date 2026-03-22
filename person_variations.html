@@ -451,6 +451,14 @@
       font-size: 0.82rem;
     }
 
+    .prompt-metric {
+      max-width: 12rem;
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.45;
+      text-align: right;
+    }
+
     .tiny-btn {
       min-width: 74px;
       padding: 8px 10px;
@@ -556,6 +564,11 @@
       gap: 12px;
     }
 
+    .people-list.merge-active .person-merge-target {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
     .person-card {
       display: grid;
       gap: 12px;
@@ -640,6 +653,30 @@
       gap: 8px;
     }
 
+    .person-merge-target {
+      display: grid;
+      place-items: center;
+      min-height: 58px;
+      padding: 10px 12px;
+      border-radius: 16px;
+      border: 1px dashed rgba(94, 184, 255, 0.35);
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.35;
+      text-align: center;
+      opacity: 0.84;
+      transform: translateY(0);
+      transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, opacity 0.15s ease, transform 0.15s ease;
+    }
+
+    .person-merge-target.drop-target {
+      border-color: rgba(94, 184, 255, 0.9);
+      background: rgba(94, 184, 255, 0.12);
+      box-shadow: 0 0 0 2px rgba(94, 184, 255, 0.14);
+      color: #e8f6ff;
+    }
+
     .person-source-chip {
       width: 58px;
       height: 58px;
@@ -649,6 +686,7 @@
       border: 2px solid transparent;
       background: rgba(255, 255, 255, 0.05);
       position: relative;
+      cursor: grab;
     }
 
     .person-source-chip img,
@@ -678,6 +716,7 @@
 
     .person-source-chip.dragging {
       opacity: 0.5;
+      cursor: grabbing;
     }
 
     .person-source-chip.drop-target {
@@ -925,7 +964,7 @@
       z-index: 1000;
       display: none;
       place-items: center;
-      padding: 10px;
+      padding: 0;
       background: rgba(6, 8, 12, 0.9);
       backdrop-filter: blur(8px);
       overflow: hidden;
@@ -936,26 +975,29 @@
     }
 
     .lightbox-content {
-      position: relative;
-      width: min(98vw, calc((100vh - 44px) * 0.62));
-      margin: auto;
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100dvh;
+      max-height: 100dvh;
+      margin: 0;
       display: grid;
-      gap: 10px;
-      padding: 10px;
-      max-height: calc(100vh - 20px);
-      border-radius: 22px;
-      background: rgba(15, 19, 27, 0.96);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: 0 32px 90px rgba(0, 0, 0, 0.4);
+      grid-template-rows: minmax(0, 1fr) auto auto;
+      gap: 0;
+      padding: 0;
+      border-radius: 0;
+      background: transparent;
+      border: none;
+      box-shadow: none;
       overflow: hidden;
     }
 
     .lightbox-stage {
       position: relative;
-      border-radius: 18px;
+      border-radius: 0;
       overflow: hidden;
       background: #0d1016;
-      height: min(calc(100vh - 96px), 920px);
+      height: auto;
       min-height: 0;
       touch-action: none;
     }
@@ -971,6 +1013,58 @@
       user-select: none;
       -webkit-user-drag: none;
       cursor: zoom-in;
+    }
+
+    .lightbox-compare-overlay {
+      position: absolute;
+      inset: 0;
+      background: transparent;
+      pointer-events: none;
+      clip-path: inset(0 0 0 0);
+    }
+
+    .lightbox-compare-handle {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 24px;
+      transform: translateX(-12px);
+      pointer-events: none;
+    }
+
+    .lightbox-compare-handle::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 2px;
+      transform: translateX(-1px);
+      background: rgba(39, 38, 64, 0.72);
+      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.4), 0 0 18px rgba(172, 52, 22, 0.2);
+    }
+
+    .lightbox-compare-handle::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      background: #fff;
+      border: 2px solid rgba(172, 52, 22, 0.64);
+      box-shadow: 0 8px 18px rgba(172, 52, 22, 0.14);
+    }
+
+    .lightbox-stage.compare-mode {
+      cursor: ew-resize;
+      touch-action: none;
+    }
+
+    .lightbox-stage.compare-mode .lightbox-image {
+      cursor: ew-resize;
     }
 
     .lightbox-stage.is-zoomed .lightbox-image {
@@ -1025,20 +1119,20 @@
     }
 
     .lightbox-meta {
-      display: grid;
-      gap: 6px;
-      color: var(--muted);
-    }
-
-    .lightbox-meta strong {
-      color: var(--text);
-      font-size: 1rem;
+      display: none !important;
     }
 
     .lightbox-dots {
-      position: static;
-      transform: none;
+      position: fixed;
+      left: 50%;
+      bottom: max(92px, calc(env(safe-area-inset-bottom) + 84px));
+      transform: translateX(-50%);
+      z-index: 6;
       justify-self: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(10, 14, 21, 0.72);
+      backdrop-filter: blur(10px);
     }
 
     @media (max-width: 980px) {
@@ -1046,19 +1140,12 @@
         grid-template-columns: 1fr;
       }
 
-      .lightbox {
-        padding: 6px;
-      }
-
       .lightbox-content {
-        width: min(99vw, calc((100vh - 28px) * 0.62));
-        max-height: calc(100vh - 12px);
-        padding: 8px;
-        gap: 8px;
+        padding: 0;
+        gap: 0;
       }
 
       .lightbox-stage {
-        height: min(calc(100vh - 88px), 860px);
         min-height: 0;
       }
 
@@ -1081,24 +1168,16 @@
         padding: 14px;
       }
 
-      .lightbox {
-        padding: 0;
-      }
-
       .lightbox-content {
-        width: 100vw;
-        height: 100vh;
-        max-height: 100vh;
-        padding: 4px;
-        gap: 4px;
+        padding: 0;
+        gap: 0;
         border-radius: 0;
         border: none;
       }
 
       .lightbox-stage {
-        height: calc(100vh - 86px);
         min-height: 0;
-        border-radius: 14px;
+        border-radius: 0;
       }
 
       .lightbox-image {
@@ -1107,8 +1186,9 @@
       }
 
       .lightbox-meta {
+        width: calc(100vw - 16px);
         gap: 2px;
-        padding: 0 6px 4px;
+        padding: 10px 12px;
       }
 
       .mobile-paste-field {
@@ -1200,7 +1280,7 @@ body.solar-curator::after {
   background: radial-gradient(circle at 50% 50%, rgba(72, 80, 109, 0.12), transparent 70%);
 }
 
-body.solar-curator > * {
+body.solar-curator > :not(.lightbox) {
   position: relative;
   z-index: 1;
 }
@@ -1263,18 +1343,6 @@ body.solar-curator .hero {
     var(--sc-surface);
   box-shadow: var(--sc-shadow-soft), inset 0 1px 0 rgba(255, 255, 255, 0.65);
   overflow: hidden;
-}
-
-body.solar-curator .hero::before {
-  content: "THE SOLAR CURATOR";
-  width: fit-content;
-  padding: 0.55rem 0.95rem;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.76);
-  color: var(--sc-primary);
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.18em;
 }
 
 body.solar-curator .hero::after {
@@ -1593,6 +1661,10 @@ body.solar-curator .prompt-badge {
   border: none;
 }
 
+body.solar-curator .prompt-metric {
+  color: var(--sc-text-soft);
+}
+
 body.solar-curator .person-card {
   gap: 0.95rem;
   padding: 1rem;
@@ -1614,6 +1686,27 @@ body.solar-curator .person-source-chip {
   border: none;
   width: 62px;
   height: 62px;
+}
+
+body.solar-curator .person-merge-target {
+  border: 1px dashed rgba(172, 52, 22, 0.2);
+  background:
+    radial-gradient(circle at top left, rgba(240, 101, 67, 0.08), transparent 44%),
+    rgba(255, 255, 255, 0.52);
+  color: var(--sc-text-soft);
+  box-shadow: inset 0 0 0 1px rgba(89, 65, 60, 0.04);
+}
+
+body.solar-curator .people-list.merge-active .person-merge-target,
+body.solar-curator .person-merge-target.drop-target {
+  border-color: rgba(172, 52, 22, 0.45);
+  background:
+    radial-gradient(circle at top left, rgba(240, 101, 67, 0.14), transparent 48%),
+    rgba(255, 255, 255, 0.74);
+  box-shadow:
+    0 14px 24px rgba(172, 52, 22, 0.08),
+    inset 0 0 0 1px rgba(172, 52, 22, 0.08);
+  color: var(--sc-text);
 }
 
 body.solar-curator .person-source-chip.active,
@@ -1659,21 +1752,22 @@ body.solar-curator .status.error {
 }
 
 body.solar-curator .lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
   background: rgba(39, 38, 64, 0.36);
   backdrop-filter: blur(14px);
 }
 
 body.solar-curator .lightbox-content {
   border: none;
-  border-radius: 2.4rem;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(250, 244, 236, 0.95)),
-    var(--sc-surface);
-  box-shadow: 0 24px 60px rgba(39, 38, 64, 0.14);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
 }
 
 body.solar-curator .lightbox-stage {
-  border-radius: 2rem;
+  border-radius: 0;
   background:
     radial-gradient(circle at top left, rgba(240, 101, 67, 0.08), transparent 45%),
     #f2ebdf;
@@ -1681,7 +1775,9 @@ body.solar-curator .lightbox-stage {
 
 body.solar-curator .lightbox-nav,
 body.solar-curator .lightbox-close,
-body.solar-curator .stage-note {
+body.solar-curator .stage-note,
+body.solar-curator .lightbox-meta,
+body.solar-curator .lightbox-dots {
   background: rgba(255, 255, 255, 0.72);
 }
 
@@ -1957,6 +2053,10 @@ body.solar-curator.person-variations-page .empty-state {
   min-height: 360px;
   border-radius: 2rem;
   overflow: hidden;
+  cursor: ew-resize;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
   background:
     radial-gradient(circle at top left, rgba(240, 101, 67, 0.08), transparent 34%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(246, 239, 230, 0.98));
@@ -1991,6 +2091,8 @@ body.solar-curator.person-variations-page .empty-state {
   height: 100%;
   object-fit: contain;
   background: transparent;
+  pointer-events: none;
+  -webkit-user-drag: none;
 }
 
 .edit-compare-overlay {
@@ -2306,7 +2408,7 @@ body.solar-curator.person-variations-page .empty-state {
               </svg>
             </button>
           </div>
-          <span>Tries next prompt on moderation</span>
+          <span>Tries next prompt on failure</span>
         </div>
         <div class="panel-body">
           <div
@@ -2368,7 +2470,7 @@ body.solar-curator.person-variations-page .empty-state {
               <button id="edit-add-prompt-btn" class="ghost-btn" type="button">Add Prompt</button>
               <button id="edit-reset-prompts-btn" class="ghost-btn" type="button">Reset Edit Fallbacks</button>
             </div>
-            <p class="edit-help edit-prompt-note">Prompts are tried in order. If a prompt is moderated, the next enabled prompt runs automatically until one succeeds.</p>
+            <p class="edit-help edit-prompt-note">Prompts are tried in order. If one fails, the next enabled prompt runs automatically until one succeeds.</p>
             <div id="edit-prompt-list" class="prompt-list" aria-live="polite"></div>
           </div>
         </div>
@@ -2454,6 +2556,8 @@ body.solar-curator.person-variations-page .empty-state {
       </button>
       <div id="lightbox-stage" class="lightbox-stage">
         <img id="lightbox-image" class="lightbox-image" alt="Full size generated image" />
+        <img id="lightbox-compare-overlay" class="lightbox-image lightbox-compare-overlay" alt="Original source preview" hidden />
+        <div id="lightbox-compare-handle" class="lightbox-compare-handle" aria-hidden="true" hidden></div>
       </div>
       <div id="lightbox-dots" class="carousel-dots lightbox-dots" aria-hidden="true"></div>
       <div class="lightbox-meta">
@@ -2501,6 +2605,9 @@ body.solar-curator.person-variations-page .empty-state {
     const verticalAspectRatio = 9 / 16;
     const preparedSourceMaxLongSide = 2048;
     const maxParallelGenerations = 2;
+    const maxLightboxZoom = 6;
+    const lightboxTapZoom = 3;
+    const lightboxWheelZoomStep = 0.45;
 
     const pasteTarget = document.getElementById("paste-target");
     const statusEl = document.getElementById("status");
@@ -2547,6 +2654,8 @@ body.solar-curator.person-variations-page .empty-state {
     const lightbox = document.getElementById("lightbox");
     const lightboxStage = document.getElementById("lightbox-stage");
     const lightboxImage = document.getElementById("lightbox-image");
+    const lightboxCompareOverlay = document.getElementById("lightbox-compare-overlay");
+    const lightboxCompareHandle = document.getElementById("lightbox-compare-handle");
     const lightboxDots = document.getElementById("lightbox-dots");
     const lightboxTitle = document.getElementById("lightbox-title");
     const lightboxVersionLabel = document.getElementById("lightbox-version-label");
@@ -2613,6 +2722,7 @@ body.solar-curator.person-variations-page .empty-state {
       lightboxZoom: 1,
       lightboxPanX: 0,
       lightboxPanY: 0,
+      lightboxComparePercent: 100,
       generateCount: 10,
       dragIndex: -1,
       dragSource: null,
@@ -2650,10 +2760,24 @@ body.solar-curator.person-variations-page .empty-state {
       dragIndex: -1
     };
 
-    function makePromptEntry(text, enabled = true) {
+    function normalizeTrackedCount(value) {
+      if (!Number.isFinite(value)) {
+        return 0;
+      }
+      return Math.max(0, Math.floor(value));
+    }
+
+    function makePromptEntry(text, enabled = true, stats = {}) {
+      const trackedAttempts = normalizeTrackedCount(stats?.trackedAttempts);
+      const trackedSuccesses = Math.min(
+        trackedAttempts,
+        normalizeTrackedCount(stats?.trackedSuccesses)
+      );
       return {
         text: String(text || ""),
-        enabled: Boolean(enabled)
+        enabled: Boolean(enabled),
+        trackedAttempts,
+        trackedSuccesses
       };
     }
 
@@ -2820,7 +2944,7 @@ body.solar-curator.person-variations-page .empty-state {
         if (typeof prompt === "string") {
           return makePromptEntry(prompt, true);
         }
-        return makePromptEntry(prompt?.text || "", prompt?.enabled ?? true);
+        return makePromptEntry(prompt?.text || "", prompt?.enabled ?? true, prompt);
       });
     }
 
@@ -3804,8 +3928,12 @@ body.solar-curator.person-variations-page .empty-state {
 
     function clearPeopleDragState() {
       state.dragSource = null;
+      peopleList.classList.remove("merge-active");
       document.querySelectorAll(".person-card.drop-target, .person-source-chip.drop-target, .person-source-chip.dragging").forEach((element) => {
         element.classList.remove("drop-target", "dragging");
+      });
+      document.querySelectorAll(".person-merge-target.drop-target").forEach((element) => {
+        element.classList.remove("drop-target");
       });
     }
 
@@ -3867,6 +3995,7 @@ body.solar-curator.person-variations-page .empty-state {
       renderViewToggle();
       peopleList.innerHTML = "";
       state.people.forEach((person) => {
+        const canAcceptMerge = Boolean(state.dragSource && state.dragSource.personId !== person.id);
         const card = document.createElement("article");
         card.className = "person-card";
         if (state.viewMode === "people" && person.id === state.filterPersonId) {
@@ -3941,7 +4070,7 @@ body.solar-curator.person-variations-page .empty-state {
           chip.type = "button";
           chip.draggable = true;
           chip.dataset.index = String(index + 1);
-          chip.title = `${getSourceDisplayLabel(source, index)}${source.id === state.activeSourceId ? " (active)" : ""}`;
+          chip.title = `${getSourceDisplayLabel(source, index)}${source.id === state.activeSourceId ? " (active)" : ""}. Drag onto another person to merge.`;
           if (person.id === state.activePersonId && source.id === state.activeSourceId) {
             chip.classList.add("active");
           }
@@ -3953,6 +4082,7 @@ body.solar-curator.person-variations-page .empty-state {
               personId: person.id,
               sourceId: source.id
             };
+            peopleList.classList.add("merge-active");
             chip.classList.add("dragging");
             event.dataTransfer.effectAllowed = "move";
             event.dataTransfer.setData("text/plain", source.id);
@@ -3992,7 +4122,36 @@ body.solar-curator.person-variations-page .empty-state {
           stack.appendChild(chip);
         });
 
-        card.append(head, stack);
+        const mergeTarget = document.createElement("div");
+        mergeTarget.className = "person-merge-target";
+        mergeTarget.textContent = canAcceptMerge
+          ? `Drop here to merge into ${person.name}`
+          : "Drag a source thumbnail here to merge it into this person";
+        mergeTarget.addEventListener("dragover", (event) => {
+          if (!state.dragSource || state.dragSource.personId === person.id) {
+            return;
+          }
+          event.preventDefault();
+          card.classList.add("drop-target");
+          mergeTarget.classList.add("drop-target");
+        });
+        mergeTarget.addEventListener("dragleave", () => {
+          mergeTarget.classList.remove("drop-target");
+          card.classList.remove("drop-target");
+        });
+        mergeTarget.addEventListener("drop", (event) => {
+          event.preventDefault();
+          mergeTarget.classList.remove("drop-target");
+          card.classList.remove("drop-target");
+          const dragged = state.dragSource;
+          clearPeopleDragState();
+          if (!dragged) {
+            return;
+          }
+          mergeSourceIntoPerson(dragged.personId, dragged.sourceId, person.id);
+        });
+
+        card.append(head, stack, mergeTarget);
         peopleList.appendChild(card);
       });
     }
@@ -4338,10 +4497,27 @@ body.solar-curator.person-variations-page .empty-state {
     }
 
     function getLightboxItem() {
-      if (state.lightboxCollection === "slider") {
+      if (state.lightboxCollection === "slider" || state.lightboxCollection === "slider-compare") {
         return editState.archive[state.lightboxIndex] || null;
       }
       return state.visibleItems[state.lightboxIndex] || null;
+    }
+
+    function isSliderLightboxCollection(collection = state.lightboxCollection) {
+      return collection === "slider" || collection === "slider-compare";
+    }
+
+    function isLightboxCompareMode(collection = state.lightboxCollection) {
+      return collection === "slider-compare";
+    }
+
+    function canShowSliderCompareForItem(item = getLightboxItem()) {
+      return Boolean(
+        isLightboxCompareMode() &&
+        item &&
+        editState.source &&
+        item.id === editState.currentArchiveId
+      );
     }
 
     function isLightboxShowingPrompt(index) {
@@ -4615,7 +4791,7 @@ body.solar-curator.person-variations-page .empty-state {
     }
 
     function applyLightboxTransform() {
-      const nextZoom = clampNumber(Number(state.lightboxZoom) || 1, 1, 4);
+      const nextZoom = clampNumber(Number(state.lightboxZoom) || 1, 1, maxLightboxZoom);
       state.lightboxZoom = nextZoom;
       const nextPan = nextZoom <= 1
         ? { panX: 0, panY: 0 }
@@ -4623,8 +4799,12 @@ body.solar-curator.person-variations-page .empty-state {
       state.lightboxPanX = nextPan.panX;
       state.lightboxPanY = nextPan.panY;
       lightboxImage.style.transform = `translate(${state.lightboxPanX}px, ${state.lightboxPanY}px) scale(${state.lightboxZoom})`;
+      lightboxCompareOverlay.style.transform = isLightboxCompareMode()
+        ? `translate(${state.lightboxPanX}px, ${state.lightboxPanY}px) scale(${state.lightboxZoom})`
+        : "";
       lightboxStage.classList.toggle("is-zoomed", state.lightboxZoom > 1.01);
       lightboxImage.classList.toggle("dragging", false);
+      lightboxCompareOverlay.classList.toggle("dragging", false);
     }
 
     function resetLightboxZoom() {
@@ -4635,12 +4815,58 @@ body.solar-curator.person-variations-page .empty-state {
     }
 
     function setLightboxZoom(zoom, options = {}) {
-      state.lightboxZoom = clampNumber(zoom, 1, 4);
+      if (isLightboxCompareMode()) {
+        return;
+      }
+      state.lightboxZoom = clampNumber(zoom, 1, maxLightboxZoom);
       if (!options.keepPan || state.lightboxZoom <= 1.01) {
         state.lightboxPanX = 0;
         state.lightboxPanY = 0;
       }
       applyLightboxTransform();
+    }
+
+    function setLightboxCompareMode(enabled) {
+      lightboxStage.classList.toggle("compare-mode", enabled);
+      lightboxCompareOverlay.hidden = !enabled;
+      lightboxCompareHandle.hidden = !enabled;
+      if (!enabled) {
+        lightboxCompareOverlay.removeAttribute("src");
+        lightboxCompareOverlay.style.clipPath = "";
+        lightboxCompareHandle.style.left = "";
+        lightboxCompareOverlay.style.transform = "";
+      }
+    }
+
+    function updateLightboxCompareReveal() {
+      if (!isLightboxCompareMode()) {
+        return;
+      }
+      const percent = Math.max(0, Math.min(100, Math.round(state.lightboxComparePercent)));
+      state.lightboxComparePercent = percent;
+      lightboxCompareHandle.style.left = `${percent}%`;
+      lightboxCompareOverlay.style.clipPath = `inset(0 ${100 - percent}% 0 0)`;
+    }
+
+    function setLightboxComparePercentFromClientX(clientX) {
+      if (!isLightboxCompareMode()) {
+        return;
+      }
+      const rect = lightboxStage.getBoundingClientRect();
+      if (!rect.width) {
+        return;
+      }
+      state.lightboxComparePercent = Math.max(0, Math.min(100, ((clientX - rect.left) / rect.width) * 100));
+      updateLightboxCompareReveal();
+    }
+
+    function openEditCompareLightbox() {
+      const currentIndex = editState.archive.findIndex((entry) => entry.id === editState.currentArchiveId);
+      if (currentIndex < 0 || !editState.source) {
+        return;
+      }
+      state.lightboxComparePercent = editState.sliderPercent;
+      openLightbox(currentIndex, "slider-compare");
     }
 
     function renderGenerateCountOptions() {
@@ -4852,7 +5078,7 @@ body.solar-curator.person-variations-page .empty-state {
 
     function updateLightboxNav() {
       const item = getLightboxItem();
-      if (state.lightboxCollection === "slider") {
+      if (isSliderLightboxCollection()) {
         const hasMultipleItems = editState.archive.length > 1;
         lightboxPrevButton.disabled = !hasMultipleItems;
         lightboxNextButton.disabled = !hasMultipleItems;
@@ -4870,6 +5096,37 @@ body.solar-curator.person-variations-page .empty-state {
 
     function updateLightboxContent() {
       const item = getLightboxItem();
+      if (isLightboxCompareMode() && !canShowSliderCompareForItem(item)) {
+        state.lightboxCollection = "slider";
+      }
+      if (canShowSliderCompareForItem(item)) {
+        const imageUrl = getEditArchiveImageUrl(item);
+        if (!imageUrl || !editState.source) {
+          return;
+        }
+        hydrateEditArchiveEntry(item);
+        setLightboxCompareMode(true);
+        resetLightboxZoom();
+        lightboxImage.src = addCacheBuster(imageUrl);
+        lightboxCompareOverlay.src = addCacheBuster(editState.source);
+        lightboxImage.alt = `Full size slider comparison ${state.lightboxIndex + 1}`;
+        lightboxCompareOverlay.alt = "Original source preview";
+        lightboxImage.onload = () => {
+          applyLightboxTransform();
+          updateLightboxCompareReveal();
+        };
+        lightboxCompareOverlay.onload = () => {
+          updateLightboxCompareReveal();
+        };
+        lightboxTitle.textContent = editState.archive.length > 1
+          ? `Compare edit ${state.lightboxIndex + 1} of ${editState.archive.length}`
+          : "Compare slider edit";
+        lightboxVersionLabel.textContent = formatTimestamp(item.createdAt);
+        renderDots(lightboxDots, editState.archive.length, state.lightboxIndex);
+        updateLightboxNav();
+        return;
+      }
+      setLightboxCompareMode(false);
       if (state.lightboxCollection === "slider") {
         const imageUrl = getEditArchiveImageUrl(item);
         if (!imageUrl) {
@@ -4885,8 +5142,8 @@ body.solar-curator.person-variations-page .empty-state {
         lightboxTitle.textContent = editState.archive.length > 1
           ? `Saved edit ${state.lightboxIndex + 1} of ${editState.archive.length}`
           : "Saved slider edit";
-        lightboxVersionLabel.textContent = `${formatTimestamp(item.createdAt)} • prompt ${item.promptIndex + 1}`;
-        renderDots(lightboxDots, 0, 0);
+        lightboxVersionLabel.textContent = formatTimestamp(item.createdAt);
+        renderDots(lightboxDots, editState.archive.length, state.lightboxIndex);
         updateLightboxNav();
         return;
       }
@@ -4918,7 +5175,7 @@ body.solar-curator.person-variations-page .empty-state {
     function openLightbox(index, collection = "variations") {
       state.lightboxIndex = index;
       state.lightboxCollection = collection;
-      state.lightboxKey = collection === "slider"
+      state.lightboxKey = isSliderLightboxCollection(collection)
         ? (editState.archive[index]?.id || "")
         : (state.visibleItems[index]?.key || "");
       updateLightboxContent();
@@ -4935,6 +5192,7 @@ body.solar-curator.person-variations-page .empty-state {
       state.lightboxIndex = -1;
       state.lightboxKey = "";
       state.lightboxCollection = "variations";
+      setLightboxCompareMode(false);
       lightbox.classList.remove("open");
       lightbox.setAttribute("aria-hidden", "true");
       lightboxImage.removeAttribute("src");
@@ -4942,7 +5200,7 @@ body.solar-curator.person-variations-page .empty-state {
     }
 
     function stepLightboxVersion(direction) {
-      if (state.lightboxCollection === "slider") {
+      if (isSliderLightboxCollection()) {
         if (!editState.archive.length) {
           return;
         }
@@ -4960,7 +5218,7 @@ body.solar-curator.person-variations-page .empty-state {
     }
 
     function stepLightboxPrompt(direction) {
-      if (state.lightboxCollection === "slider") {
+      if (isSliderLightboxCollection()) {
         return;
       }
       if (state.lightboxIndex < 0 || state.visibleItems.length <= 1) {
@@ -4977,6 +5235,8 @@ body.solar-curator.person-variations-page .empty-state {
     function bindGridSwipeNavigation(element, onPreviousVersion, onNextVersion, onPreviousPrompt, onNextPrompt) {
       const pointers = new Map();
       let gestureMode = "";
+      let compareDragActive = false;
+      let compareTouchActive = false;
       let swipeStartX = 0;
       let swipeStartY = 0;
       let panStartX = 0;
@@ -4997,16 +5257,39 @@ body.solar-curator.person-variations-page .empty-state {
       }
 
       element.addEventListener("dblclick", (event) => {
+        if (isLightboxCompareMode()) {
+          return;
+        }
         event.preventDefault();
         if (state.lightboxZoom > 1.01) {
           resetLightboxZoom();
         } else {
-          setLightboxZoom(2.5);
+          setLightboxZoom(lightboxTapZoom);
         }
       });
 
+      element.addEventListener("wheel", (event) => {
+        if (state.lightboxIndex < 0) {
+          return;
+        }
+        if (isLightboxCompareMode()) {
+          return;
+        }
+        event.preventDefault();
+        const delta = event.deltaY < 0 ? lightboxWheelZoomStep : -lightboxWheelZoomStep;
+        const nextZoom = clampNumber(state.lightboxZoom + delta, 1, maxLightboxZoom);
+        setLightboxZoom(nextZoom, { keepPan: nextZoom > 1.01 });
+      }, { passive: false });
+
       element.addEventListener("pointerdown", (event) => {
         if (event.pointerType !== "touch" && event.button !== 0) {
+          return;
+        }
+        if (isLightboxCompareMode()) {
+          compareDragActive = true;
+          element.setPointerCapture?.(event.pointerId);
+          event.preventDefault();
+          setLightboxComparePercentFromClientX(event.clientX);
           return;
         }
         pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
@@ -5033,6 +5316,11 @@ body.solar-curator.person-variations-page .empty-state {
       });
 
       element.addEventListener("pointermove", (event) => {
+        if (compareDragActive && isLightboxCompareMode()) {
+          event.preventDefault();
+          setLightboxComparePercentFromClientX(event.clientX);
+          return;
+        }
         if (!pointers.has(event.pointerId)) {
           return;
         }
@@ -5045,7 +5333,7 @@ body.solar-curator.person-variations-page .empty-state {
           if (!pinchStartDistance) {
             return;
           }
-          state.lightboxZoom = clampNumber(pinchStartZoom * (distance / pinchStartDistance), 1, 4);
+          state.lightboxZoom = clampNumber(pinchStartZoom * (distance / pinchStartDistance), 1, maxLightboxZoom);
           if (state.lightboxZoom <= 1.01) {
             state.lightboxPanX = 0;
             state.lightboxPanY = 0;
@@ -5061,6 +5349,12 @@ body.solar-curator.person-variations-page .empty-state {
       });
 
       element.addEventListener("pointerup", (event) => {
+        if (compareDragActive && isLightboxCompareMode()) {
+          compareDragActive = false;
+          setLightboxComparePercentFromClientX(event.clientX);
+          element.releasePointerCapture?.(event.pointerId);
+          return;
+        }
         if (!pointers.has(event.pointerId)) {
           return;
         }
@@ -5099,7 +5393,7 @@ body.solar-curator.person-variations-page .empty-state {
           const now = Date.now();
           if (Math.abs(deltaX) < 12 && Math.abs(deltaY) < 12) {
             if (now - lastTapAt < 280) {
-              setLightboxZoom(state.lightboxZoom > 1.01 ? 1 : 2.5);
+              setLightboxZoom(state.lightboxZoom > 1.01 ? 1 : lightboxTapZoom);
               lastTapAt = 0;
             } else {
               lastTapAt = now;
@@ -5128,12 +5422,50 @@ body.solar-curator.person-variations-page .empty-state {
       });
 
       element.addEventListener("pointercancel", (event) => {
+        if (compareDragActive && isLightboxCompareMode()) {
+          compareDragActive = false;
+          element.releasePointerCapture?.(event.pointerId);
+          return;
+        }
         pointers.delete(event.pointerId);
         lightboxImage.classList.remove("dragging");
         if (!pointers.size) {
           gestureMode = "";
         }
       });
+
+      element.addEventListener("touchstart", (event) => {
+        if (!isLightboxCompareMode() || !event.touches.length) {
+          return;
+        }
+        compareTouchActive = true;
+        event.preventDefault();
+        setLightboxComparePercentFromClientX(event.touches[0].clientX);
+      }, { passive: false });
+
+      element.addEventListener("touchmove", (event) => {
+        if (!compareTouchActive || !isLightboxCompareMode() || !event.touches.length) {
+          return;
+        }
+        event.preventDefault();
+        setLightboxComparePercentFromClientX(event.touches[0].clientX);
+      }, { passive: false });
+
+      function releaseLightboxCompareTouch(event) {
+        if (!compareTouchActive || !isLightboxCompareMode()) {
+          return;
+        }
+        const touch = event.changedTouches?.[0];
+        if (touch) {
+          setLightboxComparePercentFromClientX(touch.clientX);
+        }
+        compareTouchActive = false;
+      }
+
+      element.addEventListener("touchend", releaseLightboxCompareTouch, { passive: false });
+      element.addEventListener("touchcancel", () => {
+        compareTouchActive = false;
+      }, { passive: false });
     }
 
     function renderPrompts() {
@@ -5182,10 +5514,20 @@ body.solar-curator.person-variations-page .empty-state {
         textarea.id = `prompt-${index + 1}`;
         textarea.name = `prompt-${index + 1}`;
         textarea.setAttribute("aria-label", `Prompt ${index + 1}`);
+
+        const metric = document.createElement("div");
+        metric.className = "prompt-metric";
+        metric.textContent = getEditPromptSuccessRateLabel(prompt);
+
         textarea.addEventListener("input", () => {
-          state.prompts[index].text = textarea.value;
+          const nextText = textarea.value;
+          if (state.prompts[index].text !== nextText) {
+            state.prompts[index].text = nextText;
+            resetEditPromptTracking(state.prompts[index]);
+            metric.textContent = getEditPromptSuccessRateLabel(state.prompts[index]);
+          }
           if (state.results[index]) {
-            state.results[index].prompt = textarea.value;
+            state.results[index].prompt = nextText;
           }
           savePrompts();
           renderResults();
@@ -5240,7 +5582,7 @@ body.solar-curator.person-variations-page .empty-state {
           });
         });
 
-        tools.append(badge, enabledLabel, runButton, removeButton);
+        tools.append(badge, metric, enabledLabel, runButton, removeButton);
         row.append(dragHandle, textarea, tools);
         promptList.appendChild(row);
       });
@@ -5464,6 +5806,57 @@ body.solar-curator.person-variations-page .empty-state {
         .filter((index) => index >= 0);
     }
 
+    function getEditPromptTracking(prompt) {
+      const trackedAttempts = normalizeTrackedCount(prompt?.trackedAttempts);
+      const trackedSuccesses = Math.min(
+        trackedAttempts,
+        normalizeTrackedCount(prompt?.trackedSuccesses)
+      );
+      return {
+        trackedAttempts,
+        trackedSuccesses
+      };
+    }
+
+    function getEditPromptSuccessRateLabel(prompt) {
+      const { trackedAttempts, trackedSuccesses } = getEditPromptTracking(prompt);
+      if (!trackedAttempts) {
+        return "Success rate: No tracked runs yet";
+      }
+      const rate = Math.round((trackedSuccesses / trackedAttempts) * 100);
+      return `Success rate: ${rate}% (${trackedSuccesses}/${trackedAttempts})`;
+    }
+
+    function resetEditPromptTracking(prompt) {
+      if (!prompt) {
+        return;
+      }
+      prompt.trackedAttempts = 0;
+      prompt.trackedSuccesses = 0;
+    }
+
+    function recordEditPromptAttempt(index, wasSuccessful) {
+      const prompt = editState.prompts[index];
+      if (!prompt) {
+        return;
+      }
+      const { trackedAttempts, trackedSuccesses } = getEditPromptTracking(prompt);
+      prompt.trackedAttempts = trackedAttempts + 1;
+      prompt.trackedSuccesses = trackedSuccesses + (wasSuccessful ? 1 : 0);
+      saveEditPrompts();
+    }
+
+    function recordMainPromptAttempt(index, wasSuccessful) {
+      const prompt = state.prompts[index];
+      if (!prompt) {
+        return;
+      }
+      const { trackedAttempts, trackedSuccesses } = getEditPromptTracking(prompt);
+      prompt.trackedAttempts = trackedAttempts + 1;
+      prompt.trackedSuccesses = trackedSuccesses + (wasSuccessful ? 1 : 0);
+      savePrompts();
+    }
+
     function setEditStageNote(message) {
       editStageNote.textContent = message;
     }
@@ -5474,6 +5867,127 @@ body.solar-curator.person-variations-page .empty-state {
       editCompareRange.value = String(percent);
       editCompareHandle.style.left = `${percent}%`;
       editCompareOverlayImage.style.clipPath = `inset(0 ${100 - percent}% 0 0)`;
+    }
+
+    function setEditComparePercentFromClientX(clientX) {
+      const rect = editCompareStage.getBoundingClientRect();
+      if (!rect.width) {
+        return;
+      }
+      const percent = ((clientX - rect.left) / rect.width) * 100;
+      editState.sliderPercent = Math.max(0, Math.min(100, percent));
+      updateEditCompareReveal();
+    }
+
+    function bindEditCompareStageDrag() {
+      let activePointerId = null;
+      let touchActive = false;
+      let touchStartX = 0;
+      let touchStartY = 0;
+      let touchMoved = false;
+      let lastTapAt = 0;
+      let lastTapX = 0;
+      let lastTapY = 0;
+
+      function canInteractWithEditCompareStage() {
+        return !editCompareStage.classList.contains("empty");
+      }
+
+      editCompareStage.addEventListener("pointerdown", (event) => {
+        if (!canInteractWithEditCompareStage()) {
+          return;
+        }
+        if (event.pointerType !== "touch" && event.button !== 0) {
+          return;
+        }
+        activePointerId = event.pointerId;
+        editCompareStage.setPointerCapture?.(event.pointerId);
+        event.preventDefault();
+        setEditComparePercentFromClientX(event.clientX);
+      });
+
+      editCompareStage.addEventListener("pointermove", (event) => {
+        if (activePointerId !== event.pointerId) {
+          return;
+        }
+        event.preventDefault();
+        setEditComparePercentFromClientX(event.clientX);
+      });
+
+      function releaseEditComparePointer(event) {
+        if (activePointerId !== event.pointerId) {
+          return;
+        }
+        activePointerId = null;
+        editCompareStage.releasePointerCapture?.(event.pointerId);
+      }
+
+      editCompareStage.addEventListener("pointerup", (event) => {
+        setEditComparePercentFromClientX(event.clientX);
+        releaseEditComparePointer(event);
+      });
+
+      editCompareStage.addEventListener("pointercancel", releaseEditComparePointer);
+
+      editCompareStage.addEventListener("touchstart", (event) => {
+        if (!canInteractWithEditCompareStage() || !event.touches.length) {
+          return;
+        }
+        touchActive = true;
+        touchStartX = event.touches[0].clientX;
+        touchStartY = event.touches[0].clientY;
+        touchMoved = false;
+        event.preventDefault();
+        setEditComparePercentFromClientX(event.touches[0].clientX);
+      }, { passive: false });
+
+      editCompareStage.addEventListener("touchmove", (event) => {
+        if (!touchActive || !event.touches.length) {
+          return;
+        }
+        const deltaX = event.touches[0].clientX - touchStartX;
+        const deltaY = event.touches[0].clientY - touchStartY;
+        if (Math.abs(deltaX) > 10 || Math.abs(deltaY) > 10) {
+          touchMoved = true;
+        }
+        event.preventDefault();
+        setEditComparePercentFromClientX(event.touches[0].clientX);
+      }, { passive: false });
+
+      function releaseEditCompareTouch(event) {
+        if (!touchActive) {
+          return;
+        }
+        const touch = event.changedTouches?.[0];
+        if (touch) {
+          setEditComparePercentFromClientX(touch.clientX);
+          if (!touchMoved) {
+            const now = Date.now();
+            if (now - lastTapAt < 280 && Math.abs(touch.clientX - lastTapX) < 24 && Math.abs(touch.clientY - lastTapY) < 24) {
+              openEditCompareLightbox();
+              lastTapAt = 0;
+            } else {
+              lastTapAt = now;
+              lastTapX = touch.clientX;
+              lastTapY = touch.clientY;
+            }
+          }
+        }
+        touchActive = false;
+      }
+
+      editCompareStage.addEventListener("touchend", releaseEditCompareTouch, { passive: false });
+      editCompareStage.addEventListener("touchcancel", () => {
+        touchActive = false;
+      }, { passive: false });
+
+      editCompareStage.addEventListener("dblclick", (event) => {
+        if (!canInteractWithEditCompareStage()) {
+          return;
+        }
+        event.preventDefault();
+        openEditCompareLightbox();
+      });
     }
 
     function getCurrentEditArchiveEntry() {
@@ -5580,8 +6094,18 @@ body.solar-curator.person-variations-page .empty-state {
         textarea.id = `edit-prompt-${index + 1}`;
         textarea.name = `edit-prompt-${index + 1}`;
         textarea.setAttribute("aria-label", `Fallback prompt ${index + 1}`);
+
+        const metric = document.createElement("div");
+        metric.className = "prompt-metric";
+        metric.textContent = getEditPromptSuccessRateLabel(prompt);
+
         textarea.addEventListener("input", () => {
-          editState.prompts[index].text = textarea.value;
+          const nextText = textarea.value;
+          if (editState.prompts[index].text !== nextText) {
+            editState.prompts[index].text = nextText;
+            resetEditPromptTracking(editState.prompts[index]);
+            metric.textContent = getEditPromptSuccessRateLabel(editState.prompts[index]);
+          }
           saveEditPrompts();
         });
 
@@ -5626,7 +6150,7 @@ body.solar-curator.person-variations-page .empty-state {
           refreshEditButtons();
         });
 
-        tools.append(badge, enabledLabel, removeButton);
+        tools.append(badge, metric, enabledLabel, removeButton);
         row.append(dragHandle, textarea, tools);
         editPromptList.appendChild(row);
       });
@@ -5709,14 +6233,11 @@ body.solar-curator.person-variations-page .empty-state {
         title.textContent = `Saved edit ${index + 1}`;
         const versionLabel = document.createElement("div");
         versionLabel.className = "result-version-label";
-        versionLabel.textContent = `Used prompt ${entry.promptIndex + 1} after ${entry.attemptCount} ${entry.attemptCount === 1 ? "try" : "tries"}`;
+        versionLabel.textContent = `Succeeded after ${entry.attemptCount} ${entry.attemptCount === 1 ? "attempt" : "attempts"}`;
         const status = document.createElement("div");
         status.className = "result-status success";
         status.textContent = formatTimestamp(entry.createdAt);
-        const promptText = document.createElement("div");
-        promptText.className = "result-person-label";
-        promptText.textContent = entry.prompt || "Saved edit";
-        meta.append(title, versionLabel, status, promptText);
+        meta.append(title, versionLabel, status);
 
         card.append(frame, meta);
         editArchiveGrid.appendChild(card);
@@ -5789,7 +6310,16 @@ body.solar-curator.person-variations-page .empty-state {
       editState.currentArchiveId = "";
       editState.sliderPercent = 100;
       renderEditWorkspace();
-      setStatus("Slider edit source ready. Run the fallback prompt chain to generate an edit.");
+      if (!getSharedTokenValue()) {
+        setStatus("Slider edit source ready. Enter an xAI API key to start generating automatically.");
+        return;
+      }
+      if (!getEnabledEditPromptIndices().length) {
+        setStatus("Slider edit source ready. Enable at least one fallback prompt to start generating automatically.");
+        return;
+      }
+      setStatus("Slider edit source ready. Starting edit...");
+      await runSliderEdit();
     }
 
     async function clearEditSource() {
@@ -5920,7 +6450,6 @@ body.solar-curator.person-variations-page .empty-state {
               const blob = await item.getType(imageType);
               const dataUrl = await blobToDataUrl(blob);
               await setEditSource(dataUrl, "clipboard image");
-              setStatus("Clipboard image loaded.");
               return;
             }
             if ((item.types || []).includes("text/plain")) {
@@ -5928,7 +6457,6 @@ body.solar-curator.person-variations-page .empty-state {
               const pastedText = (await textBlob.text()).trim();
               if (isHttpUrl(pastedText)) {
                 await setEditSource(pastedText, "clipboard image URL");
-                setStatus("Clipboard image URL loaded.");
                 return;
               }
             }
@@ -5943,7 +6471,6 @@ body.solar-curator.person-variations-page .empty-state {
           const pastedText = (await navigator.clipboard.readText()).trim();
           if (isHttpUrl(pastedText)) {
             await setEditSource(pastedText, "clipboard image URL");
-            setStatus("Clipboard image URL loaded.");
             return;
           }
         } catch (_error) {
@@ -6038,8 +6565,8 @@ body.solar-curator.person-variations-page .empty-state {
       editState.isGenerating = true;
       refreshEditButtons();
       renderEditPrompts();
-      setEditStageNote("Trying fallback prompts...");
-      setStatus(`Running up to ${enabledIndices.length} fallback prompts until one succeeds...`);
+      setEditStageNote("Trying prompts...");
+      setStatus(`Running up to ${enabledIndices.length} prompts until one succeeds...`);
 
       try {
         let moderatedCount = 0;
@@ -6049,13 +6576,21 @@ body.solar-curator.person-variations-page .empty-state {
           if (!prompt) {
             continue;
           }
-          setStatus(`Trying slider edit prompt ${cursor + 1} of ${enabledIndices.length}...`);
-          setEditStageNote(`Trying prompt ${cursor + 1} of ${enabledIndices.length}`);
-          const data = await requestSliderEdit(prompt);
+          setStatus(`Trying edit ${cursor + 1} of ${enabledIndices.length}...`);
+          setEditStageNote(`Trying option ${cursor + 1} of ${enabledIndices.length}`);
+          let data;
+          try {
+            data = await requestSliderEdit(prompt);
+          } catch (error) {
+            recordEditPromptAttempt(promptIndex, false);
+            throw error;
+          }
           if (data.is_moderated) {
+            recordEditPromptAttempt(promptIndex, false);
             moderatedCount += 1;
             continue;
           }
+          recordEditPromptAttempt(promptIndex, true);
           const storedVersion = await persistGeneratedVersion(data.edited_url);
           const entry = normalizeEditArchiveEntry({
             id: makeId("slideredit"),
@@ -6072,11 +6607,11 @@ body.solar-curator.person-variations-page .empty-state {
           saveEditArchive();
           renderEditWorkspace();
           setEditStageNote("Use the slider to compare original and edited image");
-          setStatus(`Slider edit generated with fallback prompt ${promptIndex + 1}.`);
+          setStatus("Slider edit generated successfully.");
           return;
         }
-        setEditStageNote("All fallback prompts were moderated");
-        setStatus("All enabled slider edit prompts were moderated. Adjust the prompt list and try again.");
+        setEditStageNote("All prompt attempts failed");
+        setStatus("All enabled prompt attempts failed. Adjust the prompt list and try again.");
       } finally {
         editState.isGenerating = false;
         refreshEditButtons();
@@ -6097,7 +6632,7 @@ body.solar-curator.person-variations-page .empty-state {
       if (editState.currentArchiveId === entryId) {
         editState.currentArchiveId = "";
       }
-      if (state.lightboxCollection === "slider" && state.lightboxKey === entryId) {
+      if (isSliderLightboxCollection() && state.lightboxKey === entryId) {
         closeLightbox();
       }
       ensureCurrentEditArchiveSelection();
@@ -6114,7 +6649,7 @@ body.solar-curator.person-variations-page .empty-state {
       await deleteBlobKeys(blobKeys);
       editState.archive = [];
       editState.currentArchiveId = "";
-      if (state.lightboxCollection === "slider") {
+      if (isSliderLightboxCollection()) {
         closeLightbox();
       }
       saveEditArchive();
@@ -6376,6 +6911,8 @@ body.solar-curator.person-variations-page .empty-state {
         queueResultCardReveal(state.activePersonId, index);
         renderResults();
         if (data.is_moderated) {
+          recordMainPromptAttempt(index, false);
+          renderPrompts();
           setStatus(previousImageUrl
             ? `Prompt ${index + 1} was moderated. Kept the previous image.`
             : `Prompt ${index + 1} was moderated.`);
@@ -6384,6 +6921,8 @@ body.solar-curator.person-variations-page .empty-state {
             generated: false
           };
         } else {
+          recordMainPromptAttempt(index, true);
+          renderPrompts();
           setStatus(`Generated prompt ${index + 1} of ${state.prompts.length}.`);
           return {
             isModerated: false,
@@ -6404,6 +6943,8 @@ body.solar-curator.person-variations-page .empty-state {
           delete state.variantSelections[selectionKey];
           queueResultCardReveal(state.activePersonId, index);
           renderResults();
+          recordMainPromptAttempt(index, false);
+          renderPrompts();
           setStatus(previousVersions.length
             ? `Prompt ${index + 1} was moderated. Kept the previous image.`
             : `Prompt ${index + 1} was moderated.`);
@@ -6423,6 +6964,8 @@ body.solar-curator.person-variations-page .empty-state {
         };
         queueResultCardReveal(state.activePersonId, index);
         renderResults();
+        recordMainPromptAttempt(index, false);
+        renderPrompts();
         throw error;
       }
     }
@@ -6856,17 +7399,13 @@ body.solar-curator.person-variations-page .empty-state {
         }
         editMobilePasteField.value = "";
         if (isHttpUrl(trimmedValue)) {
-          setEditSource(trimmedValue, "pasted image URL").then(() => {
-            setStatus("Clipboard image URL loaded.");
-          }).catch((error) => {
+          setEditSource(trimmedValue, "pasted image URL").catch((error) => {
             setStatus(error.message || "Could not read pasted content.");
           });
           return;
         }
         if (trimmedValue.startsWith("data:image/")) {
-          setEditSource(trimmedValue, "pasted image").then(() => {
-            setStatus("Clipboard image loaded.");
-          }).catch((error) => {
+          setEditSource(trimmedValue, "pasted image").catch((error) => {
             setStatus(error.message || "Could not read pasted content.");
           });
         }
@@ -6894,6 +7433,7 @@ body.solar-curator.person-variations-page .empty-state {
       editState.sliderPercent = Number(editCompareRange.value) || 0;
       updateEditCompareReveal();
     });
+    bindEditCompareStageDrag();
     lightbox.addEventListener("click", (event) => {
       if (event.target === lightbox) {
         closeLightbox();
@@ -6914,6 +7454,15 @@ body.solar-curator.person-variations-page .empty-state {
     document.addEventListener("keydown", (event) => {
       if (event.key === "Escape") {
         closeLightbox();
+      } else if (state.lightboxIndex >= 0 && (event.key === "+" || event.key === "=")) {
+        event.preventDefault();
+        setLightboxZoom(state.lightboxZoom + lightboxWheelZoomStep, { keepPan: state.lightboxZoom > 1.01 });
+      } else if (state.lightboxIndex >= 0 && event.key === "-") {
+        event.preventDefault();
+        setLightboxZoom(state.lightboxZoom - lightboxWheelZoomStep, { keepPan: state.lightboxZoom > 1.01 });
+      } else if (state.lightboxIndex >= 0 && event.key === "0") {
+        event.preventDefault();
+        resetLightboxZoom();
       } else if (state.lightboxIndex >= 0 && event.key === "ArrowLeft") {
         stepLightboxVersion(-1);
       } else if (state.lightboxIndex >= 0 && event.key === "ArrowRight") {
