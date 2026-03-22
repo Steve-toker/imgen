@@ -1130,16 +1130,1024 @@
       }
     }
   </style>
+  <style>
+@import url("https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600;6..72,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap");
+
+:root {
+  --sc-surface: #fdf9f3;
+  --sc-surface-low: #f7f3ed;
+  --sc-surface-high: #ece6dd;
+  --sc-surface-highest: #e6e2dc;
+  --sc-surface-float: rgba(255, 255, 255, 0.7);
+  --sc-text: #272640;
+  --sc-text-soft: #59413c;
+  --sc-primary: #ac3416;
+  --sc-primary-bright: #f06543;
+  --sc-secondary: #48506d;
+  --sc-secondary-soft: #d7daea;
+  --sc-success: #376247;
+  --sc-danger: #9f3f31;
+  --sc-warning: #935a22;
+  --sc-shadow: 0 20px 40px rgba(172, 52, 22, 0.08);
+  --sc-shadow-soft: 0 16px 34px rgba(172, 52, 22, 0.06);
+  --sc-ghost-border: 0 0 0 1px rgba(89, 65, 60, 0.08);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body.solar-curator {
+  margin: 0;
+  min-height: 100vh;
+  padding: 32px;
+  position: relative;
+  overflow-x: hidden;
+  font-family: "Plus Jakarta Sans", "Segoe UI", sans-serif;
+  color: var(--sc-text);
+  background:
+    radial-gradient(circle at top left, rgba(240, 101, 67, 0.18), transparent 24%),
+    radial-gradient(circle at 88% 12%, rgba(72, 80, 109, 0.12), transparent 20%),
+    linear-gradient(180deg, #fffaf3 0%, #f7f1e7 44%, #f0e7db 100%);
+}
+
+body.solar-curator::before,
+body.solar-curator::after {
+  content: "";
+  position: fixed;
+  z-index: 0;
+  pointer-events: none;
+  filter: blur(4px);
+}
+
+body.solar-curator::before {
+  top: -80px;
+  right: -120px;
+  width: 340px;
+  height: 340px;
+  border-radius: 46% 54% 63% 37% / 41% 45% 55% 59%;
+  background: radial-gradient(circle at 35% 35%, rgba(240, 101, 67, 0.24), rgba(240, 101, 67, 0.05) 58%, transparent 72%);
+}
+
+body.solar-curator::after {
+  left: -120px;
+  bottom: 8vh;
+  width: 300px;
+  height: 300px;
+  border-radius: 58% 42% 45% 55% / 58% 55% 45% 42%;
+  background: radial-gradient(circle at 50% 50%, rgba(72, 80, 109, 0.12), transparent 70%);
+}
+
+body.solar-curator > * {
+  position: relative;
+  z-index: 1;
+}
+
+body.solar-curator [hidden] {
+  display: none !important;
+}
+
+body.solar-curator h1,
+body.solar-curator h2,
+body.solar-curator .hero h1,
+body.solar-curator .panel-head strong,
+body.solar-curator .lightbox-meta strong {
+  font-family: "Newsreader", Georgia, serif;
+  letter-spacing: -0.04em;
+  color: var(--sc-text);
+}
+
+body.solar-curator h1 {
+  font-size: clamp(2.75rem, 6vw, 5rem);
+  line-height: 0.92;
+  font-weight: 600;
+}
+
+body.solar-curator h2 {
+  font-size: clamp(1.65rem, 3vw, 2.35rem);
+  line-height: 1;
+  font-weight: 560;
+}
+
+body.solar-curator p,
+body.solar-curator .status,
+body.solar-curator .meta,
+body.solar-curator .source-copy span,
+body.solar-curator .field-label,
+body.solar-curator .result-version-label,
+body.solar-curator .result-status,
+body.solar-curator .person-help,
+body.solar-curator .people-panel-head span,
+body.solar-curator .panel-head span {
+  color: var(--sc-text-soft);
+}
+
+body.solar-curator .wrap {
+  width: min(1380px, 100%);
+  margin: 0 auto;
+  display: grid;
+  gap: 2rem;
+}
+
+body.solar-curator .hero {
+  position: relative;
+  display: grid;
+  gap: 1rem;
+  padding: clamp(2rem, 4vw, 3.25rem);
+  border: none;
+  border-radius: 3rem;
+  background:
+    linear-gradient(140deg, rgba(255, 255, 255, 0.72), rgba(255, 247, 236, 0.92) 52%, rgba(245, 229, 211, 0.96)),
+    var(--sc-surface);
+  box-shadow: var(--sc-shadow-soft), inset 0 1px 0 rgba(255, 255, 255, 0.65);
+  overflow: hidden;
+}
+
+body.solar-curator .hero::before {
+  content: "THE SOLAR CURATOR";
+  width: fit-content;
+  padding: 0.55rem 0.95rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.76);
+  color: var(--sc-primary);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+}
+
+body.solar-curator .hero::after {
+  content: "";
+  position: absolute;
+  top: 16%;
+  right: clamp(1.2rem, 5vw, 3.5rem);
+  width: clamp(140px, 18vw, 220px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(240, 101, 67, 0.28), rgba(240, 101, 67, 0.08) 48%, transparent 72%);
+  filter: blur(3px);
+}
+
+body.solar-curator .hero p {
+  max-width: 58rem;
+  font-size: 0.94rem;
+  line-height: 1.65;
+}
+
+body.solar-curator .layout {
+  display: grid;
+  grid-template-columns: minmax(320px, 0.86fr) minmax(0, 1.14fr);
+  gap: 2rem;
+  align-items: start;
+}
+
+body.solar-curator .panel,
+body.solar-curator .stage-shell {
+  overflow: hidden;
+  border: none;
+  border-radius: 3rem;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(255, 250, 243, 0.96)),
+    var(--sc-surface);
+  box-shadow: var(--sc-shadow-soft);
+}
+
+body.solar-curator .panel-head,
+body.solar-curator .stage-meta {
+  padding: 1.5rem 1.75rem 0.65rem;
+  background: transparent;
+  border: none;
+}
+
+body.solar-curator .panel-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+body.solar-curator .panel-head strong {
+  font-size: 2rem;
+  font-weight: 560;
+  line-height: 0.98;
+}
+
+body.solar-curator .panel-head span,
+body.solar-curator .stage-meta span {
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+body.solar-curator .panel-body {
+  display: grid;
+  gap: 1rem;
+  padding: 1.25rem 1.75rem 1.85rem;
+}
+
+body.solar-curator label,
+body.solar-curator .field {
+  display: grid;
+  gap: 0.6rem;
+  font-size: 0.92rem;
+  color: var(--sc-text);
+}
+
+body.solar-curator input[type="password"],
+body.solar-curator input[type="text"],
+body.solar-curator select,
+body.solar-curator textarea,
+body.solar-curator .mobile-paste-field {
+  width: 100%;
+  border: none;
+  border-radius: 1.5rem;
+  background: var(--sc-surface-high);
+  color: var(--sc-text);
+  padding: 0.95rem 1.05rem;
+  font: inherit;
+  line-height: 1.45;
+  box-shadow: inset 0 0 0 1px rgba(89, 65, 60, 0.06);
+  transition: box-shadow 0.18s ease, transform 0.18s ease, background 0.18s ease;
+}
+
+body.solar-curator input[type="password"]:focus,
+body.solar-curator input[type="text"]:focus,
+body.solar-curator select:focus,
+body.solar-curator textarea:focus,
+body.solar-curator .mobile-paste-field:focus {
+  outline: none;
+  background: #f3ede4;
+  box-shadow:
+    inset 0 0 0 2px rgba(172, 52, 22, 0.4),
+    0 0 0 5px rgba(172, 52, 22, 0.08);
+}
+
+body.solar-curator input::placeholder,
+body.solar-curator textarea::placeholder {
+  color: rgba(89, 65, 60, 0.7);
+}
+
+body.solar-curator input[type="range"] {
+  accent-color: var(--sc-primary);
+}
+
+body.solar-curator button,
+body.solar-curator .source-picker-label,
+body.solar-curator .picker-label {
+  border: none;
+  border-radius: 999px;
+  padding: 0.9rem 1.35rem;
+  min-height: 46px;
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: #fff7f2;
+  background:
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.2), transparent 38%),
+    linear-gradient(135deg, var(--sc-primary-bright), var(--sc-primary));
+  box-shadow: 0 12px 24px rgba(172, 52, 22, 0.18);
+  cursor: pointer;
+  transition: transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
+}
+
+body.solar-curator button:hover,
+body.solar-curator .source-picker-label:hover,
+body.solar-curator .picker-label:hover {
+  transform: scale(1.02);
+  background:
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.16), transparent 36%),
+    linear-gradient(135deg, var(--sc-primary), #8f250f);
+  box-shadow: 0 16px 30px rgba(172, 52, 22, 0.22);
+}
+
+body.solar-curator button:disabled,
+body.solar-curator .source-picker-label.is-busy {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+body.solar-curator .ghost-btn,
+body.solar-curator .picker-label,
+body.solar-curator .source-picker-label,
+body.solar-curator .view-toggle button,
+body.solar-curator .person-action-btn,
+body.solar-curator .mini-icon-btn,
+body.solar-curator .result-regenerate,
+body.solar-curator .result-delete,
+body.solar-curator .result-version-nav,
+body.solar-curator .lightbox-nav,
+body.solar-curator .lightbox-close,
+body.solar-curator .icon-btn {
+  color: var(--sc-text);
+  background: rgba(255, 255, 255, 0.66);
+  box-shadow:
+    inset 0 0 0 1px rgba(89, 65, 60, 0.08),
+    0 10px 20px rgba(172, 52, 22, 0.06);
+}
+
+body.solar-curator .icon-btn,
+body.solar-curator .person-action-btn,
+body.solar-curator .mini-icon-btn,
+body.solar-curator .result-regenerate,
+body.solar-curator .result-version-nav,
+body.solar-curator .lightbox-nav,
+body.solar-curator .lightbox-close {
+  color: var(--sc-primary);
+}
+
+body.solar-curator .icon-btn svg,
+body.solar-curator .person-action-btn svg,
+body.solar-curator .mini-icon-btn svg {
+  width: 18px !important;
+  height: 18px !important;
+  flex: 0 0 18px;
+  fill: currentColor !important;
+}
+
+body.solar-curator .danger-btn {
+  color: #fff6f2;
+  background:
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.16), transparent 38%),
+    linear-gradient(135deg, #bc5f4f, #8f3528);
+}
+
+body.solar-curator .checkbox,
+body.solar-curator .toggle-row {
+  color: var(--sc-text-soft);
+}
+
+body.solar-curator .checkbox input,
+body.solar-curator .toggle-row input {
+  accent-color: var(--sc-primary);
+}
+
+body.solar-curator .paste-target,
+body.solar-curator .canvas-stage,
+body.solar-curator .result-stage,
+body.solar-curator .result,
+body.solar-curator .image-stage,
+body.solar-curator .token-panel,
+body.solar-curator .source-preview,
+body.solar-curator .prompt-row,
+body.solar-curator .people-panel,
+body.solar-curator .result-card,
+body.solar-curator .empty-state,
+body.solar-curator .view-toggle,
+body.solar-curator .filter-pill {
+  border: none;
+  background: var(--sc-surface-low);
+  box-shadow: var(--sc-ghost-border);
+}
+
+body.solar-curator .paste-target,
+body.solar-curator .canvas-stage,
+body.solar-curator .result-stage,
+body.solar-curator .result,
+body.solar-curator .image-stage,
+body.solar-curator .empty-state {
+  border-radius: 2rem;
+}
+
+body.solar-curator .token-panel,
+body.solar-curator .source-preview,
+body.solar-curator .prompt-row,
+body.solar-curator .people-panel,
+body.solar-curator .result-card {
+  border-radius: 2rem;
+}
+
+body.solar-curator .paste-target {
+  min-height: 124px;
+  padding: 1.6rem;
+  color: var(--sc-text-soft);
+  background:
+    radial-gradient(circle at top left, rgba(240, 101, 67, 0.12), transparent 40%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.75), rgba(246, 239, 230, 0.96));
+  outline: none;
+}
+
+body.solar-curator .paste-target:focus,
+body.solar-curator .paste-target.ready {
+  box-shadow:
+    inset 0 0 0 2px rgba(172, 52, 22, 0.34),
+    0 14px 30px rgba(172, 52, 22, 0.1);
+}
+
+body.solar-curator .result img,
+body.solar-curator canvas,
+body.solar-curator .result-stage img,
+body.solar-curator .source-preview img,
+body.solar-curator .result-frame img,
+body.solar-curator .lightbox-image {
+  border-radius: 2rem;
+  background: #f4ecdf;
+  box-shadow: var(--sc-shadow);
+}
+
+body.solar-curator .prompt-row,
+body.solar-curator .person-card,
+body.solar-curator .result-card {
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+}
+
+body.solar-curator .prompt-row:hover,
+body.solar-curator .person-card:hover,
+body.solar-curator .result-card:hover {
+  transform: translateY(-2px);
+  background: #f2ece2;
+  box-shadow:
+    0 18px 28px rgba(172, 52, 22, 0.08),
+    inset 0 0 0 1px rgba(89, 65, 60, 0.06);
+}
+
+body.solar-curator .prompt-row.drop-target,
+body.solar-curator .person-card.active,
+body.solar-curator .person-card.drop-target,
+body.solar-curator .result-frame.clickable:hover {
+  box-shadow:
+    0 16px 28px rgba(172, 52, 22, 0.1),
+    inset 0 0 0 2px rgba(172, 52, 22, 0.16);
+}
+
+body.solar-curator .drag-handle,
+body.solar-curator .prompt-badge,
+body.solar-curator .filter-pill,
+body.solar-curator .person-source-chip::after,
+body.solar-curator .carousel-dots,
+body.solar-curator .stage-note {
+  background: var(--sc-surface-float);
+  color: var(--sc-text);
+  backdrop-filter: blur(20px);
+  box-shadow:
+    inset 0 0 0 1px rgba(89, 65, 60, 0.08),
+    0 14px 26px rgba(172, 52, 22, 0.08);
+}
+
+body.solar-curator .drag-handle,
+body.solar-curator .prompt-badge {
+  border: none;
+}
+
+body.solar-curator .person-card {
+  gap: 0.95rem;
+  padding: 1rem;
+  border: none;
+  border-radius: 2rem;
+  background: rgba(255, 255, 255, 0.55);
+  box-shadow: var(--sc-ghost-border);
+}
+
+body.solar-curator .person-source-chip,
+body.solar-curator .result-frame {
+  border-radius: 2rem;
+  background:
+    linear-gradient(135deg, rgba(240, 101, 67, 0.1), transparent 54%),
+    #f0e7dc;
+}
+
+body.solar-curator .person-source-chip {
+  border: none;
+  width: 62px;
+  height: 62px;
+}
+
+body.solar-curator .person-source-chip.active,
+body.solar-curator .person-source-chip.drop-target {
+  box-shadow:
+    0 12px 24px rgba(172, 52, 22, 0.1),
+    inset 0 0 0 2px rgba(172, 52, 22, 0.2);
+}
+
+body.solar-curator .person-source-chip .source-placeholder,
+body.solar-curator .image-stage.empty::before {
+  background:
+    radial-gradient(circle at top left, rgba(240, 101, 67, 0.14), transparent 45%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(245, 237, 227, 0.98));
+  color: var(--sc-text-soft);
+}
+
+body.solar-curator .result-card {
+  min-height: 340px;
+  gap: 0.9rem;
+  padding: 1rem;
+}
+
+body.solar-curator .result-meta strong,
+body.solar-curator .person-select strong,
+body.solar-curator .source-copy strong,
+body.solar-curator .people-panel-head strong {
+  color: var(--sc-text);
+}
+
+body.solar-curator .result-status.success {
+  color: var(--sc-success);
+}
+
+body.solar-curator .result-status.notice,
+body.solar-curator .source-warning {
+  color: var(--sc-warning);
+}
+
+body.solar-curator .result-status.error,
+body.solar-curator .status.error {
+  color: var(--sc-danger);
+}
+
+body.solar-curator .lightbox {
+  background: rgba(39, 38, 64, 0.36);
+  backdrop-filter: blur(14px);
+}
+
+body.solar-curator .lightbox-content {
+  border: none;
+  border-radius: 2.4rem;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(250, 244, 236, 0.95)),
+    var(--sc-surface);
+  box-shadow: 0 24px 60px rgba(39, 38, 64, 0.14);
+}
+
+body.solar-curator .lightbox-stage {
+  border-radius: 2rem;
+  background:
+    radial-gradient(circle at top left, rgba(240, 101, 67, 0.08), transparent 45%),
+    #f2ebdf;
+}
+
+body.solar-curator .lightbox-nav,
+body.solar-curator .lightbox-close,
+body.solar-curator .stage-note {
+  background: rgba(255, 255, 255, 0.72);
+}
+
+body.solar-curator .carousel-dot {
+  background: rgba(89, 65, 60, 0.24);
+}
+
+body.solar-curator .carousel-dot.active {
+  background: var(--sc-primary);
+}
+
+body.solar-curator code {
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+  background: rgba(172, 52, 22, 0.08);
+  color: var(--sc-primary);
+}
+
+body.solar-curator.frontend-test-page .wrap,
+body.solar-curator.image-compare-page .wrap,
+body.solar-curator.reframe-test-page .wrap {
+  width: min(1180px, 100%);
+}
+
+body.solar-curator.frontend-test-page .panel:first-child,
+body.solar-curator.image-compare-page .wrap > h1,
+body.solar-curator.reframe-test-page .hero {
+  position: relative;
+}
+
+body.solar-curator.frontend-test-page .panel:first-child {
+  padding: clamp(2rem, 4vw, 3rem);
+  gap: 1rem;
+}
+
+body.solar-curator.frontend-test-page .panel:first-child::before {
+  content: "EDITORIAL TEST";
+  width: fit-content;
+  padding: 0.55rem 0.9rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.75);
+  color: var(--sc-primary);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+}
+
+body.solar-curator.frontend-test-page h1,
+body.solar-curator.image-compare-page h1 {
+  margin: 0;
+}
+
+body.solar-curator.frontend-test-page #test-form,
+body.solar-curator.reframe-test-page .layout > :first-child {
+  margin-top: 1.5rem;
+}
+
+body.solar-curator.frontend-test-page #result {
+  min-height: 380px;
+  background:
+    radial-gradient(circle at top left, rgba(240, 101, 67, 0.12), transparent 36%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(246, 239, 230, 0.96));
+}
+
+body.solar-curator.image-compare-page {
+  display: block;
+}
+
+body.solar-curator.image-compare-page .wrap {
+  display: grid;
+  gap: 1.35rem;
+}
+
+body.solar-curator.image-compare-page h1 {
+  font-size: clamp(2.5rem, 6vw, 4.4rem);
+}
+
+body.solar-curator.image-compare-page h1::before {
+  content: "REVEAL EDITION";
+  display: block;
+  margin-bottom: 0.9rem;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: var(--sc-primary);
+}
+
+body.solar-curator.image-compare-page .controls {
+  gap: 0.85rem;
+  margin: 0;
+}
+
+body.solar-curator.image-compare-page .status {
+  flex: 1 1 280px;
+}
+
+body.solar-curator.image-compare-page .prompt-wrap {
+  padding: 1.25rem;
+  border-radius: 2rem;
+  background: rgba(255, 255, 255, 0.58);
+  box-shadow: var(--sc-ghost-border);
+}
+
+body.solar-curator.image-compare-page .stage-shell {
+  border-radius: 3rem;
+}
+
+body.solar-curator.image-compare-page .stage-meta {
+  padding-bottom: 1rem;
+}
+
+body.solar-curator.image-compare-page .image-stage {
+  min-height: 60vh;
+  background:
+    radial-gradient(circle at top left, rgba(240, 101, 67, 0.08), transparent 30%),
+    repeating-linear-gradient(
+      -45deg,
+      rgba(89, 65, 60, 0.035) 0,
+      rgba(89, 65, 60, 0.035) 12px,
+      transparent 12px,
+      transparent 24px
+    ),
+    #efe6d9;
+}
+
+body.solar-curator.image-compare-page .slider-indicator::after {
+  background: rgba(39, 38, 64, 0.72);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.4), 0 0 18px rgba(172, 52, 22, 0.2);
+}
+
+body.solar-curator.image-compare-page .slider-indicator::before {
+  border-color: rgba(172, 52, 22, 0.64);
+  box-shadow: 0 8px 18px rgba(172, 52, 22, 0.14);
+}
+
+body.solar-curator.reframe-test-page .layout > :last-child {
+  margin-top: 3.5rem;
+}
+
+body.solar-curator.reframe-test-page .canvas-stage,
+body.solar-curator.reframe-test-page .result-stage {
+  padding: 1.25rem;
+  background:
+    radial-gradient(circle at top left, rgba(240, 101, 67, 0.08), transparent 34%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(246, 239, 230, 0.98));
+}
+
+body.solar-curator.reframe-test-page .result-controls {
+  align-items: end;
+}
+
+body.solar-curator.person-variations-page .wrap {
+  gap: 2.5rem;
+}
+
+body.solar-curator.person-variations-page .hero {
+  grid-template-columns: minmax(0, 1.1fr) minmax(220px, 0.54fr);
+  gap: 1.4rem 2rem;
+  align-items: end;
+}
+
+body.solar-curator.person-variations-page .hero > :nth-child(2) {
+  max-width: 40rem;
+}
+
+body.solar-curator.person-variations-page .hero > :last-child {
+  justify-self: end;
+  max-width: 18rem;
+  padding: 1rem 1.1rem;
+  border-radius: 2rem;
+  background: rgba(255, 255, 255, 0.54);
+  box-shadow: var(--sc-ghost-border);
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+
+body.solar-curator.person-variations-page .layout > :first-child {
+  margin-top: 2rem;
+}
+
+body.solar-curator.person-variations-page .layout > :last-child {
+  margin-top: 5.5rem;
+}
+
+body.solar-curator.person-variations-page .source-actions,
+body.solar-curator.person-variations-page .source-controls,
+body.solar-curator.person-variations-page .prompt-actions,
+body.solar-curator.person-variations-page .controls,
+body.solar-curator.person-variations-page .results-toolbar,
+body.solar-curator.person-variations-page .toolbar-actions,
+body.solar-curator.person-variations-page .result-controls,
+body.solar-curator.reframe-test-page .row,
+body.solar-curator.reframe-test-page .result-controls {
+  gap: 0.9rem;
+}
+
+body.solar-curator.person-variations-page .results-grid {
+  gap: 2rem 1.25rem;
+}
+
+body.solar-curator.person-variations-page .people-panel {
+  gap: 1rem;
+  padding: 1.2rem;
+}
+
+body.solar-curator.person-variations-page .view-toggle {
+  padding: 0.35rem;
+}
+
+body.solar-curator.person-variations-page .view-toggle button.active,
+body.solar-curator.person-variations-page .filter-icon-btn.active,
+body.solar-curator.person-variations-page .icon-btn.active {
+  color: #fff7f2;
+  background:
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.16), transparent 36%),
+    linear-gradient(135deg, var(--sc-primary-bright), var(--sc-primary));
+  box-shadow: 0 12px 24px rgba(172, 52, 22, 0.18);
+}
+
+body.solar-curator.person-variations-page .result-delete {
+  color: #8d2f24;
+}
+
+body.solar-curator.person-variations-page .empty-state {
+  padding: 3rem 2rem;
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+.mode-switch {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  align-items: center;
+}
+
+.mode-tab {
+  min-width: 168px;
+}
+
+.mode-tab.active {
+  color: #fff7f2;
+  background:
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.16), transparent 36%),
+    linear-gradient(135deg, var(--sc-primary-bright), var(--sc-primary));
+  box-shadow: 0 12px 24px rgba(172, 52, 22, 0.18);
+}
+
+.mode-layout[hidden],
+.edit-archive-panel[hidden] {
+  display: none !important;
+}
+
+.edit-help {
+  font-size: 0.83rem;
+  color: var(--sc-text-soft);
+  line-height: 1.55;
+}
+
+.edit-compare-shell {
+  display: grid;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 2rem;
+  background: var(--sc-surface-low);
+  box-shadow: var(--sc-ghost-border);
+}
+
+.edit-compare-stage {
+  position: relative;
+  width: 100%;
+  min-height: 360px;
+  border-radius: 2rem;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at top left, rgba(240, 101, 67, 0.08), transparent 34%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(246, 239, 230, 0.98));
+}
+
+.edit-compare-stage.empty::before {
+  content: attr(data-empty-message);
+  position: absolute;
+  inset: 1.25rem;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  color: var(--sc-text-soft);
+  line-height: 1.5;
+  border-radius: 1.6rem;
+  background:
+    radial-gradient(circle at top left, rgba(240, 101, 67, 0.12), transparent 40%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.78), rgba(244, 236, 226, 0.98));
+}
+
+.edit-compare-stage.empty .edit-compare-base,
+.edit-compare-stage.empty .edit-compare-overlay,
+.edit-compare-stage.empty .edit-compare-handle {
+  display: none;
+}
+
+.edit-compare-base,
+.edit-compare-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: transparent;
+}
+
+.edit-compare-overlay {
+  clip-path: inset(0 0 0 0);
+}
+
+.edit-compare-handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 24px;
+  transform: translateX(-12px);
+  pointer-events: none;
+}
+
+.edit-compare-handle::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 2px;
+  transform: translateX(-1px);
+  background: rgba(39, 38, 64, 0.72);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.4), 0 0 18px rgba(172, 52, 22, 0.2);
+}
+
+.edit-compare-handle::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  border: 2px solid rgba(172, 52, 22, 0.64);
+  box-shadow: 0 8px 18px rgba(172, 52, 22, 0.14);
+}
+
+.edit-compare-controls {
+  gap: 0.45rem;
+}
+
+.edit-archive-toolbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  margin: 0 0 1rem;
+}
+
+.edit-archive-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 1.25rem;
+}
+
+.edit-archive-card .result-frame {
+  cursor: zoom-in;
+}
+
+.edit-archive-card .result-meta {
+  gap: 0.45rem;
+}
+
+.edit-prompt-note {
+  padding: 0.95rem 1rem;
+  border-radius: 1.5rem;
+  background: rgba(255, 255, 255, 0.6);
+  box-shadow: var(--sc-ghost-border);
+}
+
+@media (max-width: 980px) {
+  body.solar-curator {
+    padding: 20px;
+  }
+
+  body.solar-curator .layout,
+  body.solar-curator.person-variations-page .hero {
+    grid-template-columns: 1fr;
+  }
+
+  body.solar-curator.person-variations-page .layout > :first-child,
+  body.solar-curator.person-variations-page .layout > :last-child,
+  body.solar-curator.reframe-test-page .layout > :first-child,
+  body.solar-curator.reframe-test-page .layout > :last-child,
+  body.solar-curator.frontend-test-page #test-form {
+    margin-top: 0;
+  }
+
+  body.solar-curator.person-variations-page .hero > :last-child {
+    justify-self: start;
+    max-width: 32rem;
+  }
+}
+
+@media (max-width: 640px) {
+  body.solar-curator {
+    padding: 14px;
+  }
+
+  body.solar-curator .hero,
+  body.solar-curator .panel,
+  body.solar-curator .stage-shell,
+  body.solar-curator .lightbox-content {
+    border-radius: 2rem;
+  }
+
+  body.solar-curator .panel-head,
+  body.solar-curator .panel-body,
+  body.solar-curator .stage-meta {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  body.solar-curator .panel-head strong {
+    font-size: 1.7rem;
+  }
+
+  body.solar-curator.image-compare-page .image-stage {
+    min-height: 52vh;
+  }
+
+  body.solar-curator .paste-target,
+  body.solar-curator .result,
+  body.solar-curator .canvas-stage,
+  body.solar-curator .result-stage,
+  body.solar-curator .image-stage,
+  body.solar-curator .token-panel,
+  body.solar-curator .source-preview,
+  body.solar-curator .prompt-row,
+  body.solar-curator .people-panel,
+  body.solar-curator .result-card,
+  body.solar-curator .empty-state,
+  body.solar-curator .result-frame,
+  body.solar-curator .person-source-chip {
+    border-radius: 1.6rem;
+  }
+}
+  </style>
 </head>
-<body>
+<body class="solar-curator person-variations-page">
   <div class="wrap">
     <section class="hero">
       <h1>Character Lab</h1>
       <p>Paste a photo of one person, adjust the prompts, then generate a full set of variations that keep that same person in the scene.</p>
       <p class="status" id="status">Paste, upload, or choose a saved person source to start generating.</p>
+      <div class="mode-switch" role="tablist" aria-label="Workspace mode">
+        <button id="variation-mode-btn" class="ghost-btn mode-tab" type="button" role="tab" aria-selected="true" aria-controls="variation-layout">Character Variations</button>
+        <button id="slider-mode-btn" class="ghost-btn mode-tab" type="button" role="tab" aria-selected="false" aria-controls="slider-layout">Slider Edit</button>
+      </div>
     </section>
 
-    <section class="layout">
+    <section id="variation-layout" class="layout mode-layout">
       <div class="panel">
         <div class="panel-head">
           <div class="head-group">
@@ -1278,6 +2286,143 @@
         </div>
       </div>
     </section>
+
+    <section id="slider-layout" class="layout mode-layout" hidden>
+      <div class="panel">
+        <div class="panel-head">
+          <div class="head-group">
+            <strong>Source + Fallback Prompts</strong>
+            <button
+              id="edit-toggle-prompts-btn"
+              class="ghost-btn icon-btn"
+              type="button"
+              title="Edit fallback prompts"
+              aria-label="Edit fallback prompts"
+              aria-expanded="false"
+              aria-controls="edit-prompt-editor"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M3 17.25V21h3.75l11-11.03-3.75-3.75L3 17.25zm17.71-10.04a1.003 1.003 0 0 0 0-1.42l-2.5-2.5a1.003 1.003 0 0 0-1.42 0l-1.96 1.96 3.75 3.75 2.13-1.79z"/>
+              </svg>
+            </button>
+          </div>
+          <span>Tries next prompt on moderation</span>
+        </div>
+        <div class="panel-body">
+          <div
+            id="edit-paste-target"
+            class="paste-target"
+            tabindex="0"
+            role="button"
+            aria-label="Paste image or image URL here for slider edit"
+          >Tap or click here to paste an image for slider editing</div>
+
+          <div class="source-actions">
+            <button id="edit-paste-clipboard-btn" class="ghost-btn" type="button">Paste From Clipboard</button>
+            <label for="edit-pick-image-input" id="edit-pick-image-btn" class="ghost-btn source-picker-label">Choose Image</label>
+            <label for="edit-camera-image-input" id="edit-camera-image-btn" class="ghost-btn source-picker-label">Use Camera</label>
+            <input id="edit-pick-image-input" type="file" accept="image/*" hidden />
+            <input id="edit-camera-image-input" type="file" accept="image/*" capture="environment" hidden />
+          </div>
+          <textarea
+            id="edit-mobile-paste-field"
+            class="mobile-paste-field"
+            rows="2"
+            autocapitalize="off"
+            autocomplete="off"
+            spellcheck="false"
+            placeholder="On iPhone: tap here, then tap Paste from the native menu."
+            aria-label="Tap and paste an image on mobile for slider edit"
+          ></textarea>
+
+          <div id="edit-source-preview" class="source-preview">
+            <img id="edit-source-image" alt="Slider edit source preview" />
+            <div class="source-copy">
+              <strong id="edit-source-title">Ready to edit</strong>
+              <span id="edit-source-description"></span>
+              <span id="edit-source-warning" class="source-warning"></span>
+            </div>
+          </div>
+
+          <div class="source-controls">
+            <button id="edit-generate-btn" type="button">Generate Edit</button>
+            <button id="edit-clear-source-btn" class="ghost-btn" type="button">Clear Source</button>
+          </div>
+
+          <form class="token-panel">
+            <label class="field" for="edit-token-input">
+              <span class="field-label">xAI API key for browser-only image edits</span>
+              <input id="edit-token-input" type="password" placeholder="xai-..." autocomplete="off" spellcheck="false" />
+            </label>
+            <div class="controls">
+              <label class="toggle-row" for="edit-save-token-checkbox">
+                <input id="edit-save-token-checkbox" type="checkbox" />
+                <span>Save token in local storage</span>
+              </label>
+              <button id="edit-clear-token-btn" class="ghost-btn" type="button">Clear Token</button>
+            </div>
+          </form>
+
+          <div id="edit-prompt-editor" class="prompt-editor">
+            <div class="prompt-actions">
+              <button id="edit-add-prompt-btn" class="ghost-btn" type="button">Add Prompt</button>
+              <button id="edit-reset-prompts-btn" class="ghost-btn" type="button">Reset Edit Fallbacks</button>
+            </div>
+            <p class="edit-help edit-prompt-note">Prompts are tried in order. If a prompt is moderated, the next enabled prompt runs automatically until one succeeds.</p>
+            <div id="edit-prompt-list" class="prompt-list" aria-live="polite"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <div class="head-group">
+            <strong>Slider Preview</strong>
+            <button
+              id="edit-toggle-archive-btn"
+              class="ghost-btn icon-btn"
+              type="button"
+              title="Open slider edit archive"
+              aria-label="Open slider edit archive"
+              aria-expanded="false"
+              aria-controls="edit-archive-panel"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M4 4h16v4H4V4Zm1 6h14v9a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-9Zm4 2v2h6v-2H9Z"/>
+              </svg>
+            </button>
+          </div>
+          <span id="edit-results-summary">0 saved</span>
+        </div>
+        <div class="panel-body">
+          <div class="edit-compare-shell">
+            <div class="stage-meta">
+              <span>Original overlays the edit</span>
+              <span>Use the slider to reveal the generated version</span>
+            </div>
+            <div id="edit-compare-stage" class="edit-compare-stage empty" data-empty-message="Paste a source image, then run a slider edit.">
+              <img id="edit-compare-base-image" class="edit-compare-base" alt="Generated slider edit preview" />
+              <img id="edit-compare-overlay-image" class="edit-compare-overlay" alt="Original source preview" />
+              <div id="edit-compare-handle" class="edit-compare-handle" aria-hidden="true"></div>
+              <div id="edit-stage-note" class="stage-note">Waiting for a source image</div>
+            </div>
+            <label class="field edit-compare-controls" for="edit-compare-range">
+              <span>Reveal edited image</span>
+              <input id="edit-compare-range" type="range" min="0" max="100" step="1" value="100" />
+            </label>
+          </div>
+
+          <div id="edit-archive-panel" class="edit-archive-panel" hidden>
+            <div class="edit-archive-toolbar">
+              <p class="edit-help">Successful slider edits are saved here. Archive cards open in the zoom view. The slider preview only compares against an edit generated for the current source image.</p>
+              <button id="edit-delete-all-images-btn" class="danger-btn" type="button">Delete Saved Edits</button>
+            </div>
+            <div id="edit-archive-grid" class="edit-archive-grid"></div>
+            <div id="edit-results-empty" class="empty-state">No saved slider edits yet. Run an edit and successful images will appear here.</div>
+          </div>
+        </div>
+      </div>
+    </section>
   </div>
 
   <div id="lightbox" class="lightbox" aria-hidden="true">
@@ -1324,7 +2469,10 @@
     const activeSourceStorageKey = "personVariations.activeSource.v2";
     const filterPersonStorageKey = "personVariations.filterPerson.v2";
     const resultsViewStorageKey = "personVariations.viewMode.v2";
+    const appModeStorageKey = "personVariations.appMode.v1";
     const promptStorageKey = "personVariations.prompts.v1";
+    const editPromptStorageKey = "personVariations.sliderEdit.prompts.v1";
+    const editArchiveStorageKey = "personVariations.sliderEdit.archive.v1";
     const resultsStorageKey = "personVariations.results.v1";
     const sourceStorageKey = "personVariations.source.v1";
     const tokenStorageKey = "personVariations.token.v1";
@@ -1344,6 +2492,11 @@
       "Place this person in a business meeting where they are calmly negotiating with three ducks around a conference table, sharp and funny.",
       "Turn this person into a weather reporter standing in a storm of flying pizza slices, heroic pose, detailed comedic realism."
     ];
+    const defaultEditPrompts = [
+      "Add a festive Santa hat to each visible person. Keep the exact same framing, background, and composition.",
+      "Edit only the headwear: place a soft red holiday cap on each visible person while preserving the original crop and lighting.",
+      "Keep the photo unchanged except for adding realistic red winter hats to the people in the image."
+    ];
     const verticalRecomposeSuffix = "Recompose into a tall vertical scene. Expand beyond the original crop. Show the same person fully integrated in a new environment. Replace the original background completely. Do not preserve the original photo frame, square crop or black padding. Fill the entire image naturally from top to bottom.";
     const verticalAspectRatio = 9 / 16;
     const preparedSourceMaxLongSide = 2048;
@@ -1351,6 +2504,10 @@
 
     const pasteTarget = document.getElementById("paste-target");
     const statusEl = document.getElementById("status");
+    const variationModeButton = document.getElementById("variation-mode-btn");
+    const sliderModeButton = document.getElementById("slider-mode-btn");
+    const variationLayout = document.getElementById("variation-layout");
+    const sliderLayout = document.getElementById("slider-layout");
     const sourcePreview = document.getElementById("source-preview");
     const sourceImage = document.getElementById("source-image");
     const sourceTitle = document.getElementById("source-title");
@@ -1365,6 +2522,9 @@
     const tokenInput = document.getElementById("token-input");
     const saveTokenCheckbox = document.getElementById("save-token-checkbox");
     const clearTokenButton = document.getElementById("clear-token-btn");
+    const editTokenInput = document.getElementById("edit-token-input");
+    const editSaveTokenCheckbox = document.getElementById("edit-save-token-checkbox");
+    const editClearTokenButton = document.getElementById("edit-clear-token-btn");
     const togglePromptsButton = document.getElementById("toggle-prompts-btn");
     const promptEditor = document.getElementById("prompt-editor");
     const promptList = document.getElementById("prompt-list");
@@ -1395,6 +2555,37 @@
     const lightboxNextButton = document.getElementById("lightbox-next-btn");
     const lightboxDownButton = document.getElementById("lightbox-down-btn");
     const lightboxCloseButton = document.getElementById("lightbox-close-btn");
+    const editPasteTarget = document.getElementById("edit-paste-target");
+    const editSourcePreview = document.getElementById("edit-source-preview");
+    const editSourceImage = document.getElementById("edit-source-image");
+    const editSourceTitle = document.getElementById("edit-source-title");
+    const editSourceDescription = document.getElementById("edit-source-description");
+    const editSourceWarning = document.getElementById("edit-source-warning");
+    const editPasteClipboardButton = document.getElementById("edit-paste-clipboard-btn");
+    const editMobilePasteField = document.getElementById("edit-mobile-paste-field");
+    const editPickImageButton = document.getElementById("edit-pick-image-btn");
+    const editCameraImageButton = document.getElementById("edit-camera-image-btn");
+    const editPickImageInput = document.getElementById("edit-pick-image-input");
+    const editCameraImageInput = document.getElementById("edit-camera-image-input");
+    const editGenerateButton = document.getElementById("edit-generate-btn");
+    const editClearSourceButton = document.getElementById("edit-clear-source-btn");
+    const editTogglePromptsButton = document.getElementById("edit-toggle-prompts-btn");
+    const editPromptEditor = document.getElementById("edit-prompt-editor");
+    const editPromptList = document.getElementById("edit-prompt-list");
+    const editAddPromptButton = document.getElementById("edit-add-prompt-btn");
+    const editResetPromptsButton = document.getElementById("edit-reset-prompts-btn");
+    const editToggleArchiveButton = document.getElementById("edit-toggle-archive-btn");
+    const editArchivePanel = document.getElementById("edit-archive-panel");
+    const editResultsSummary = document.getElementById("edit-results-summary");
+    const editArchiveGrid = document.getElementById("edit-archive-grid");
+    const editResultsEmpty = document.getElementById("edit-results-empty");
+    const editDeleteAllImagesButton = document.getElementById("edit-delete-all-images-btn");
+    const editCompareStage = document.getElementById("edit-compare-stage");
+    const editCompareBaseImage = document.getElementById("edit-compare-base-image");
+    const editCompareOverlayImage = document.getElementById("edit-compare-overlay-image");
+    const editCompareHandle = document.getElementById("edit-compare-handle");
+    const editCompareRange = document.getElementById("edit-compare-range");
+    const editStageNote = document.getElementById("edit-stage-note");
     const blobUrlCache = new Map();
     const blobUrlLoads = new Set();
     const sourceBlobUrlCache = new Map();
@@ -1433,9 +2624,30 @@
       storageQuotaExceeded: false,
       pendingRevealKey: "",
       pendingRevealBehavior: "smooth",
+      appMode: "variations",
       archiveOpen: false,
+      lightboxCollection: "variations",
       deferSourceImageReveal: false,
       sourcePreviewUnlocked: true
+    };
+
+    const editState = {
+      source: "",
+      sourcePreviewUrl: "",
+      sourceLabel: "",
+      sourceWidth: 0,
+      sourceHeight: 0,
+      prompts: [],
+      archive: [],
+      isGenerating: false,
+      promptEditorOpen: false,
+      archiveOpen: false,
+      sliderPercent: 100,
+      currentArchiveId: "",
+      preparedSourceKey: "",
+      preparedSourceDataUrl: "",
+      preparedSourcePromise: null,
+      dragIndex: -1
     };
 
     function makePromptEntry(text, enabled = true) {
@@ -1467,6 +2679,76 @@
       toggleArchiveButton.classList.toggle("active", state.archiveOpen);
       toggleArchiveButton.title = state.archiveOpen ? "Hide archive" : "Open archive";
       toggleArchiveButton.setAttribute("aria-label", state.archiveOpen ? "Hide archive" : "Open archive");
+    }
+
+    function renderEditArchivePanel() {
+      editArchivePanel.hidden = !editState.archiveOpen;
+      editToggleArchiveButton.setAttribute("aria-expanded", String(editState.archiveOpen));
+      editToggleArchiveButton.classList.toggle("active", editState.archiveOpen);
+      editToggleArchiveButton.title = editState.archiveOpen ? "Hide slider edit archive" : "Open slider edit archive";
+      editToggleArchiveButton.setAttribute("aria-label", editState.archiveOpen ? "Hide slider edit archive" : "Open slider edit archive");
+    }
+
+    function renderAppMode() {
+      const sliderMode = isSliderMode();
+      variationLayout.hidden = sliderMode;
+      sliderLayout.hidden = !sliderMode;
+      variationModeButton.classList.toggle("active", !sliderMode);
+      sliderModeButton.classList.toggle("active", sliderMode);
+      variationModeButton.setAttribute("aria-selected", String(!sliderMode));
+      sliderModeButton.setAttribute("aria-selected", String(sliderMode));
+      if (!sliderMode) {
+        renderWorkspace();
+      } else {
+        renderEditWorkspace();
+      }
+      localStorage.setItem(appModeStorageKey, state.appMode);
+    }
+
+    function switchAppMode(mode) {
+      if (mode !== "variations" && mode !== "slider") {
+        return;
+      }
+      state.appMode = mode;
+      closeLightbox();
+      renderAppMode();
+    }
+
+    function getEditArchiveImageUrl(entry) {
+      return getVersionImageUrl(entry?.version);
+    }
+
+    function getEditArchiveBlobKeys(entry) {
+      return entry?.version?.blobKey ? [entry.version.blobKey] : [];
+    }
+
+    function hydrateEditArchiveEntry(entry) {
+      if (!entry?.version?.blobKey || blobUrlCache.has(entry.version.blobKey) || blobUrlLoads.has(entry.version.blobKey)) {
+        return;
+      }
+      const blobKey = entry.version.blobKey;
+      blobUrlLoads.add(blobKey);
+      getImageRecord(blobKey)
+        .then((record) => {
+          if (!record?.blob) {
+            entry.version.blobKey = "";
+            saveEditArchive();
+            renderEditArchive();
+            return;
+          }
+          const objectUrl = URL.createObjectURL(record.blob);
+          blobUrlCache.set(blobKey, objectUrl);
+          renderEditArchive();
+          renderEditCompareStage();
+        })
+        .catch(() => {
+          entry.version.blobKey = "";
+          saveEditArchive();
+          renderEditArchive();
+        })
+        .finally(() => {
+          blobUrlLoads.delete(blobKey);
+        });
     }
 
     function queueResultCardReveal(personId, promptIndex, behavior = "smooth") {
@@ -1512,14 +2794,15 @@
     function loadSavedToken() {
       const savedToken = localStorage.getItem(tokenStorageKey) || "";
       if (savedToken) {
-        tokenInput.value = savedToken;
-        saveTokenCheckbox.checked = true;
+        setSharedTokenValue(savedToken);
+        setSharedSaveTokenChecked(true);
       }
     }
 
     function persistTokenIfNeeded() {
-      if (saveTokenCheckbox.checked && tokenInput.value.trim()) {
-        localStorage.setItem(tokenStorageKey, tokenInput.value.trim());
+      const token = getSharedTokenValue();
+      if (isSaveTokenEnabled() && token) {
+        localStorage.setItem(tokenStorageKey, token);
       } else {
         localStorage.removeItem(tokenStorageKey);
       }
@@ -1547,6 +2830,103 @@
         return defaultPrompts.map((prompt) => makePromptEntry(prompt, true));
       }
       return normalized;
+    }
+
+    function cloneEditPrompts(prompts) {
+      const normalized = normalizePromptList(prompts);
+      if (!normalized.length) {
+        return defaultEditPrompts.map((prompt) => makePromptEntry(prompt, true));
+      }
+      return normalized;
+    }
+
+    function normalizeEditArchiveEntry(value) {
+      const version = normalizeVersionEntry(value?.version || value?.imageUrl || "");
+      return {
+        id: typeof value?.id === "string" && value.id ? value.id : makeId("slideredit"),
+        prompt: typeof value?.prompt === "string" ? value.prompt : "",
+        sourceLabel: typeof value?.sourceLabel === "string" ? value.sourceLabel : "",
+        createdAt: Number.isFinite(value?.createdAt) ? Number(value.createdAt) : Date.now(),
+        attemptCount: Number.isFinite(value?.attemptCount) ? Number(value.attemptCount) : 1,
+        promptIndex: Number.isFinite(value?.promptIndex) ? Number(value.promptIndex) : 0,
+        version,
+      };
+    }
+
+    function cloneEditArchive(entries) {
+      if (!Array.isArray(entries)) {
+        return [];
+      }
+      return entries.map(normalizeEditArchiveEntry);
+    }
+
+    function loadAppMode() {
+      const savedMode = localStorage.getItem(appModeStorageKey);
+      if (savedMode === "slider" || savedMode === "variations") {
+        state.appMode = savedMode;
+      }
+    }
+
+    function loadEditPrompts() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(editPromptStorageKey) || "null");
+        return cloneEditPrompts(saved);
+      } catch (_error) {
+        localStorage.removeItem(editPromptStorageKey);
+        return cloneEditPrompts([]);
+      }
+    }
+
+    function loadEditArchive() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(editArchiveStorageKey) || "null");
+        return cloneEditArchive(saved);
+      } catch (_error) {
+        localStorage.removeItem(editArchiveStorageKey);
+        return [];
+      }
+    }
+
+    function saveEditPrompts() {
+      localStorage.setItem(editPromptStorageKey, JSON.stringify(cloneEditPrompts(editState.prompts)));
+    }
+
+    function saveEditArchive() {
+      localStorage.setItem(editArchiveStorageKey, JSON.stringify(cloneEditArchive(editState.archive)));
+    }
+
+    function isSliderMode() {
+      return state.appMode === "slider";
+    }
+
+    function getSharedTokenValue() {
+      return String(editTokenInput?.value || tokenInput.value || "").trim();
+    }
+
+    function setSharedTokenValue(value) {
+      [tokenInput, editTokenInput].forEach((input) => {
+        if (input && input.value !== value) {
+          input.value = value;
+        }
+      });
+    }
+
+    function setSharedSaveTokenChecked(checked) {
+      [saveTokenCheckbox, editSaveTokenCheckbox].forEach((input) => {
+        if (input) {
+          input.checked = checked;
+        }
+      });
+    }
+
+    function isSaveTokenEnabled() {
+      return Boolean(saveTokenCheckbox.checked || editSaveTokenCheckbox.checked);
+    }
+
+    function clearEditPreparedSourceCache() {
+      editState.preparedSourceKey = "";
+      editState.preparedSourceDataUrl = "";
+      editState.preparedSourcePromise = null;
     }
 
     function clearPreparedSourceCache() {
@@ -2958,10 +4338,16 @@
     }
 
     function getLightboxItem() {
+      if (state.lightboxCollection === "slider") {
+        return editState.archive[state.lightboxIndex] || null;
+      }
       return state.visibleItems[state.lightboxIndex] || null;
     }
 
     function isLightboxShowingPrompt(index) {
+      if (state.lightboxCollection !== "variations") {
+        return false;
+      }
       const item = getLightboxItem();
       return Boolean(item && item.personId === state.activePersonId && item.promptIndex === index);
     }
@@ -3274,7 +4660,7 @@
 
     function renderResults() {
       state.visibleItems = buildVisibleItems();
-      if (state.lightboxKey) {
+      if (state.lightboxCollection === "variations" && state.lightboxKey) {
         const nextLightboxIndex = state.visibleItems.findIndex((item) => item.key === state.lightboxKey);
         if (nextLightboxIndex >= 0) {
           state.lightboxIndex = nextLightboxIndex;
@@ -3466,6 +4852,14 @@
 
     function updateLightboxNav() {
       const item = getLightboxItem();
+      if (state.lightboxCollection === "slider") {
+        const hasMultipleItems = editState.archive.length > 1;
+        lightboxPrevButton.disabled = !hasMultipleItems;
+        lightboxNextButton.disabled = !hasMultipleItems;
+        lightboxUpButton.disabled = true;
+        lightboxDownButton.disabled = true;
+        return;
+      }
       const hasMultiplePrompts = state.visibleItems.length > 1;
       const hasMultipleImages = getVisibleItemVariantCount(item) > 1;
       lightboxPrevButton.disabled = !hasMultipleImages;
@@ -3476,6 +4870,26 @@
 
     function updateLightboxContent() {
       const item = getLightboxItem();
+      if (state.lightboxCollection === "slider") {
+        const imageUrl = getEditArchiveImageUrl(item);
+        if (!imageUrl) {
+          return;
+        }
+        hydrateEditArchiveEntry(item);
+        resetLightboxZoom();
+        lightboxImage.src = addCacheBuster(imageUrl);
+        lightboxImage.alt = `Full size saved slider edit ${state.lightboxIndex + 1}`;
+        lightboxImage.onload = () => {
+          applyLightboxTransform();
+        };
+        lightboxTitle.textContent = editState.archive.length > 1
+          ? `Saved edit ${state.lightboxIndex + 1} of ${editState.archive.length}`
+          : "Saved slider edit";
+        lightboxVersionLabel.textContent = `${formatTimestamp(item.createdAt)} • prompt ${item.promptIndex + 1}`;
+        renderDots(lightboxDots, 0, 0);
+        updateLightboxNav();
+        return;
+      }
       const result = item?.result;
       const imageUrl = getResultImageUrl(result);
       if (!imageUrl) {
@@ -3501,9 +4915,12 @@
       updateLightboxNav();
     }
 
-    function openLightbox(index) {
+    function openLightbox(index, collection = "variations") {
       state.lightboxIndex = index;
-      state.lightboxKey = state.visibleItems[index]?.key || "";
+      state.lightboxCollection = collection;
+      state.lightboxKey = collection === "slider"
+        ? (editState.archive[index]?.id || "")
+        : (state.visibleItems[index]?.key || "");
       updateLightboxContent();
       lightbox.classList.add("open");
       lightbox.setAttribute("aria-hidden", "false");
@@ -3517,6 +4934,7 @@
       resetLightboxZoom();
       state.lightboxIndex = -1;
       state.lightboxKey = "";
+      state.lightboxCollection = "variations";
       lightbox.classList.remove("open");
       lightbox.setAttribute("aria-hidden", "true");
       lightboxImage.removeAttribute("src");
@@ -3524,6 +4942,16 @@
     }
 
     function stepLightboxVersion(direction) {
+      if (state.lightboxCollection === "slider") {
+        if (!editState.archive.length) {
+          return;
+        }
+        const nextPosition = (state.lightboxIndex + direction + editState.archive.length) % editState.archive.length;
+        state.lightboxIndex = nextPosition;
+        state.lightboxKey = editState.archive[nextPosition]?.id || "";
+        updateLightboxContent();
+        return;
+      }
       const item = getLightboxItem();
       if (!item) {
         return;
@@ -3532,6 +4960,9 @@
     }
 
     function stepLightboxPrompt(direction) {
+      if (state.lightboxCollection === "slider") {
+        return;
+      }
       if (state.lightboxIndex < 0 || state.visibleItems.length <= 1) {
         return;
       }
@@ -4027,6 +5458,670 @@
       setStatus("Source image cleared.");
     }
 
+    function getEnabledEditPromptIndices() {
+      return editState.prompts
+        .map((prompt, index) => (prompt.enabled ? index : -1))
+        .filter((index) => index >= 0);
+    }
+
+    function setEditStageNote(message) {
+      editStageNote.textContent = message;
+    }
+
+    function updateEditCompareReveal() {
+      const percent = Math.max(0, Math.min(100, Math.round(editState.sliderPercent)));
+      editState.sliderPercent = percent;
+      editCompareRange.value = String(percent);
+      editCompareHandle.style.left = `${percent}%`;
+      editCompareOverlayImage.style.clipPath = `inset(0 ${100 - percent}% 0 0)`;
+    }
+
+    function getCurrentEditArchiveEntry() {
+      return editState.archive.find((entry) => entry.id === editState.currentArchiveId) || null;
+    }
+
+    function ensureCurrentEditArchiveSelection() {
+      if (getCurrentEditArchiveEntry()) {
+        return;
+      }
+      editState.currentArchiveId = "";
+    }
+
+    function renderEditSourcePreview() {
+      if (!editState.source) {
+        editSourcePreview.classList.remove("open", "no-image", "deferred");
+        editPasteTarget.classList.remove("ready");
+        editPasteTarget.textContent = "Tap or click here to paste an image for slider editing";
+        editSourceImage.removeAttribute("src");
+        editSourceTitle.textContent = "Ready to edit";
+        editSourceDescription.textContent = "";
+        editSourceWarning.textContent = "";
+        editSourceWarning.classList.remove("visible");
+        refreshEditButtons();
+        return;
+      }
+
+      editSourcePreview.classList.add("open");
+      editSourcePreview.classList.remove("no-image", "deferred");
+      editPasteTarget.classList.add("ready");
+      editPasteTarget.textContent = "Source image ready for slider editing";
+      editSourceImage.src = editState.sourcePreviewUrl || editState.source;
+      editSourceTitle.textContent = "Slider edit source loaded";
+      editSourceDescription.textContent = editState.sourceLabel || "current source image";
+      if (isHttpUrl(editState.source)) {
+        editSourceWarning.textContent = "Using a remote image URL. Keep edits composition-safe so the slider lines up with the original.";
+        editSourceWarning.classList.add("visible");
+      } else {
+        editSourceWarning.textContent = "";
+        editSourceWarning.classList.remove("visible");
+      }
+      refreshEditButtons();
+    }
+
+    function renderEditPromptEditor() {
+      editPromptEditor.classList.toggle("open", editState.promptEditorOpen);
+      editTogglePromptsButton.setAttribute("aria-expanded", String(editState.promptEditorOpen));
+      editTogglePromptsButton.classList.toggle("active", editState.promptEditorOpen);
+    }
+
+    function moveEditPrompt(fromIndex, toIndex) {
+      if (fromIndex < 0 || toIndex < 0 || fromIndex === toIndex) {
+        return;
+      }
+      const movedPrompt = editState.prompts.splice(fromIndex, 1)[0];
+      editState.prompts.splice(toIndex, 0, movedPrompt);
+      saveEditPrompts();
+      renderEditPrompts();
+    }
+
+    function renderEditPrompts() {
+      editPromptList.innerHTML = "";
+      editState.prompts.forEach((prompt, index) => {
+        const row = document.createElement("div");
+        row.className = "prompt-row";
+        row.dataset.index = String(index);
+        row.addEventListener("dragover", (event) => {
+          event.preventDefault();
+          if (editState.dragIndex >= 0 && editState.dragIndex !== index) {
+            row.classList.add("drop-target");
+          }
+        });
+        row.addEventListener("dragleave", () => {
+          row.classList.remove("drop-target");
+        });
+        row.addEventListener("drop", (event) => {
+          event.preventDefault();
+          row.classList.remove("drop-target");
+          moveEditPrompt(editState.dragIndex, index);
+        });
+
+        const dragHandle = document.createElement("div");
+        dragHandle.className = "drag-handle";
+        dragHandle.textContent = ":::";
+        dragHandle.draggable = !editState.isGenerating;
+        dragHandle.title = "Drag to reorder prompt";
+        dragHandle.addEventListener("dragstart", (event) => {
+          editState.dragIndex = index;
+          row.classList.add("dragging");
+          event.dataTransfer.effectAllowed = "move";
+          event.dataTransfer.setData("text/plain", String(index));
+        });
+        dragHandle.addEventListener("dragend", () => {
+          editState.dragIndex = -1;
+          row.classList.remove("dragging");
+          editPromptList.querySelectorAll(".prompt-row.drop-target").forEach((element) => {
+            element.classList.remove("drop-target");
+          });
+        });
+
+        const textarea = document.createElement("textarea");
+        textarea.value = prompt.text;
+        textarea.spellcheck = false;
+        textarea.id = `edit-prompt-${index + 1}`;
+        textarea.name = `edit-prompt-${index + 1}`;
+        textarea.setAttribute("aria-label", `Fallback prompt ${index + 1}`);
+        textarea.addEventListener("input", () => {
+          editState.prompts[index].text = textarea.value;
+          saveEditPrompts();
+        });
+
+        const tools = document.createElement("div");
+        tools.className = "prompt-tools";
+
+        const badge = document.createElement("div");
+        badge.className = "prompt-badge";
+        badge.textContent = `Try ${index + 1}`;
+
+        const enabledLabel = document.createElement("label");
+        enabledLabel.className = "toggle-row";
+        enabledLabel.htmlFor = `edit-prompt-enabled-${index + 1}`;
+
+        const enabledInput = document.createElement("input");
+        enabledInput.type = "checkbox";
+        enabledInput.id = `edit-prompt-enabled-${index + 1}`;
+        enabledInput.checked = prompt.enabled;
+        enabledInput.disabled = editState.isGenerating;
+        enabledInput.addEventListener("change", () => {
+          editState.prompts[index].enabled = enabledInput.checked;
+          saveEditPrompts();
+          refreshEditButtons();
+        });
+
+        const enabledText = document.createElement("span");
+        enabledText.textContent = "Enabled";
+        enabledLabel.append(enabledInput, enabledText);
+
+        const removeButton = document.createElement("button");
+        removeButton.className = "danger-btn tiny-btn";
+        removeButton.type = "button";
+        removeButton.textContent = "Remove";
+        removeButton.disabled = editState.prompts.length <= 1 || editState.isGenerating;
+        removeButton.addEventListener("click", () => {
+          if (editState.prompts.length <= 1 || editState.isGenerating) {
+            return;
+          }
+          editState.prompts.splice(index, 1);
+          saveEditPrompts();
+          renderEditPrompts();
+          refreshEditButtons();
+        });
+
+        tools.append(badge, enabledLabel, removeButton);
+        row.append(dragHandle, textarea, tools);
+        editPromptList.appendChild(row);
+      });
+    }
+
+    function refreshEditButtons() {
+      const hasSource = Boolean(editState.source);
+      editGenerateButton.disabled = !hasSource || editState.isGenerating || !getEnabledEditPromptIndices().length;
+      editClearSourceButton.disabled = !hasSource || editState.isGenerating;
+      editPickImageButton.classList.toggle("is-busy", editState.isGenerating);
+      editCameraImageButton.classList.toggle("is-busy", editState.isGenerating);
+      editPickImageButton.setAttribute("aria-disabled", editState.isGenerating ? "true" : "false");
+      editCameraImageButton.setAttribute("aria-disabled", editState.isGenerating ? "true" : "false");
+      editAddPromptButton.disabled = editState.isGenerating;
+      editResetPromptsButton.disabled = editState.isGenerating;
+      editDeleteAllImagesButton.disabled = editState.isGenerating || !editState.archive.length;
+      editCompareRange.disabled = !hasSource || !getCurrentEditArchiveEntry();
+    }
+
+    function formatTimestamp(timestamp) {
+      try {
+        return new Date(timestamp).toLocaleString([], {
+          dateStyle: "medium",
+          timeStyle: "short"
+        });
+      } catch (_error) {
+        return "Saved now";
+      }
+    }
+
+    function renderEditArchive() {
+      editArchiveGrid.innerHTML = "";
+      editState.archive.forEach((entry, index) => {
+        hydrateEditArchiveEntry(entry);
+        const card = document.createElement("article");
+        card.className = "result-card edit-archive-card";
+
+        const frame = document.createElement("div");
+        frame.className = "result-frame";
+        const imageUrl = getEditArchiveImageUrl(entry);
+        if (imageUrl) {
+          const image = document.createElement("img");
+          image.src = addCacheBuster(imageUrl);
+          image.alt = `Saved slider edit ${index + 1}`;
+          image.addEventListener("error", () => {
+            entry.version.blobKey = "";
+            saveEditArchive();
+            renderEditArchive();
+            renderEditCompareStage();
+          }, { once: true });
+          frame.appendChild(image);
+          frame.addEventListener("click", () => {
+            openLightbox(index, "slider");
+          });
+        } else {
+          frame.textContent = "Saved edit unavailable.";
+        }
+
+        const deleteButton = document.createElement("button");
+        deleteButton.className = "ghost-btn mini-icon-btn result-delete";
+        deleteButton.type = "button";
+        deleteButton.title = "Delete saved edit";
+        deleteButton.setAttribute("aria-label", "Delete saved edit");
+        deleteButton.innerHTML = `
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M9 3h6l1 2h4v2H4V5h4l1-2Zm-2 6h2v9H7V9Zm4 0h2v9h-2V9Zm4 0h2v9h-2V9ZM6 21a2 2 0 0 1-2-2V7h16v12a2 2 0 0 1-2 2H6Z"/>
+          </svg>
+        `;
+        deleteButton.addEventListener("click", (event) => {
+          event.stopPropagation();
+          deleteEditArchiveEntry(entry.id).catch((error) => {
+            setStatus(error.message || "Could not delete the saved slider edit.");
+          });
+        });
+        frame.appendChild(deleteButton);
+
+        const meta = document.createElement("div");
+        meta.className = "result-meta";
+        const title = document.createElement("strong");
+        title.textContent = `Saved edit ${index + 1}`;
+        const versionLabel = document.createElement("div");
+        versionLabel.className = "result-version-label";
+        versionLabel.textContent = `Used prompt ${entry.promptIndex + 1} after ${entry.attemptCount} ${entry.attemptCount === 1 ? "try" : "tries"}`;
+        const status = document.createElement("div");
+        status.className = "result-status success";
+        status.textContent = formatTimestamp(entry.createdAt);
+        const promptText = document.createElement("div");
+        promptText.className = "result-person-label";
+        promptText.textContent = entry.prompt || "Saved edit";
+        meta.append(title, versionLabel, status, promptText);
+
+        card.append(frame, meta);
+        editArchiveGrid.appendChild(card);
+      });
+
+      editResultsSummary.textContent = `${editState.archive.length} saved`;
+      editResultsEmpty.style.display = editState.archive.length ? "none" : "block";
+      saveEditArchive();
+      refreshEditButtons();
+    }
+
+    function renderEditCompareStage() {
+      const currentEntry = getCurrentEditArchiveEntry();
+      const generatedUrl = getEditArchiveImageUrl(currentEntry);
+      if (!editState.source) {
+        editCompareStage.classList.add("empty");
+        editCompareStage.dataset.emptyMessage = "Paste a source image, then run a slider edit.";
+        editCompareBaseImage.removeAttribute("src");
+        editCompareOverlayImage.removeAttribute("src");
+        editCompareStage.style.aspectRatio = "";
+        setEditStageNote("Waiting for a source image");
+        refreshEditButtons();
+        return;
+      }
+      if (!generatedUrl) {
+        editCompareStage.classList.add("empty");
+        editCompareStage.dataset.emptyMessage = "Run a slider edit to compare the latest result against the original.";
+        editCompareBaseImage.removeAttribute("src");
+        editCompareOverlayImage.removeAttribute("src");
+        editCompareStage.style.aspectRatio = editState.sourceWidth && editState.sourceHeight
+          ? `${editState.sourceWidth} / ${editState.sourceHeight}`
+          : "";
+        setEditStageNote("Waiting for the first successful edit");
+        refreshEditButtons();
+        return;
+      }
+      editCompareStage.classList.remove("empty");
+      if (editCompareBaseImage.src !== generatedUrl) {
+        editCompareBaseImage.src = generatedUrl;
+      }
+      if (editCompareOverlayImage.src !== editState.source) {
+        editCompareOverlayImage.src = editState.source;
+      }
+      editCompareStage.style.aspectRatio = editState.sourceWidth && editState.sourceHeight
+        ? `${editState.sourceWidth} / ${editState.sourceHeight}`
+        : "";
+      updateEditCompareReveal();
+      setEditStageNote("Use the slider to compare original and edited image");
+      refreshEditButtons();
+    }
+
+    function renderEditWorkspace() {
+      renderEditPromptEditor();
+      renderEditPrompts();
+      renderEditSourcePreview();
+      renderEditArchivePanel();
+      renderEditArchive();
+      renderEditCompareStage();
+      refreshEditButtons();
+    }
+
+    async function setEditSource(source, label, previewUrl = source) {
+      clearEditPreparedSourceCache();
+      const image = await loadImageElement(source);
+      editState.source = source;
+      editState.sourcePreviewUrl = previewUrl;
+      editState.sourceLabel = label;
+      editState.sourceWidth = image.naturalWidth || image.width || 0;
+      editState.sourceHeight = image.naturalHeight || image.height || 0;
+      editState.currentArchiveId = "";
+      editState.sliderPercent = 100;
+      renderEditWorkspace();
+      setStatus("Slider edit source ready. Run the fallback prompt chain to generate an edit.");
+    }
+
+    async function clearEditSource() {
+      clearEditPreparedSourceCache();
+      editState.source = "";
+      editState.sourcePreviewUrl = "";
+      editState.sourceLabel = "";
+      editState.sourceWidth = 0;
+      editState.sourceHeight = 0;
+      editState.currentArchiveId = "";
+      editState.sliderPercent = 100;
+      renderEditWorkspace();
+      editPasteTarget.focus();
+      setStatus("Slider edit source cleared.");
+    }
+
+    async function buildPreparedEditSource() {
+      const source = editState.source;
+      if (!source) {
+        throw new Error("Paste a source image first.");
+      }
+      if (isHttpUrl(source)) {
+        return source;
+      }
+      if (editState.preparedSourceKey === source) {
+        if (editState.preparedSourceDataUrl) {
+          return editState.preparedSourceDataUrl;
+        }
+        if (editState.preparedSourcePromise) {
+          return editState.preparedSourcePromise;
+        }
+      }
+
+      editState.preparedSourceKey = source;
+      editState.preparedSourcePromise = (async () => {
+        const image = await loadImageElement(source);
+        const sourceWidth = image.naturalWidth || image.width;
+        const sourceHeight = image.naturalHeight || image.height;
+        if (!sourceWidth || !sourceHeight) {
+          throw new Error("Could not read the source image dimensions.");
+        }
+        const longestSide = Math.max(sourceWidth, sourceHeight);
+        const scaleDown = longestSide > preparedSourceMaxLongSide
+          ? (preparedSourceMaxLongSide / longestSide)
+          : 1;
+        const finalWidth = Math.max(1, Math.round(sourceWidth * scaleDown));
+        const finalHeight = Math.max(1, Math.round(sourceHeight * scaleDown));
+        const canvas = document.createElement("canvas");
+        canvas.width = finalWidth;
+        canvas.height = finalHeight;
+        const context = canvas.getContext("2d");
+        if (!context) {
+          throw new Error("Could not prepare the source image.");
+        }
+        context.drawImage(image, 0, 0, finalWidth, finalHeight);
+        return canvas.toDataURL("image/jpeg", 0.92);
+      })();
+
+      try {
+        const preparedSource = await editState.preparedSourcePromise;
+        if (editState.preparedSourceKey === source) {
+          editState.preparedSourceDataUrl = preparedSource;
+          editState.preparedSourcePromise = null;
+        }
+        return preparedSource;
+      } catch (error) {
+        if (editState.preparedSourceKey === source) {
+          clearEditPreparedSourceCache();
+        }
+        throw error;
+      }
+    }
+
+    async function loadEditSelectedFile(file, label) {
+      if (!file || !file.type.startsWith("image/")) {
+        setStatus("Choose an image file.");
+        return;
+      }
+      const dataUrl = await blobToDataUrl(file);
+      await setEditSource(dataUrl, label);
+    }
+
+    async function handleEditPaste(event) {
+      const clipboardData = event.clipboardData;
+      if (!clipboardData || editState.isGenerating) {
+        return;
+      }
+      const items = Array.from(clipboardData.items || []);
+      const imageItem = items.find((item) => item.type.startsWith("image/"));
+      if (imageItem) {
+        event.preventDefault();
+        const blob = imageItem.getAsFile();
+        if (!blob) {
+          setStatus("Could not read the pasted image.");
+          return;
+        }
+        const dataUrl = await blobToDataUrl(blob);
+        await setEditSource(dataUrl, "pasted image");
+        return;
+      }
+
+      const pastedText = clipboardData.getData("text/plain").trim();
+      if (isHttpUrl(pastedText)) {
+        event.preventDefault();
+        await setEditSource(pastedText, "pasted image URL");
+        return;
+      }
+
+      setStatus("Paste an image or an http(s) image URL.");
+    }
+
+    async function pasteEditFromClipboard() {
+      if (editState.isGenerating) {
+        setStatus("Wait for the current slider edit to finish.");
+        return;
+      }
+      if (!navigator.clipboard) {
+        setStatus("Clipboard access is not available here. Long-press the paste area and use Paste.");
+        return;
+      }
+
+      if (typeof navigator.clipboard.read === "function") {
+        try {
+          const items = await navigator.clipboard.read();
+          for (const item of items) {
+            const imageType = (item.types || []).find((type) => type.startsWith("image/"));
+            if (imageType) {
+              const blob = await item.getType(imageType);
+              const dataUrl = await blobToDataUrl(blob);
+              await setEditSource(dataUrl, "clipboard image");
+              setStatus("Clipboard image loaded.");
+              return;
+            }
+            if ((item.types || []).includes("text/plain")) {
+              const textBlob = await item.getType("text/plain");
+              const pastedText = (await textBlob.text()).trim();
+              if (isHttpUrl(pastedText)) {
+                await setEditSource(pastedText, "clipboard image URL");
+                setStatus("Clipboard image URL loaded.");
+                return;
+              }
+            }
+          }
+        } catch (_error) {
+          // Fallback to readText below.
+        }
+      }
+
+      if (typeof navigator.clipboard.readText === "function") {
+        try {
+          const pastedText = (await navigator.clipboard.readText()).trim();
+          if (isHttpUrl(pastedText)) {
+            await setEditSource(pastedText, "clipboard image URL");
+            setStatus("Clipboard image URL loaded.");
+            return;
+          }
+        } catch (_error) {
+          // Ignore and use final status below.
+        }
+      }
+
+      setStatus("No image found in the clipboard. On iPhone, tap Paste From Clipboard after copying the image.");
+    }
+
+    async function requestSliderEdit(prompt) {
+      const token = getSharedTokenValue();
+      if (!token) {
+        throw new Error("Enter an xAI API key first.");
+      }
+      persistTokenIfNeeded();
+      const preparedSource = await buildPreparedEditSource();
+      const requestPayload = {
+        model: "grok-imagine-image",
+        prompt: String(prompt || "").trim(),
+        response_format: "b64_json",
+        resolution: "2k",
+        image: {
+          url: preparedSource,
+          type: "image_url"
+        }
+      };
+
+      let response;
+      try {
+        response = await fetch("https://api.x.ai/v1/images/edits", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          },
+          body: JSON.stringify(requestPayload)
+        });
+      } catch (_error) {
+        throw new Error("Direct browser request failed before completion. This is usually CORS, network, or browser policy.");
+      }
+
+      let data;
+      try {
+        data = await response.json();
+      } catch (_parseError) {
+        throw new Error("xAI returned an invalid response.");
+      }
+
+      if (!response.ok) {
+        if (isModerationMessage(data?.error || data?.error?.message || data?.message)) {
+          return {
+            edited_url: "",
+            is_moderated: true
+          };
+        }
+        const errorMessage = typeof data?.error === "string"
+          ? data.error
+          : (data?.error?.message || data?.message || `Image generation failed (${response.status}).`);
+        throw new Error(errorMessage);
+      }
+
+      const imageData = data?.data?.[0];
+      const base64Image = imageData?.b64_json;
+      const mimeType = typeof imageData?.mime_type === "string" && imageData.mime_type
+        ? imageData.mime_type
+        : "image/png";
+      if (typeof base64Image === "string" && base64Image) {
+        return {
+          edited_url: `data:${mimeType};base64,${base64Image}`,
+          is_moderated: false
+        };
+      }
+      throw new Error("xAI did not return b64_json for the edit response.");
+    }
+
+    async function runSliderEdit() {
+      if (editState.isGenerating) {
+        return;
+      }
+      if (!isSupportedImageSource(editState.source)) {
+        setStatus("Paste a source image first.");
+        return;
+      }
+
+      const enabledIndices = getEnabledEditPromptIndices();
+      if (!enabledIndices.length) {
+        setStatus("Enable at least one fallback prompt first.");
+        return;
+      }
+
+      editState.isGenerating = true;
+      refreshEditButtons();
+      renderEditPrompts();
+      setEditStageNote("Trying fallback prompts...");
+      setStatus(`Running up to ${enabledIndices.length} fallback prompts until one succeeds...`);
+
+      try {
+        let moderatedCount = 0;
+        for (let cursor = 0; cursor < enabledIndices.length; cursor += 1) {
+          const promptIndex = enabledIndices[cursor];
+          const prompt = (editState.prompts[promptIndex]?.text || "").trim();
+          if (!prompt) {
+            continue;
+          }
+          setStatus(`Trying slider edit prompt ${cursor + 1} of ${enabledIndices.length}...`);
+          setEditStageNote(`Trying prompt ${cursor + 1} of ${enabledIndices.length}`);
+          const data = await requestSliderEdit(prompt);
+          if (data.is_moderated) {
+            moderatedCount += 1;
+            continue;
+          }
+          const storedVersion = await persistGeneratedVersion(data.edited_url);
+          const entry = normalizeEditArchiveEntry({
+            id: makeId("slideredit"),
+            prompt,
+            promptIndex,
+            attemptCount: moderatedCount + 1,
+            sourceLabel: editState.sourceLabel,
+            createdAt: Date.now(),
+            version: storedVersion
+          });
+          editState.archive.unshift(entry);
+          editState.currentArchiveId = entry.id;
+          editState.sliderPercent = 100;
+          saveEditArchive();
+          renderEditWorkspace();
+          setEditStageNote("Use the slider to compare original and edited image");
+          setStatus(`Slider edit generated with fallback prompt ${promptIndex + 1}.`);
+          return;
+        }
+        setEditStageNote("All fallback prompts were moderated");
+        setStatus("All enabled slider edit prompts were moderated. Adjust the prompt list and try again.");
+      } finally {
+        editState.isGenerating = false;
+        refreshEditButtons();
+        renderEditPrompts();
+      }
+    }
+
+    async function deleteEditArchiveEntry(entryId) {
+      if (editState.isGenerating) {
+        return;
+      }
+      const entry = editState.archive.find((item) => item.id === entryId);
+      if (!entry) {
+        return;
+      }
+      await deleteBlobKeys(getEditArchiveBlobKeys(entry));
+      editState.archive = editState.archive.filter((item) => item.id !== entryId);
+      if (editState.currentArchiveId === entryId) {
+        editState.currentArchiveId = "";
+      }
+      if (state.lightboxCollection === "slider" && state.lightboxKey === entryId) {
+        closeLightbox();
+      }
+      ensureCurrentEditArchiveSelection();
+      saveEditArchive();
+      renderEditWorkspace();
+      setStatus("Saved slider edit deleted.");
+    }
+
+    async function deleteAllEditArchiveImages() {
+      if (editState.isGenerating || !editState.archive.length) {
+        return;
+      }
+      const blobKeys = editState.archive.flatMap((entry) => getEditArchiveBlobKeys(entry));
+      await deleteBlobKeys(blobKeys);
+      editState.archive = [];
+      editState.currentArchiveId = "";
+      if (state.lightboxCollection === "slider") {
+        closeLightbox();
+      }
+      saveEditArchive();
+      renderEditWorkspace();
+      setStatus("Deleted all saved slider edits.");
+    }
+
     async function handlePaste(event) {
       const clipboardData = event.clipboardData;
       if (!clipboardData || state.isGenerating) {
@@ -4149,7 +6244,7 @@
     }
 
     async function requestImage(prompt) {
-      const token = tokenInput.value.trim();
+      const token = getSharedTokenValue();
       if (!token) {
         throw new Error("Enter an xAI API key first.");
       }
@@ -4462,7 +6557,10 @@
     }
 
     async function initialize() {
+      loadAppMode();
       state.people = loadPeople();
+      editState.prompts = loadEditPrompts();
+      editState.archive = loadEditArchive();
       loadSavedToken();
       loadViewMode();
       loadActiveSelection();
@@ -4474,23 +6572,53 @@
         state.sourcePreviewUnlocked = !hasRestoredSource;
       }
       state.archiveOpen = false;
+      renderArchivePanel();
       state.prompts = resolveInitialPrompts();
       await migrateInlineSourceImages();
-      renderWorkspace();
+      state.archiveOpen = false;
+      renderArchivePanel();
+      renderAppMode();
       if (state.source) {
         setStatus("Saved people restored locally.");
       }
     }
 
     togglePromptsButton.addEventListener("click", togglePromptEditor);
+    editTogglePromptsButton.addEventListener("click", () => {
+      editState.promptEditorOpen = !editState.promptEditorOpen;
+      renderEditPromptEditor();
+    });
     toggleArchiveButton.addEventListener("click", toggleArchivePanel);
+    editToggleArchiveButton.addEventListener("click", () => {
+      editState.archiveOpen = !editState.archiveOpen;
+      renderEditArchivePanel();
+    });
     toggleFiltersButton.addEventListener("click", toggleFiltersPanel);
+    variationModeButton.addEventListener("click", () => switchAppMode("variations"));
+    sliderModeButton.addEventListener("click", () => switchAppMode("slider"));
     showAllImagesButton.addEventListener("click", () => switchViewMode("all"));
     addPromptButton.addEventListener("click", addPrompt);
+    editAddPromptButton.addEventListener("click", () => {
+      editState.prompts.push(makePromptEntry("", true));
+      saveEditPrompts();
+      renderEditPrompts();
+      refreshEditButtons();
+    });
     resetPromptsButton.addEventListener("click", resetPrompts);
+    editResetPromptsButton.addEventListener("click", () => {
+      editState.prompts = cloneEditPrompts([]);
+      saveEditPrompts();
+      renderEditWorkspace();
+      setStatus("Slider edit fallback prompts restored.");
+    });
     deleteAllImagesButton.addEventListener("click", () => {
       deleteAllGeneratedImages().catch((error) => {
         setStatus(error.message || "Could not delete generated images.");
+      });
+    });
+    editDeleteAllImagesButton.addEventListener("click", () => {
+      deleteAllEditArchiveImages().catch((error) => {
+        setStatus(error.message || "Could not delete saved slider edits.");
       });
     });
     generateCountSelect.addEventListener("change", () => {
@@ -4505,9 +6633,23 @@
         setStatus(error.message || "Could not generate images.");
       });
     });
+    editGenerateButton.addEventListener("click", () => {
+      runSliderEdit().catch((error) => {
+        editState.isGenerating = false;
+        refreshEditButtons();
+        renderEditPrompts();
+        setEditStageNote("Slider edit failed");
+        setStatus(error.message || "Could not generate the slider edit.");
+      });
+    });
     clearSourceButton.addEventListener("click", () => {
       clearSource().catch((error) => {
         setStatus(error.message || "Could not clear the source image.");
+      });
+    });
+    editClearSourceButton.addEventListener("click", () => {
+      clearEditSource().catch((error) => {
+        setStatus(error.message || "Could not clear the slider edit source image.");
       });
     });
     pasteClipboardButton.addEventListener("click", () => {
@@ -4531,17 +6673,54 @@
         setStatus(error.message || "Could not read the clipboard.");
       });
     });
+    editPasteClipboardButton.addEventListener("click", () => {
+      if (editMobilePasteField && window.getComputedStyle(editMobilePasteField).display !== "none") {
+        editMobilePasteField.value = "";
+        try {
+          editMobilePasteField.focus({
+            preventScroll: true
+          });
+        } catch (_error) {
+          editMobilePasteField.focus();
+        }
+        setStatus("On iPhone: tap and hold in the field, then tap Paste.");
+        return;
+      }
+      pasteEditFromClipboard().catch((error) => {
+        setStatus(error.message || "Could not read the clipboard.");
+      });
+    });
     clearTokenButton.addEventListener("click", () => {
       localStorage.removeItem(tokenStorageKey);
-      tokenInput.value = "";
-      saveTokenCheckbox.checked = false;
+      setSharedTokenValue("");
+      setSharedSaveTokenChecked(false);
       setStatus("Saved token cleared.");
     });
-    saveTokenCheckbox.addEventListener("change", persistTokenIfNeeded);
+    editClearTokenButton.addEventListener("click", () => {
+      localStorage.removeItem(tokenStorageKey);
+      setSharedTokenValue("");
+      setSharedSaveTokenChecked(false);
+      setStatus("Saved token cleared.");
+    });
+    editSaveTokenCheckbox.addEventListener("change", () => {
+      setSharedSaveTokenChecked(editSaveTokenCheckbox.checked);
+      persistTokenIfNeeded();
+    });
     tokenInput.addEventListener("input", () => {
-      if (!saveTokenCheckbox.checked) {
+      setSharedTokenValue(tokenInput.value);
+      if (!isSaveTokenEnabled()) {
         localStorage.removeItem(tokenStorageKey);
       }
+    });
+    editTokenInput.addEventListener("input", () => {
+      setSharedTokenValue(editTokenInput.value);
+      if (!isSaveTokenEnabled()) {
+        localStorage.removeItem(tokenStorageKey);
+      }
+    });
+    saveTokenCheckbox.addEventListener("change", () => {
+      setSharedSaveTokenChecked(saveTokenCheckbox.checked);
+      persistTokenIfNeeded();
     });
     pickImageButton.addEventListener("click", (event) => {
       if (state.isGenerating) {
@@ -4555,12 +6734,31 @@
         setStatus("Wait for the current generation run to finish.");
       }
     });
+    editPickImageButton.addEventListener("click", (event) => {
+      if (editState.isGenerating) {
+        event.preventDefault();
+        setStatus("Wait for the current slider edit to finish.");
+      }
+    });
+    editCameraImageButton.addEventListener("click", (event) => {
+      if (editState.isGenerating) {
+        event.preventDefault();
+        setStatus("Wait for the current slider edit to finish.");
+      }
+    });
     pickImageInput.addEventListener("change", (event) => {
       const file = event.target.files?.[0];
       loadSelectedFile(file, "selected image").catch((error) => {
         setStatus(error.message || "Could not load selected image.");
       });
       pickImageInput.value = "";
+    });
+    editPickImageInput.addEventListener("change", (event) => {
+      const file = event.target.files?.[0];
+      loadEditSelectedFile(file, "selected image").catch((error) => {
+        setStatus(error.message || "Could not load selected image.");
+      });
+      editPickImageInput.value = "";
     });
     cameraImageInput.addEventListener("change", (event) => {
       const file = event.target.files?.[0];
@@ -4569,12 +6767,25 @@
       });
       cameraImageInput.value = "";
     });
+    editCameraImageInput.addEventListener("change", (event) => {
+      const file = event.target.files?.[0];
+      loadEditSelectedFile(file, "camera image").catch((error) => {
+        setStatus(error.message || "Could not load camera image.");
+      });
+      editCameraImageInput.value = "";
+    });
     pasteTarget.addEventListener("click", () => pasteTarget.focus());
     pasteTarget.addEventListener("paste", (event) => {
       handlePaste(event).catch((error) => {
         logSourceDebug("paste:error", {
           message: error?.message || String(error)
         });
+        setStatus(error.message || "Could not read pasted content.");
+      });
+    });
+    editPasteTarget.addEventListener("click", () => editPasteTarget.focus());
+    editPasteTarget.addEventListener("paste", (event) => {
+      handleEditPaste(event).catch((error) => {
         setStatus(error.message || "Could not read pasted content.");
       });
     });
@@ -4627,6 +6838,40 @@
         }
       });
     }
+    if (editMobilePasteField) {
+      editMobilePasteField.addEventListener("focus", () => {
+        setStatus("On iPhone: tap and hold in the field, then tap Paste.");
+      });
+      editMobilePasteField.addEventListener("paste", (event) => {
+        handleEditPaste(event).then(() => {
+          editMobilePasteField.value = "";
+        }).catch((error) => {
+          setStatus(error.message || "Could not read pasted content.");
+        });
+      });
+      editMobilePasteField.addEventListener("input", () => {
+        const trimmedValue = (editMobilePasteField.value || "").trim();
+        if (!trimmedValue) {
+          return;
+        }
+        editMobilePasteField.value = "";
+        if (isHttpUrl(trimmedValue)) {
+          setEditSource(trimmedValue, "pasted image URL").then(() => {
+            setStatus("Clipboard image URL loaded.");
+          }).catch((error) => {
+            setStatus(error.message || "Could not read pasted content.");
+          });
+          return;
+        }
+        if (trimmedValue.startsWith("data:image/")) {
+          setEditSource(trimmedValue, "pasted image").then(() => {
+            setStatus("Clipboard image loaded.");
+          }).catch((error) => {
+            setStatus(error.message || "Could not read pasted content.");
+          });
+        }
+      });
+    }
     document.addEventListener("paste", (event) => {
       if (event.defaultPrevented) {
         return;
@@ -4637,12 +6882,17 @@
         });
         return;
       }
-      handlePaste(event).catch((error) => {
+      const pasteHandler = isSliderMode() ? handleEditPaste : handlePaste;
+      pasteHandler(event).catch((error) => {
         logSourceDebug("paste:document_error", {
           message: error?.message || String(error)
         });
         setStatus(error.message || "Could not read pasted content.");
       });
+    });
+    editCompareRange.addEventListener("input", () => {
+      editState.sliderPercent = Number(editCompareRange.value) || 0;
+      updateEditCompareReveal();
     });
     lightbox.addEventListener("click", (event) => {
       if (event.target === lightbox) {
