@@ -1617,6 +1617,16 @@ body.solar-curator .lightbox-image {
   box-shadow: var(--sc-shadow);
 }
 
+body.solar-curator .swap-target-media img,
+body.solar-curator .swap-target-mask-canvas {
+  border-radius: 0;
+}
+
+body.solar-curator .swap-target-mask-canvas {
+  background: transparent;
+  box-shadow: none;
+}
+
 body.solar-curator .prompt-row,
 body.solar-curator .person-card,
 body.solar-curator .result-card {
@@ -2168,6 +2178,235 @@ body.solar-curator.person-variations-page .empty-state {
   box-shadow: var(--sc-ghost-border);
 }
 
+.swap-source-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+#swap-layout {
+  grid-template-columns: 1fr;
+}
+
+.swap-source-card {
+  display: grid;
+  gap: 0.9rem;
+  padding: 1rem;
+  border-radius: 1.6rem;
+  background: rgba(255, 255, 255, 0.58);
+  box-shadow: var(--sc-ghost-border);
+}
+
+.swap-source-card-head {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.swap-source-card-head strong {
+  font-size: 0.98rem;
+}
+
+.swap-source-card-head span,
+.swap-field-note {
+  color: var(--sc-text-soft);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.swap-saved-source-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.7rem;
+  align-items: end;
+}
+
+.swap-saved-source-row select,
+.swap-field textarea {
+  width: 100%;
+  border-radius: 1rem;
+  border: 1px solid rgba(33, 34, 67, 0.1);
+  background: rgba(255, 255, 255, 0.8);
+  color: var(--sc-text);
+  padding: 0.85rem 0.95rem;
+  font: inherit;
+}
+
+.swap-field {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.swap-field textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+.swap-action-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+}
+
+.swap-target-preview {
+  grid-template-columns: 1fr;
+}
+
+.swap-target-preview .source-copy {
+  padding-top: 0.15rem;
+}
+
+.swap-source-card .source-preview {
+  grid-template-columns: 96px minmax(0, 1fr);
+}
+
+.swap-source-card .swap-target-preview {
+  grid-template-columns: 1fr;
+}
+
+.swap-target-media {
+  position: relative;
+  width: 100%;
+  min-height: 320px;
+  border-radius: 0;
+  overflow: hidden;
+  background: #0d1016;
+  display: grid;
+  place-items: center;
+  align-self: start;
+}
+
+.swap-target-media img {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto;
+  object-fit: contain;
+  border-radius: 0;
+  background: #0d1016;
+}
+
+.swap-target-mask-canvas {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  display: block;
+  opacity: 0.55;
+  cursor: crosshair;
+  touch-action: none;
+}
+
+.swap-crop-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+}
+
+.swap-source-card .source-actions,
+.swap-crop-actions,
+.swap-action-row {
+  align-items: center;
+}
+
+.swap-source-card .source-actions > .ghost-btn,
+.swap-source-card .source-actions > .source-picker-label,
+.swap-crop-actions > .ghost-btn,
+.swap-action-row > .ghost-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  max-width: 100%;
+  min-width: 0;
+  flex: 0 0 auto;
+  text-align: center;
+}
+
+.swap-crop-actions .ghost-btn.active {
+  background: rgba(245, 125, 90, 0.18);
+  border-color: rgba(245, 125, 90, 0.38);
+  color: var(--sc-text);
+}
+
+.swap-crop-note {
+  color: var(--sc-text-soft);
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.swap-stage-shell {
+  display: grid;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 2rem;
+  background: var(--sc-surface-low);
+  box-shadow: var(--sc-ghost-border);
+}
+
+.swap-stage {
+  position: relative;
+  min-height: 360px;
+  border-radius: 2rem;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at top left, rgba(240, 101, 67, 0.08), transparent 34%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(246, 239, 230, 0.98));
+}
+
+.swap-stage.empty::before {
+  content: attr(data-empty-message);
+  position: absolute;
+  inset: 1.25rem;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  color: var(--sc-text-soft);
+  line-height: 1.5;
+  border-radius: 1.6rem;
+  background:
+    radial-gradient(circle at top left, rgba(240, 101, 67, 0.12), transparent 40%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.78), rgba(244, 236, 226, 0.98));
+}
+
+.swap-stage img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.swap-stage.empty img {
+  display: none;
+}
+
+.swap-stage-note {
+  position: absolute;
+  left: 1rem;
+  right: 1rem;
+  bottom: 1rem;
+  padding: 0.7rem 0.9rem;
+  border-radius: 1rem;
+  background: rgba(17, 18, 35, 0.72);
+  color: rgba(255, 251, 248, 0.92);
+  font-size: 0.82rem;
+  line-height: 1.4;
+  backdrop-filter: blur(10px);
+}
+
+@media (max-width: 980px) {
+  .swap-source-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .swap-saved-source-row {
+    grid-template-columns: 1fr;
+  }
+
+  .swap-source-card .source-preview {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 980px) {
   body.solar-curator {
     padding: 20px;
@@ -2246,6 +2485,7 @@ body.solar-curator.person-variations-page .empty-state {
       <div class="mode-switch" role="tablist" aria-label="Workspace mode">
         <button id="variation-mode-btn" class="ghost-btn mode-tab" type="button" role="tab" aria-selected="true" aria-controls="variation-layout">Character Variations</button>
         <button id="slider-mode-btn" class="ghost-btn mode-tab" type="button" role="tab" aria-selected="false" aria-controls="slider-layout">Slider Edit</button>
+        <button id="swap-mode-btn" class="ghost-btn mode-tab" type="button" role="tab" aria-selected="false" aria-controls="swap-layout">Face Swap</button>
       </div>
     </section>
 
@@ -2525,6 +2765,168 @@ body.solar-curator.person-variations-page .empty-state {
         </div>
       </div>
     </section>
+
+    <section id="swap-layout" class="layout mode-layout" hidden>
+      <div class="panel">
+        <div class="panel-head">
+          <div class="head-group">
+            <strong>Face Swap Sources</strong>
+          </div>
+          <span>Reuse saved people or paste new images</span>
+        </div>
+        <div class="panel-body">
+          <div class="swap-source-grid">
+            <section class="swap-source-card">
+              <div class="swap-source-card-head">
+                <strong>Target portrait</strong>
+                <span>The composition to keep. This image is sent as-is and becomes the final frame.</span>
+              </div>
+              <div id="swap-target-paste-target" class="paste-target" tabindex="0" role="button" aria-label="Paste target image or image URL here">Tap or click here to paste the target image or image URL</div>
+              <div class="source-actions">
+                <button id="swap-target-paste-clipboard-btn" class="ghost-btn" type="button">Paste From Clipboard</button>
+                <label for="swap-target-pick-image-input" class="ghost-btn source-picker-label">Choose Image</label>
+                <input id="swap-target-pick-image-input" type="file" accept="image/*" hidden />
+              </div>
+              <label class="swap-field">
+                <span class="field-label">iPhone Paste Area</span>
+              <textarea id="swap-target-mobile-paste-field" class="mobile-paste-field" rows="2" autocapitalize="off" autocomplete="off" spellcheck="false" placeholder="On iPhone: tap here, then tap Paste from the native menu." aria-label="Tap and paste a target image on mobile"></textarea>
+              </label>
+              <div id="swap-target-preview" class="source-preview swap-target-preview no-image">
+                <div id="swap-target-media" class="swap-target-media">
+                  <img id="swap-target-image" alt="Face swap target preview" />
+                  <canvas id="swap-target-mask-canvas" class="swap-target-mask-canvas" width="720" height="720" aria-label="Optional face swap crop selection"></canvas>
+                </div>
+                <div class="source-copy">
+                  <strong id="swap-target-title">No portrait</strong>
+                  <span id="swap-target-description">Paste or choose a target portrait, or pull one from your saved people.</span>
+                </div>
+              </div>
+              <div class="swap-crop-actions">
+                <button id="swap-target-mask-add-btn" class="ghost-btn" type="button">Add Crop Rectangle</button>
+                <button id="swap-target-mask-remove-btn" class="ghost-btn" type="button">Remove Rectangle</button>
+                <button id="swap-target-mask-clear-btn" class="ghost-btn" type="button">Clear Crop</button>
+              </div>
+              <p id="swap-target-crop-note" class="swap-crop-note">Optional: draw face crop rectangles on the target. If none are drawn, the current full-frame face-swap workflow is used.</p>
+              <div class="swap-saved-source-row">
+                <label class="swap-field">
+                  <span class="field-label">Saved person source</span>
+                  <select id="swap-target-source-select" aria-label="Choose a saved person source for target"></select>
+                </label>
+                <button id="swap-target-load-saved-btn" class="ghost-btn" type="button">Use Saved</button>
+              </div>
+              <div class="swap-action-row">
+                <button id="swap-target-use-active-btn" class="ghost-btn" type="button">Use Active Person</button>
+                <button id="swap-target-clear-btn" class="ghost-btn" type="button">Clear Target</button>
+              </div>
+            </section>
+
+            <section class="swap-source-card">
+              <div class="swap-source-card-head">
+                <strong>Donor face</strong>
+                <span>The identity to transfer. A tight face-focused source usually works best.</span>
+              </div>
+              <div id="swap-donor-paste-target" class="paste-target" tabindex="0" role="button" aria-label="Paste donor image or image URL here">Tap or click here to paste the donor image or image URL</div>
+              <div class="source-actions">
+                <button id="swap-donor-paste-clipboard-btn" class="ghost-btn" type="button">Paste From Clipboard</button>
+                <label for="swap-donor-pick-image-input" class="ghost-btn source-picker-label">Choose Image</label>
+                <input id="swap-donor-pick-image-input" type="file" accept="image/*" hidden />
+              </div>
+              <label class="swap-field">
+                <span class="field-label">iPhone Paste Area</span>
+              <textarea id="swap-donor-mobile-paste-field" class="mobile-paste-field" rows="2" autocapitalize="off" autocomplete="off" spellcheck="false" placeholder="On iPhone: tap here, then tap Paste from the native menu." aria-label="Tap and paste a donor image on mobile"></textarea>
+              </label>
+              <div id="swap-donor-preview" class="source-preview no-image">
+                <img id="swap-donor-image" alt="Face swap donor preview" />
+                <div class="source-copy">
+                  <strong id="swap-donor-title">No donor image</strong>
+                  <span id="swap-donor-description">Paste or choose a donor image, or pull one from your saved people.</span>
+                </div>
+              </div>
+              <div class="swap-saved-source-row">
+                <label class="swap-field">
+                  <span class="field-label">Saved person source</span>
+                  <select id="swap-donor-source-select" aria-label="Choose a saved person source for donor"></select>
+                </label>
+                <button id="swap-donor-load-saved-btn" class="ghost-btn" type="button">Use Saved</button>
+              </div>
+              <div class="swap-action-row">
+                <button id="swap-donor-use-active-btn" class="ghost-btn" type="button">Use Active Person</button>
+                <button id="swap-donor-clear-btn" class="ghost-btn" type="button">Clear Donor</button>
+              </div>
+            </section>
+          </div>
+
+          <div class="source-controls">
+            <label class="field-inline" for="swap-generate-count-select">
+              <span class="field-label">Images</span>
+              <select id="swap-generate-count-select" aria-label="Number of face swap images to generate">
+                <option value="1">1</option>
+                <option value="2" selected>2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+              </select>
+            </label>
+            <button id="swap-generate-btn" type="button">Generate Face Swap</button>
+            <button id="swap-clear-both-btn" class="ghost-btn" type="button">Clear Both</button>
+          </div>
+
+          <form class="token-panel">
+            <label class="field" for="swap-token-input">
+              <span class="field-label">xAI API key for browser-only face swaps</span>
+              <input id="swap-token-input" type="password" placeholder="xai-..." autocomplete="off" spellcheck="false" />
+            </label>
+            <div class="controls">
+              <label class="toggle-row" for="swap-save-token-checkbox">
+                <input id="swap-save-token-checkbox" type="checkbox" />
+                <span>Save token in local storage</span>
+              </label>
+              <button id="swap-clear-token-btn" class="ghost-btn" type="button">Clear Token</button>
+            </div>
+          </form>
+
+          <label class="swap-field">
+            <span class="field-label">Extra Instructions</span>
+            <textarea id="swap-extra-instructions-input" spellcheck="false" placeholder="Examples: keep eyeglasses, keep freckles, keep natural skin texture, preserve original lighting."></textarea>
+          </label>
+          <label class="swap-field">
+            <span class="field-label">Mask Instructions</span>
+            <textarea id="swap-mask-instructions-input" spellcheck="false" placeholder="Examples: if censoring is needed, use a flat solid green mask for explicit body areas only."></textarea>
+          </label>
+          <p id="swap-field-note" class="swap-field-note">The model sees the target image with a donor reference overlay. If xAI returns solid green censor areas, the original target pixels are restored there automatically.</p>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <div class="head-group">
+            <strong>Face Swap Archive</strong>
+            <button id="swap-toggle-archive-btn" class="ghost-btn icon-btn" type="button" title="Open face swap archive" aria-label="Open face swap archive" aria-expanded="false" aria-controls="swap-archive-panel">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M4 4h16v4H4V4Zm1 6h14v9a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-9Zm4 2v2h6v-2H9Z"/>
+              </svg>
+            </button>
+          </div>
+          <span id="swap-results-summary">0 saved</span>
+        </div>
+        <div class="panel-body">
+          <div class="swap-stage-shell">
+            <div id="swap-stage" class="swap-stage empty" data-empty-message="Load a target and donor image, then generate a face swap.">
+              <img id="swap-stage-image" alt="Latest face swap result preview" />
+              <div id="swap-stage-note" class="swap-stage-note">Waiting for a target and donor image</div>
+            </div>
+          </div>
+
+          <div id="swap-archive-panel" class="edit-archive-panel" hidden>
+            <div class="edit-archive-toolbar">
+              <p class="edit-help">Saved face swaps appear here. Open any card in the fullscreen viewer and use the same archive persistence as the other modes.</p>
+              <button id="swap-delete-all-images-btn" class="danger-btn" type="button">Delete Saved Face Swaps</button>
+            </div>
+            <div id="swap-archive-grid" class="edit-archive-grid"></div>
+            <div id="swap-results-empty" class="empty-state">No saved face swaps yet. Run a face swap and the results will appear here.</div>
+          </div>
+        </div>
+      </div>
+    </section>
   </div>
 
   <div id="lightbox" class="lightbox" aria-hidden="true">
@@ -2577,6 +2979,8 @@ body.solar-curator.person-variations-page .empty-state {
     const promptStorageKey = "personVariations.prompts.v1";
     const editPromptStorageKey = "personVariations.sliderEdit.prompts.v1";
     const editArchiveStorageKey = "personVariations.sliderEdit.archive.v1";
+    const swapArchiveStorageKey = "personVariations.faceSwap.archive.v1";
+    const swapSessionStorageKey = "personVariations.faceSwap.session.v1";
     const resultsStorageKey = "personVariations.results.v1";
     const sourceStorageKey = "personVariations.source.v1";
     const tokenStorageKey = "personVariations.token.v1";
@@ -2613,8 +3017,10 @@ body.solar-curator.person-variations-page .empty-state {
     const statusEl = document.getElementById("status");
     const variationModeButton = document.getElementById("variation-mode-btn");
     const sliderModeButton = document.getElementById("slider-mode-btn");
+    const swapModeButton = document.getElementById("swap-mode-btn");
     const variationLayout = document.getElementById("variation-layout");
     const sliderLayout = document.getElementById("slider-layout");
+    const swapLayout = document.getElementById("swap-layout");
     const sourcePreview = document.getElementById("source-preview");
     const sourceImage = document.getElementById("source-image");
     const sourceTitle = document.getElementById("source-title");
@@ -2695,6 +3101,54 @@ body.solar-curator.person-variations-page .empty-state {
     const editCompareHandle = document.getElementById("edit-compare-handle");
     const editCompareRange = document.getElementById("edit-compare-range");
     const editStageNote = document.getElementById("edit-stage-note");
+    const swapTargetPasteTarget = document.getElementById("swap-target-paste-target");
+    const swapTargetPasteClipboardButton = document.getElementById("swap-target-paste-clipboard-btn");
+    const swapTargetMobilePasteField = document.getElementById("swap-target-mobile-paste-field");
+    const swapTargetPickImageInput = document.getElementById("swap-target-pick-image-input");
+    const swapTargetPreview = document.getElementById("swap-target-preview");
+    const swapTargetMedia = document.getElementById("swap-target-media");
+    const swapTargetImage = document.getElementById("swap-target-image");
+    const swapTargetMaskCanvas = document.getElementById("swap-target-mask-canvas");
+    const swapTargetTitle = document.getElementById("swap-target-title");
+    const swapTargetDescription = document.getElementById("swap-target-description");
+    const swapTargetMaskAddButton = document.getElementById("swap-target-mask-add-btn");
+    const swapTargetMaskRemoveButton = document.getElementById("swap-target-mask-remove-btn");
+    const swapTargetMaskClearButton = document.getElementById("swap-target-mask-clear-btn");
+    const swapTargetCropNote = document.getElementById("swap-target-crop-note");
+    const swapTargetSourceSelect = document.getElementById("swap-target-source-select");
+    const swapTargetLoadSavedButton = document.getElementById("swap-target-load-saved-btn");
+    const swapTargetUseActiveButton = document.getElementById("swap-target-use-active-btn");
+    const swapTargetClearButton = document.getElementById("swap-target-clear-btn");
+    const swapDonorPasteTarget = document.getElementById("swap-donor-paste-target");
+    const swapDonorPasteClipboardButton = document.getElementById("swap-donor-paste-clipboard-btn");
+    const swapDonorMobilePasteField = document.getElementById("swap-donor-mobile-paste-field");
+    const swapDonorPickImageInput = document.getElementById("swap-donor-pick-image-input");
+    const swapDonorPreview = document.getElementById("swap-donor-preview");
+    const swapDonorImage = document.getElementById("swap-donor-image");
+    const swapDonorTitle = document.getElementById("swap-donor-title");
+    const swapDonorDescription = document.getElementById("swap-donor-description");
+    const swapDonorSourceSelect = document.getElementById("swap-donor-source-select");
+    const swapDonorLoadSavedButton = document.getElementById("swap-donor-load-saved-btn");
+    const swapDonorUseActiveButton = document.getElementById("swap-donor-use-active-btn");
+    const swapDonorClearButton = document.getElementById("swap-donor-clear-btn");
+    const swapGenerateCountSelect = document.getElementById("swap-generate-count-select");
+    const swapGenerateButton = document.getElementById("swap-generate-btn");
+    const swapClearBothButton = document.getElementById("swap-clear-both-btn");
+    const swapTokenInput = document.getElementById("swap-token-input");
+    const swapSaveTokenCheckbox = document.getElementById("swap-save-token-checkbox");
+    const swapClearTokenButton = document.getElementById("swap-clear-token-btn");
+    const swapExtraInstructionsInput = document.getElementById("swap-extra-instructions-input");
+    const swapMaskInstructionsInput = document.getElementById("swap-mask-instructions-input");
+    const swapFieldNote = document.getElementById("swap-field-note");
+    const swapToggleArchiveButton = document.getElementById("swap-toggle-archive-btn");
+    const swapArchivePanel = document.getElementById("swap-archive-panel");
+    const swapResultsSummary = document.getElementById("swap-results-summary");
+    const swapArchiveGrid = document.getElementById("swap-archive-grid");
+    const swapResultsEmpty = document.getElementById("swap-results-empty");
+    const swapDeleteAllImagesButton = document.getElementById("swap-delete-all-images-btn");
+    const swapStage = document.getElementById("swap-stage");
+    const swapStageImage = document.getElementById("swap-stage-image");
+    const swapStageNote = document.getElementById("swap-stage-note");
     const blobUrlCache = new Map();
     const blobUrlLoads = new Set();
     const sourceBlobUrlCache = new Map();
@@ -2760,6 +3214,32 @@ body.solar-curator.person-variations-page .empty-state {
       dragIndex: -1
     };
 
+    const swapState = {
+      target: "",
+      targetPreviewUrl: "",
+      targetLabel: "",
+      targetWidth: 0,
+      targetHeight: 0,
+      targetMaskRects: [],
+      targetMaskMode: "add",
+      donor: "",
+      donorPreviewUrl: "",
+      donorLabel: "",
+      donorWidth: 0,
+      donorHeight: 0,
+      extraInstructions: "",
+      maskInstructions: "",
+      archive: [],
+      isGenerating: false,
+      archiveOpen: false,
+      generateCount: 2,
+      currentArchiveId: "",
+      targetPickerValue: "",
+      donorPickerValue: ""
+    };
+    const swapTargetMaskCtx = swapTargetMaskCanvas.getContext("2d");
+    let swapTargetMaskDraw = null;
+
     function normalizeTrackedCount(value) {
       if (!Number.isFinite(value)) {
         return 0;
@@ -2797,6 +3277,10 @@ body.solar-curator.person-variations-page .empty-state {
       statusEl.textContent = message;
     }
 
+    function clampNumber(value, min, max) {
+      return Math.min(max, Math.max(min, value));
+    }
+
     function renderArchivePanel() {
       archivePanel.hidden = !state.archiveOpen;
       toggleArchiveButton.setAttribute("aria-expanded", String(state.archiveOpen));
@@ -2813,24 +3297,42 @@ body.solar-curator.person-variations-page .empty-state {
       editToggleArchiveButton.setAttribute("aria-label", editState.archiveOpen ? "Hide slider edit archive" : "Open slider edit archive");
     }
 
+    function renderSwapArchivePanel() {
+      swapArchivePanel.hidden = !swapState.archiveOpen;
+      swapToggleArchiveButton.setAttribute("aria-expanded", String(swapState.archiveOpen));
+      swapToggleArchiveButton.classList.toggle("active", swapState.archiveOpen);
+      swapToggleArchiveButton.title = swapState.archiveOpen ? "Hide face swap archive" : "Open face swap archive";
+      swapToggleArchiveButton.setAttribute("aria-label", swapState.archiveOpen ? "Hide face swap archive" : "Open face swap archive");
+    }
+
     function renderAppMode() {
       const sliderMode = isSliderMode();
-      variationLayout.hidden = sliderMode;
+      const swapMode = isSwapMode();
+      variationLayout.hidden = sliderMode || swapMode;
       sliderLayout.hidden = !sliderMode;
-      variationModeButton.classList.toggle("active", !sliderMode);
+      swapLayout.hidden = !swapMode;
+      variationModeButton.classList.toggle("active", !sliderMode && !swapMode);
       sliderModeButton.classList.toggle("active", sliderMode);
-      variationModeButton.setAttribute("aria-selected", String(!sliderMode));
+      swapModeButton.classList.toggle("active", swapMode);
+      variationModeButton.setAttribute("aria-selected", String(!sliderMode && !swapMode));
       sliderModeButton.setAttribute("aria-selected", String(sliderMode));
-      if (!sliderMode) {
+      swapModeButton.setAttribute("aria-selected", String(swapMode));
+      if (swapMode) {
+        renderSwapWorkspace();
+      } else if (!sliderMode) {
         renderWorkspace();
       } else {
         renderEditWorkspace();
       }
-      localStorage.setItem(appModeStorageKey, state.appMode);
+      try {
+        localStorage.setItem(appModeStorageKey, state.appMode);
+      } catch (_error) {
+        // Ignore storage issues so mode switching still works in-memory.
+      }
     }
 
     function switchAppMode(mode) {
-      if (mode !== "variations" && mode !== "slider") {
+      if (mode !== "variations" && mode !== "slider" && mode !== "swap") {
         return;
       }
       state.appMode = mode;
@@ -2984,9 +3486,28 @@ body.solar-curator.person-variations-page .empty-state {
       return entries.map(normalizeEditArchiveEntry);
     }
 
+    function normalizeSwapArchiveEntry(value) {
+      const version = normalizeVersionEntry(value?.version || value?.imageUrl || "");
+      return {
+        id: typeof value?.id === "string" && value.id ? value.id : makeId("faceswap"),
+        createdAt: Number.isFinite(value?.createdAt) ? Number(value.createdAt) : Date.now(),
+        targetLabel: typeof value?.targetLabel === "string" ? value.targetLabel : "",
+        donorLabel: typeof value?.donorLabel === "string" ? value.donorLabel : "",
+        instructions: typeof value?.instructions === "string" ? value.instructions : "",
+        version
+      };
+    }
+
+    function cloneSwapArchive(entries) {
+      if (!Array.isArray(entries)) {
+        return [];
+      }
+      return entries.map(normalizeSwapArchiveEntry);
+    }
+
     function loadAppMode() {
       const savedMode = localStorage.getItem(appModeStorageKey);
-      if (savedMode === "slider" || savedMode === "variations") {
+      if (savedMode === "slider" || savedMode === "variations" || savedMode === "swap") {
         state.appMode = savedMode;
       }
     }
@@ -3011,6 +3532,29 @@ body.solar-curator.person-variations-page .empty-state {
       }
     }
 
+    function loadSwapArchive() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(swapArchiveStorageKey) || "null");
+        return cloneSwapArchive(saved);
+      } catch (_error) {
+        localStorage.removeItem(swapArchiveStorageKey);
+        return [];
+      }
+    }
+
+    function loadSwapSession() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(swapSessionStorageKey) || "null");
+        if (!saved || typeof saved !== "object") {
+          return null;
+        }
+        return saved;
+      } catch (_error) {
+        localStorage.removeItem(swapSessionStorageKey);
+        return null;
+      }
+    }
+
     function saveEditPrompts() {
       localStorage.setItem(editPromptStorageKey, JSON.stringify(cloneEditPrompts(editState.prompts)));
     }
@@ -3019,8 +3563,48 @@ body.solar-curator.person-variations-page .empty-state {
       localStorage.setItem(editArchiveStorageKey, JSON.stringify(cloneEditArchive(editState.archive)));
     }
 
+    function saveSwapArchive() {
+      localStorage.setItem(swapArchiveStorageKey, JSON.stringify(cloneSwapArchive(swapState.archive)));
+    }
+
+    function saveSwapSession() {
+      const hasAnyState = Boolean(
+        swapState.extraInstructions.trim() ||
+        swapState.maskInstructions.trim() ||
+        swapState.targetMaskRects.length ||
+        swapState.targetPickerValue ||
+        swapState.donorPickerValue ||
+        Math.max(1, Math.min(4, Number(swapState.generateCount) || 2)) !== 2
+      );
+      if (!hasAnyState) {
+        localStorage.removeItem(swapSessionStorageKey);
+        return;
+      }
+      try {
+        localStorage.setItem(swapSessionStorageKey, JSON.stringify({
+          extraInstructions: swapState.extraInstructions,
+          maskInstructions: swapState.maskInstructions,
+          targetMaskRects: swapState.targetMaskRects,
+          targetMaskMode: swapState.targetMaskMode,
+          generateCount: swapState.generateCount,
+          targetPickerValue: swapState.targetPickerValue,
+          donorPickerValue: swapState.donorPickerValue
+        }));
+      } catch (error) {
+        if (isQuotaError(error)) {
+          setStatus("Browser storage is full. Face swap inputs still work for this session, but they are not being saved.");
+          return;
+        }
+        throw error;
+      }
+    }
+
     function isSliderMode() {
       return state.appMode === "slider";
+    }
+
+    function isSwapMode() {
+      return state.appMode === "swap";
     }
 
     function getSharedTokenValue() {
@@ -3028,7 +3612,7 @@ body.solar-curator.person-variations-page .empty-state {
     }
 
     function setSharedTokenValue(value) {
-      [tokenInput, editTokenInput].forEach((input) => {
+      [tokenInput, editTokenInput, swapTokenInput].forEach((input) => {
         if (input && input.value !== value) {
           input.value = value;
         }
@@ -3036,7 +3620,7 @@ body.solar-curator.person-variations-page .empty-state {
     }
 
     function setSharedSaveTokenChecked(checked) {
-      [saveTokenCheckbox, editSaveTokenCheckbox].forEach((input) => {
+      [saveTokenCheckbox, editSaveTokenCheckbox, swapSaveTokenCheckbox].forEach((input) => {
         if (input) {
           input.checked = checked;
         }
@@ -3044,7 +3628,7 @@ body.solar-curator.person-variations-page .empty-state {
     }
 
     function isSaveTokenEnabled() {
-      return Boolean(saveTokenCheckbox.checked || editSaveTokenCheckbox.checked);
+      return Boolean(saveTokenCheckbox.checked || editSaveTokenCheckbox.checked || swapSaveTokenCheckbox.checked);
     }
 
     function clearEditPreparedSourceCache() {
@@ -3104,7 +3688,7 @@ body.solar-curator.person-variations-page .empty-state {
     }
 
     function isModerationMessage(message) {
-      return /moderat/i.test(String(message || ""));
+      return /moderat|safety|policy|unsafe/i.test(String(message || ""));
     }
 
     function isModerationOnlyResult(result) {
@@ -4040,6 +4624,18 @@ body.solar-curator.person-variations-page .empty-state {
         const actions = document.createElement("div");
         actions.className = "person-card-actions";
 
+        const faceSwapButton = document.createElement("button");
+        faceSwapButton.className = "ghost-btn tiny-btn";
+        faceSwapButton.type = "button";
+        faceSwapButton.textContent = "Use For Face Swap";
+        faceSwapButton.disabled = !person.sources.length;
+        faceSwapButton.addEventListener("click", (event) => {
+          event.stopPropagation();
+          usePersonForFaceSwap(person).catch((error) => {
+            setStatus(error.message || `Could not load ${person.name} for face swap.`);
+          });
+        });
+
         const deleteButton = document.createElement("button");
         deleteButton.className = "person-action-btn delete";
         deleteButton.type = "button";
@@ -4057,7 +4653,7 @@ body.solar-curator.person-variations-page .empty-state {
           });
         });
 
-        actions.append(deleteButton);
+        actions.append(faceSwapButton, deleteButton);
         head.appendChild(actions);
 
         const stack = document.createElement("div");
@@ -4500,11 +5096,18 @@ body.solar-curator.person-variations-page .empty-state {
       if (state.lightboxCollection === "slider" || state.lightboxCollection === "slider-compare") {
         return editState.archive[state.lightboxIndex] || null;
       }
+      if (state.lightboxCollection === "swap") {
+        return swapState.archive[state.lightboxIndex] || null;
+      }
       return state.visibleItems[state.lightboxIndex] || null;
     }
 
     function isSliderLightboxCollection(collection = state.lightboxCollection) {
       return collection === "slider" || collection === "slider-compare";
+    }
+
+    function isSwapLightboxCollection(collection = state.lightboxCollection) {
+      return collection === "swap";
     }
 
     function isLightboxCompareMode(collection = state.lightboxCollection) {
@@ -5066,7 +5669,19 @@ body.solar-curator.person-variations-page .empty-state {
           status.textContent = "Idle";
         }
 
-        meta.append(personLabel, title, versionLabel, status);
+        const swapTargetButton = document.createElement("button");
+        swapTargetButton.className = "ghost-btn tiny-btn";
+        swapTargetButton.type = "button";
+        swapTargetButton.textContent = "Use As Face Swap Target";
+        swapTargetButton.disabled = !activeImageUrl;
+        swapTargetButton.addEventListener("click", (event) => {
+          event.stopPropagation();
+          useVariationItemAsSwapTarget(item).catch((error) => {
+            setStatus(error.message || "Could not use that generated image as the face swap target.");
+          });
+        });
+
+        meta.append(personLabel, title, versionLabel, status, swapTargetButton);
         card.append(frame, meta);
         resultsGrid.appendChild(card);
       });
@@ -5080,6 +5695,14 @@ body.solar-curator.person-variations-page .empty-state {
       const item = getLightboxItem();
       if (isSliderLightboxCollection()) {
         const hasMultipleItems = editState.archive.length > 1;
+        lightboxPrevButton.disabled = !hasMultipleItems;
+        lightboxNextButton.disabled = !hasMultipleItems;
+        lightboxUpButton.disabled = true;
+        lightboxDownButton.disabled = true;
+        return;
+      }
+      if (isSwapLightboxCollection()) {
+        const hasMultipleItems = swapState.archive.length > 1;
         lightboxPrevButton.disabled = !hasMultipleItems;
         lightboxNextButton.disabled = !hasMultipleItems;
         lightboxUpButton.disabled = true;
@@ -5147,6 +5770,26 @@ body.solar-curator.person-variations-page .empty-state {
         updateLightboxNav();
         return;
       }
+      if (state.lightboxCollection === "swap") {
+        const imageUrl = getSwapArchiveImageUrl(item);
+        if (!imageUrl) {
+          return;
+        }
+        hydrateSwapArchiveEntry(item);
+        resetLightboxZoom();
+        lightboxImage.src = addCacheBuster(imageUrl);
+        lightboxImage.alt = `Full size saved face swap ${state.lightboxIndex + 1}`;
+        lightboxImage.onload = () => {
+          applyLightboxTransform();
+        };
+        lightboxTitle.textContent = swapState.archive.length > 1
+          ? `Saved face swap ${state.lightboxIndex + 1} of ${swapState.archive.length}`
+          : "Saved face swap";
+        lightboxVersionLabel.textContent = `${item?.targetLabel || "Target"} -> ${item?.donorLabel || "Donor"} • ${formatTimestamp(item?.createdAt || Date.now())}`;
+        renderDots(lightboxDots, swapState.archive.length, state.lightboxIndex);
+        updateLightboxNav();
+        return;
+      }
       const result = item?.result;
       const imageUrl = getResultImageUrl(result);
       if (!imageUrl) {
@@ -5177,7 +5820,9 @@ body.solar-curator.person-variations-page .empty-state {
       state.lightboxCollection = collection;
       state.lightboxKey = isSliderLightboxCollection(collection)
         ? (editState.archive[index]?.id || "")
-        : (state.visibleItems[index]?.key || "");
+        : isSwapLightboxCollection(collection)
+          ? (swapState.archive[index]?.id || "")
+          : (state.visibleItems[index]?.key || "");
       updateLightboxContent();
       lightbox.classList.add("open");
       lightbox.setAttribute("aria-hidden", "false");
@@ -5210,6 +5855,16 @@ body.solar-curator.person-variations-page .empty-state {
         updateLightboxContent();
         return;
       }
+      if (isSwapLightboxCollection()) {
+        if (!swapState.archive.length) {
+          return;
+        }
+        const nextPosition = (state.lightboxIndex + direction + swapState.archive.length) % swapState.archive.length;
+        state.lightboxIndex = nextPosition;
+        state.lightboxKey = swapState.archive[nextPosition]?.id || "";
+        updateLightboxContent();
+        return;
+      }
       const item = getLightboxItem();
       if (!item) {
         return;
@@ -5218,7 +5873,7 @@ body.solar-curator.person-variations-page .empty-state {
     }
 
     function stepLightboxPrompt(direction) {
-      if (isSliderLightboxCollection()) {
+      if (isSliderLightboxCollection() || isSwapLightboxCollection()) {
         return;
       }
       if (state.lightboxIndex < 0 || state.visibleItems.length <= 1) {
@@ -6657,6 +7312,1321 @@ body.solar-curator.person-variations-page .empty-state {
       setStatus("Deleted all saved slider edits.");
     }
 
+    function getSwapSlotConfig(slot) {
+      if (slot === "target") {
+        return {
+          pasteTarget: swapTargetPasteTarget,
+          preview: swapTargetPreview,
+          image: swapTargetImage,
+          title: swapTargetTitle,
+          description: swapTargetDescription,
+          emptyTitle: "No portrait",
+          emptyDescription: "Paste or choose a target portrait, or pull one from your saved people.",
+          waitingMessage: "Target image loading...",
+          clearStatus: "Face swap target cleared."
+        };
+      }
+      return {
+        pasteTarget: swapDonorPasteTarget,
+        preview: swapDonorPreview,
+        image: swapDonorImage,
+        title: swapDonorTitle,
+        description: swapDonorDescription,
+        emptyTitle: "No donor image",
+        emptyDescription: "Paste or choose a donor image, or pull one from your saved people.",
+        waitingMessage: "Donor image loading...",
+        clearStatus: "Face swap donor cleared."
+      };
+    }
+
+    function getSwapSlotValue(slot) {
+      return slot === "target" ? swapState.target : swapState.donor;
+    }
+
+    function getSwapSlotPreviewValue(slot) {
+      return slot === "target" ? swapState.targetPreviewUrl : swapState.donorPreviewUrl;
+    }
+
+    function getSwapSlotLabel(slot) {
+      return slot === "target" ? swapState.targetLabel : swapState.donorLabel;
+    }
+
+    function setSwapStageNote(message) {
+      swapStageNote.textContent = message;
+    }
+
+    function hasSwapFaceCrop() {
+      return Boolean(swapState.target && swapState.targetMaskRects.length);
+    }
+
+    function refreshSwapTargetMaskButtons() {
+      swapTargetMaskAddButton.classList.toggle("active", swapState.targetMaskMode === "add");
+      swapTargetMaskRemoveButton.classList.toggle("active", swapState.targetMaskMode === "remove");
+      const disabled = !swapState.target || swapState.isGenerating;
+      swapTargetMaskAddButton.disabled = disabled;
+      swapTargetMaskRemoveButton.disabled = disabled;
+      swapTargetMaskClearButton.disabled = disabled || !swapState.targetMaskRects.length;
+    }
+
+    function normalizeSwapMaskRect(fromPoint, toPoint) {
+      const x = Math.round(Math.min(fromPoint.x, toPoint.x));
+      const y = Math.round(Math.min(fromPoint.y, toPoint.y));
+      const width = Math.round(Math.abs(toPoint.x - fromPoint.x));
+      const height = Math.round(Math.abs(toPoint.y - fromPoint.y));
+      return { x, y, width, height };
+    }
+
+    function clearSwapTargetMask(options = {}) {
+      swapState.targetMaskRects = [];
+      renderSwapTargetMaskCanvas();
+      if (!options.silent) {
+        setStatus("Face swap crop cleared.");
+      }
+      saveSwapSession();
+      renderSwapWorkspace();
+    }
+
+    function getSwapMaskBounds() {
+      if (!swapState.targetMaskRects.length) {
+        return null;
+      }
+      let minX = swapTargetMaskCanvas.width;
+      let minY = swapTargetMaskCanvas.height;
+      let maxX = 0;
+      let maxY = 0;
+      swapState.targetMaskRects.forEach((rect) => {
+        minX = Math.min(minX, rect.x);
+        minY = Math.min(minY, rect.y);
+        maxX = Math.max(maxX, rect.x + rect.width);
+        maxY = Math.max(maxY, rect.y + rect.height);
+      });
+      return {
+        x: minX,
+        y: minY,
+        width: Math.max(1, maxX - minX),
+        height: Math.max(1, maxY - minY)
+      };
+    }
+
+    function getSwapMaskedFaceCropRectPx() {
+      if (!swapState.targetWidth || !swapState.targetHeight) {
+        return null;
+      }
+      const maskBounds = getSwapMaskBounds();
+      if (!maskBounds) {
+        return null;
+      }
+      const padding = Math.max(36, Math.round(Math.max(maskBounds.width, maskBounds.height) * 0.45));
+      const x = Math.max(0, maskBounds.x - padding);
+      const y = Math.max(0, maskBounds.y - padding);
+      const right = Math.min(swapState.targetWidth, maskBounds.x + maskBounds.width + padding);
+      const bottom = Math.min(swapState.targetHeight, maskBounds.y + maskBounds.height + padding);
+      return {
+        x,
+        y,
+        width: Math.max(1, right - x),
+        height: Math.max(1, bottom - y)
+      };
+    }
+
+    function buildSwapMaskCanvas(fillStyle = "#000000", options = {}) {
+      const {
+        width = swapTargetMaskCanvas.width,
+        height = swapTargetMaskCanvas.height,
+        cropRect = {
+          x: 0,
+          y: 0,
+          width: swapState.targetWidth || swapTargetMaskCanvas.width,
+          height: swapState.targetHeight || swapTargetMaskCanvas.height
+        }
+      } = options;
+      const maskCanvas = document.createElement("canvas");
+      maskCanvas.width = width;
+      maskCanvas.height = height;
+      const maskCtx = maskCanvas.getContext("2d");
+      maskCtx.fillStyle = fillStyle;
+      swapState.targetMaskRects.forEach((rect) => {
+        const scaleX = width / Math.max(1, cropRect.width);
+        const scaleY = height / Math.max(1, cropRect.height);
+        const x = Math.max(0, Math.round((rect.x - cropRect.x) * scaleX));
+        const y = Math.max(0, Math.round((rect.y - cropRect.y) * scaleY));
+        const rectWidth = Math.max(1, Math.round(rect.width * scaleX));
+        const rectHeight = Math.max(1, Math.round(rect.height * scaleY));
+        if (x < width && y < height) {
+          maskCtx.fillRect(x, y, rectWidth, rectHeight);
+        }
+      });
+      return maskCanvas;
+    }
+
+    function buildSwapProtectedMaskCanvas(fillStyle = "#000000", options = {}) {
+      const maskCanvas = document.createElement("canvas");
+      const width = options.width || swapTargetMaskCanvas.width;
+      const height = options.height || swapTargetMaskCanvas.height;
+      const cropRect = options.cropRect || {
+        x: 0,
+        y: 0,
+        width: swapState.targetWidth || swapTargetMaskCanvas.width,
+        height: swapState.targetHeight || swapTargetMaskCanvas.height
+      };
+      maskCanvas.width = width;
+      maskCanvas.height = height;
+      const maskCtx = maskCanvas.getContext("2d");
+      maskCtx.fillStyle = fillStyle;
+      maskCtx.fillRect(0, 0, width, height);
+      const visibleMask = buildSwapMaskCanvas("#ffffff", { width, height, cropRect });
+      maskCtx.globalCompositeOperation = "destination-out";
+      maskCtx.drawImage(visibleMask, 0, 0);
+      maskCtx.globalCompositeOperation = "source-over";
+      return maskCanvas;
+    }
+
+    function renderSwapTargetMaskCanvas(tempRect = null) {
+      swapTargetMaskCtx.clearRect(0, 0, swapTargetMaskCanvas.width, swapTargetMaskCanvas.height);
+      if (!swapState.target) {
+        return;
+      }
+      const hasExistingRects = swapState.targetMaskRects.length > 0;
+      const hasTempRect = Boolean(tempRect && tempRect.width > 0 && tempRect.height > 0);
+      if (!hasExistingRects && !hasTempRect) {
+        return;
+      }
+      swapTargetMaskCtx.save();
+      swapTargetMaskCtx.fillStyle = "rgba(0, 0, 0, 0.72)";
+      swapTargetMaskCtx.fillRect(0, 0, swapTargetMaskCanvas.width, swapTargetMaskCanvas.height);
+      swapState.targetMaskRects.forEach((rect) => {
+        swapTargetMaskCtx.clearRect(rect.x, rect.y, rect.width, rect.height);
+      });
+      if (hasTempRect) {
+        if (swapState.targetMaskMode === "remove") {
+          swapTargetMaskCtx.strokeStyle = "rgba(255, 120, 120, 0.95)";
+          swapTargetMaskCtx.lineWidth = 4;
+          swapTargetMaskCtx.strokeRect(tempRect.x, tempRect.y, tempRect.width, tempRect.height);
+        } else {
+          swapTargetMaskCtx.clearRect(tempRect.x, tempRect.y, tempRect.width, tempRect.height);
+          swapTargetMaskCtx.strokeStyle = "rgba(255, 255, 255, 0.88)";
+          swapTargetMaskCtx.lineWidth = 2;
+          swapTargetMaskCtx.strokeRect(tempRect.x, tempRect.y, tempRect.width, tempRect.height);
+        }
+      }
+      swapTargetMaskCtx.restore();
+    }
+
+    function updateSwapTargetMaskViewport() {
+      if (!swapState.targetWidth || !swapState.targetHeight) {
+        swapTargetMaskCanvas.style.left = "0";
+        swapTargetMaskCanvas.style.top = "0";
+        swapTargetMaskCanvas.style.width = "0";
+        swapTargetMaskCanvas.style.height = "0";
+        return;
+      }
+      const mediaWidth = swapTargetMedia.clientWidth || 0;
+      const mediaHeight = swapTargetMedia.clientHeight || 0;
+      if (!mediaWidth || !mediaHeight) {
+        return;
+      }
+      const imageAspect = swapState.targetWidth / Math.max(1, swapState.targetHeight);
+      const mediaAspect = mediaWidth / Math.max(1, mediaHeight);
+      let drawWidth = mediaWidth;
+      let drawHeight = mediaHeight;
+      let offsetX = 0;
+      let offsetY = 0;
+      if (imageAspect > mediaAspect) {
+        drawHeight = mediaWidth / imageAspect;
+        offsetY = (mediaHeight - drawHeight) / 2;
+      } else {
+        drawWidth = mediaHeight * imageAspect;
+        offsetX = (mediaWidth - drawWidth) / 2;
+      }
+      swapTargetMaskCanvas.style.left = `${offsetX}px`;
+      swapTargetMaskCanvas.style.top = `${offsetY}px`;
+      swapTargetMaskCanvas.style.width = `${drawWidth}px`;
+      swapTargetMaskCanvas.style.height = `${drawHeight}px`;
+    }
+
+    function getSwapMaskCanvasPoint(event) {
+      const rect = swapTargetMaskCanvas.getBoundingClientRect();
+      return {
+        x: clampNumber(((event.clientX - rect.left) / Math.max(1, rect.width)) * swapTargetMaskCanvas.width, 0, swapTargetMaskCanvas.width),
+        y: clampNumber(((event.clientY - rect.top) / Math.max(1, rect.height)) * swapTargetMaskCanvas.height, 0, swapTargetMaskCanvas.height)
+      };
+    }
+
+    function startSwapMaskDraw(event) {
+      if (!swapState.target || swapTargetPreview.classList.contains("no-image") || swapState.isGenerating) {
+        return;
+      }
+      const point = getSwapMaskCanvasPoint(event);
+      swapTargetMaskDraw = {
+        pointerId: event.pointerId,
+        startPoint: point,
+        currentPoint: point
+      };
+      swapTargetMaskCanvas.setPointerCapture?.(event.pointerId);
+      renderSwapTargetMaskCanvas(normalizeSwapMaskRect(point, point));
+      event.preventDefault();
+    }
+
+    function continueSwapMaskDraw(event) {
+      if (!swapTargetMaskDraw || swapTargetMaskDraw.pointerId !== event.pointerId) {
+        return;
+      }
+      const point = getSwapMaskCanvasPoint(event);
+      swapTargetMaskDraw.currentPoint = point;
+      renderSwapTargetMaskCanvas(normalizeSwapMaskRect(swapTargetMaskDraw.startPoint, point));
+      event.preventDefault();
+    }
+
+    function stopSwapMaskDraw(event) {
+      if (!swapTargetMaskDraw || swapTargetMaskDraw.pointerId !== event.pointerId) {
+        return;
+      }
+      swapTargetMaskCanvas.releasePointerCapture?.(event.pointerId);
+      const point = "clientX" in event ? getSwapMaskCanvasPoint(event) : swapTargetMaskDraw.currentPoint;
+      const rect = normalizeSwapMaskRect(swapTargetMaskDraw.startPoint, point);
+      if (rect.width >= 6 && rect.height >= 6) {
+        if (swapState.targetMaskMode === "remove") {
+          swapState.targetMaskRects = swapState.targetMaskRects.filter((existingRect) => (
+            existingRect.x + existingRect.width < rect.x ||
+            rect.x + rect.width < existingRect.x ||
+            existingRect.y + existingRect.height < rect.y ||
+            rect.y + rect.height < existingRect.y
+          ));
+        } else {
+          swapState.targetMaskRects.push(rect);
+        }
+      }
+      swapTargetMaskDraw = null;
+      renderSwapTargetMaskCanvas();
+      saveSwapSession();
+      renderSwapWorkspace();
+    }
+
+    function buildSavedSourceChoices() {
+      const choices = [];
+      state.people.forEach((person, personIndex) => {
+        (person.sources || []).forEach((source, sourceIndex) => {
+          choices.push({
+            value: `${person.id}::${source.id}`,
+            personId: person.id,
+            sourceId: source.id,
+            label: `${person.name || `Person ${personIndex + 1}`} • ${source.label || `Source ${sourceIndex + 1}`}`
+          });
+        });
+      });
+      return choices;
+    }
+
+    function renderSwapSavedSourceOptions() {
+      const choices = buildSavedSourceChoices();
+      const activeSelectionValue = state.activePersonId && state.activeSourceId
+        ? `${state.activePersonId}::${state.activeSourceId}`
+        : "";
+      if (!swapState.targetPickerValue && activeSelectionValue) {
+        swapState.targetPickerValue = activeSelectionValue;
+      }
+      if (!swapState.donorPickerValue && activeSelectionValue) {
+        swapState.donorPickerValue = activeSelectionValue;
+      }
+      [swapTargetSourceSelect, swapDonorSourceSelect].forEach((select, selectIndex) => {
+        const currentValue = selectIndex === 0 ? swapState.targetPickerValue : swapState.donorPickerValue;
+        select.innerHTML = "";
+        const placeholder = document.createElement("option");
+        placeholder.value = "";
+        placeholder.textContent = choices.length ? "Choose a saved person source" : "No saved person sources yet";
+        select.appendChild(placeholder);
+        choices.forEach((choice) => {
+          const option = document.createElement("option");
+          option.value = choice.value;
+          option.textContent = choice.label;
+          select.appendChild(option);
+        });
+        if (currentValue && choices.some((choice) => choice.value === currentValue)) {
+          select.value = currentValue;
+        } else if (activeSelectionValue && choices.some((choice) => choice.value === activeSelectionValue)) {
+          select.value = activeSelectionValue;
+          if (selectIndex === 0) {
+            swapState.targetPickerValue = activeSelectionValue;
+          } else {
+            swapState.donorPickerValue = activeSelectionValue;
+          }
+        } else {
+          select.value = "";
+        }
+      });
+    }
+
+    function refreshSwapButtons() {
+      const hasTarget = Boolean(swapState.target);
+      const hasDonor = Boolean(swapState.donor);
+      swapGenerateButton.disabled = !hasTarget || !hasDonor || swapState.isGenerating;
+      swapClearBothButton.disabled = (!hasTarget && !hasDonor) || swapState.isGenerating;
+      swapTargetClearButton.disabled = !hasTarget || swapState.isGenerating;
+      swapDonorClearButton.disabled = !hasDonor || swapState.isGenerating;
+      swapTargetLoadSavedButton.disabled = !swapTargetSourceSelect.value || swapState.isGenerating;
+      swapDonorLoadSavedButton.disabled = !swapDonorSourceSelect.value || swapState.isGenerating;
+      swapTargetUseActiveButton.disabled = !getActiveSource() || swapState.isGenerating;
+      swapDonorUseActiveButton.disabled = !getActiveSource() || swapState.isGenerating;
+      swapDeleteAllImagesButton.disabled = swapState.isGenerating || !swapState.archive.length;
+      swapTargetPasteTarget.classList.toggle("ready", hasTarget);
+      swapDonorPasteTarget.classList.toggle("ready", hasDonor);
+      refreshSwapTargetMaskButtons();
+    }
+
+    function renderSwapPreview(slot) {
+      const config = getSwapSlotConfig(slot);
+      const imageUrl = getSwapSlotPreviewValue(slot) || getSwapSlotValue(slot);
+      const label = getSwapSlotLabel(slot);
+      if (!imageUrl) {
+        config.preview.classList.remove("open");
+        config.preview.classList.add("no-image");
+        config.image.removeAttribute("src");
+        if (slot === "target") {
+          swapTargetMedia.style.aspectRatio = "3 / 4";
+          updateSwapTargetMaskViewport();
+        }
+        config.title.textContent = config.emptyTitle;
+        config.description.textContent = config.emptyDescription;
+        return;
+      }
+      config.preview.classList.add("open");
+      config.preview.classList.remove("no-image");
+      config.image.src = imageUrl;
+      if (slot === "target") {
+        swapTargetMedia.style.aspectRatio = swapState.targetWidth && swapState.targetHeight
+          ? `${swapState.targetWidth} / ${swapState.targetHeight}`
+          : "3 / 4";
+        requestAnimationFrame(() => {
+          updateSwapTargetMaskViewport();
+          renderSwapTargetMaskCanvas();
+        });
+      }
+      config.title.textContent = label || `${slot === "target" ? "Target" : "Donor"} ready`;
+      config.description.textContent = `${slot === "target" ? "Target" : "Donor"} image ready for face swap generation.`;
+    }
+
+    async function setSwapSlot(slot, source, label, previewUrl = source, options = {}) {
+      const image = await loadImageElement(source);
+      const retainPickerValue = Boolean(options.retainPickerValue);
+      if (slot === "target") {
+        if (!retainPickerValue) {
+          swapState.targetPickerValue = "";
+        }
+        swapState.target = source;
+        swapState.targetPreviewUrl = previewUrl;
+        swapState.targetLabel = label;
+        swapState.targetWidth = image.naturalWidth || image.width || 0;
+        swapState.targetHeight = image.naturalHeight || image.height || 0;
+        swapTargetMaskCanvas.width = swapState.targetWidth || swapTargetMaskCanvas.width;
+        swapTargetMaskCanvas.height = swapState.targetHeight || swapTargetMaskCanvas.height;
+        swapState.targetMaskRects = [];
+      } else {
+        if (!retainPickerValue) {
+          swapState.donorPickerValue = "";
+        }
+        swapState.donor = source;
+        swapState.donorPreviewUrl = previewUrl;
+        swapState.donorLabel = label;
+        swapState.donorWidth = image.naturalWidth || image.width || 0;
+        swapState.donorHeight = image.naturalHeight || image.height || 0;
+      }
+      saveSwapSession();
+      renderSwapWorkspace();
+    }
+
+    async function clearSwapSlot(slot) {
+      if (slot === "target") {
+        swapState.target = "";
+        swapState.targetPreviewUrl = "";
+        swapState.targetLabel = "";
+        swapState.targetWidth = 0;
+        swapState.targetHeight = 0;
+        swapState.targetMaskRects = [];
+      } else {
+        swapState.donor = "";
+        swapState.donorPreviewUrl = "";
+        swapState.donorLabel = "";
+        swapState.donorWidth = 0;
+        swapState.donorHeight = 0;
+      }
+      saveSwapSession();
+      renderSwapWorkspace();
+      getSwapSlotConfig(slot).pasteTarget.focus();
+      setStatus(getSwapSlotConfig(slot).clearStatus);
+    }
+
+    function getSwapArchiveImageUrl(entry) {
+      return getVersionImageUrl(entry?.version);
+    }
+
+    function getSwapArchiveBlobKeys(entry) {
+      return entry?.version?.blobKey ? [entry.version.blobKey] : [];
+    }
+
+    function hydrateSwapArchiveEntry(entry) {
+      if (!entry?.version?.blobKey || blobUrlCache.has(entry.version.blobKey) || blobUrlLoads.has(entry.version.blobKey)) {
+        return;
+      }
+      const blobKey = entry.version.blobKey;
+      blobUrlLoads.add(blobKey);
+      getImageRecord(blobKey)
+        .then((record) => {
+          if (!record?.blob) {
+            entry.version.blobKey = "";
+            saveSwapArchive();
+            renderSwapArchive();
+            renderSwapStage();
+            return;
+          }
+          const objectUrl = URL.createObjectURL(record.blob);
+          blobUrlCache.set(blobKey, objectUrl);
+          renderSwapArchive();
+          renderSwapStage();
+        })
+        .catch(() => {
+          entry.version.blobKey = "";
+          saveSwapArchive();
+          renderSwapArchive();
+          renderSwapStage();
+        })
+        .finally(() => {
+          blobUrlLoads.delete(blobKey);
+        });
+    }
+
+    function ensureCurrentSwapArchiveSelection() {
+      if (!swapState.archive.length) {
+        swapState.currentArchiveId = "";
+        return;
+      }
+      if (swapState.archive.some((entry) => entry.id === swapState.currentArchiveId)) {
+        return;
+      }
+      swapState.currentArchiveId = "";
+    }
+
+    function getCurrentSwapArchiveEntry() {
+      return swapState.archive.find((entry) => entry.id === swapState.currentArchiveId) || null;
+    }
+
+    function renderSwapArchive() {
+      swapArchiveGrid.innerHTML = "";
+      swapState.archive.forEach((entry, index) => {
+        hydrateSwapArchiveEntry(entry);
+        const card = document.createElement("article");
+        card.className = "result-card edit-archive-card";
+
+        const frame = document.createElement("div");
+        frame.className = "result-frame";
+        const imageUrl = getSwapArchiveImageUrl(entry);
+        if (imageUrl) {
+          const image = document.createElement("img");
+          image.src = addCacheBuster(imageUrl);
+          image.alt = `Saved face swap ${index + 1}`;
+          image.addEventListener("error", () => {
+            entry.version.blobKey = "";
+            saveSwapArchive();
+            renderSwapArchive();
+            renderSwapStage();
+          }, { once: true });
+          frame.appendChild(image);
+          frame.addEventListener("click", () => {
+            openLightbox(index, "swap");
+          });
+        } else {
+          frame.textContent = "Saved face swap unavailable.";
+        }
+
+        const deleteButton = document.createElement("button");
+        deleteButton.className = "ghost-btn mini-icon-btn result-delete";
+        deleteButton.type = "button";
+        deleteButton.title = "Delete saved face swap";
+        deleteButton.setAttribute("aria-label", "Delete saved face swap");
+        deleteButton.innerHTML = `
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M9 3h6l1 2h4v2H4V5h4l1-2Zm-2 6h2v9H7V9Zm4 0h2v9h-2V9Zm4 0h2v9h-2V9ZM6 21a2 2 0 0 1-2-2V7h16v12a2 2 0 0 1-2 2H6Z"/>
+          </svg>
+        `;
+        deleteButton.addEventListener("click", (event) => {
+          event.stopPropagation();
+          deleteSwapArchiveEntry(entry.id).catch((error) => {
+            setStatus(error.message || "Could not delete the saved face swap.");
+          });
+        });
+        frame.appendChild(deleteButton);
+
+        const meta = document.createElement("div");
+        meta.className = "result-meta";
+        const title = document.createElement("strong");
+        title.textContent = `Saved face swap ${index + 1}`;
+        const versionLabel = document.createElement("div");
+        versionLabel.className = "result-version-label";
+        versionLabel.textContent = `${entry.targetLabel || "Target"} -> ${entry.donorLabel || "Donor"}`;
+        const status = document.createElement("div");
+        status.className = "result-status success";
+        status.textContent = formatTimestamp(entry.createdAt);
+        const reuseButton = document.createElement("button");
+        reuseButton.className = "ghost-btn tiny-btn";
+        reuseButton.type = "button";
+        reuseButton.textContent = "Use As Face Swap Target";
+        reuseButton.disabled = !imageUrl;
+        reuseButton.addEventListener("click", (event) => {
+          event.stopPropagation();
+          useSwapArchiveEntryAsSwapTarget(entry).catch((error) => {
+            setStatus(error.message || "Could not use that saved face swap as the target.");
+          });
+        });
+        meta.append(title, versionLabel, status, reuseButton);
+
+        card.append(frame, meta);
+        swapArchiveGrid.appendChild(card);
+      });
+
+      swapResultsSummary.textContent = `${swapState.archive.length} saved`;
+      swapResultsEmpty.style.display = swapState.archive.length ? "none" : "block";
+      saveSwapArchive();
+      refreshSwapButtons();
+    }
+
+    function renderSwapStage() {
+      ensureCurrentSwapArchiveSelection();
+      const currentEntry = getCurrentSwapArchiveEntry();
+      const imageUrl = getSwapArchiveImageUrl(currentEntry);
+      if (!imageUrl) {
+        swapStage.classList.add("empty");
+        swapStage.dataset.emptyMessage = "Load a target and donor image, then generate a face swap.";
+        swapStageImage.removeAttribute("src");
+        swapStage.style.aspectRatio = swapState.targetWidth && swapState.targetHeight
+          ? `${swapState.targetWidth} / ${swapState.targetHeight}`
+          : "";
+        setSwapStageNote("Waiting for a target and donor image");
+        refreshSwapButtons();
+        return;
+      }
+      swapStage.classList.remove("empty");
+      swapStage.style.aspectRatio = swapState.targetWidth && swapState.targetHeight
+        ? `${swapState.targetWidth} / ${swapState.targetHeight}`
+        : "";
+      if (swapStageImage.src !== imageUrl) {
+        swapStageImage.src = imageUrl;
+      }
+      setSwapStageNote(`${currentEntry?.targetLabel || "Target"} -> ${currentEntry?.donorLabel || "Donor"} • ${formatTimestamp(currentEntry?.createdAt || Date.now())}`);
+      refreshSwapButtons();
+    }
+
+    function renderSwapWorkspace() {
+      renderSwapSavedSourceOptions();
+      renderSwapPreview("target");
+      renderSwapPreview("donor");
+      renderSwapTargetMaskCanvas();
+      renderSwapArchivePanel();
+      renderSwapArchive();
+      renderSwapStage();
+      swapGenerateCountSelect.value = String(Math.max(1, Math.min(4, Number(swapState.generateCount) || 2)));
+      if (swapExtraInstructionsInput.value !== swapState.extraInstructions) {
+        swapExtraInstructionsInput.value = swapState.extraInstructions;
+      }
+      if (swapMaskInstructionsInput.value !== swapState.maskInstructions) {
+        swapMaskInstructionsInput.value = swapState.maskInstructions;
+      }
+      const usingCrop = hasSwapFaceCrop();
+      const swapMaskInstructionsField = swapMaskInstructionsInput.closest(".swap-field");
+      if (swapMaskInstructionsField) {
+        swapMaskInstructionsField.hidden = usingCrop;
+      }
+      swapMaskInstructionsInput.disabled = usingCrop;
+      swapTargetCropNote.textContent = usingCrop
+        ? "Cropped mode active: only the selected face region is sent visibly, everything else in the patch is masked black, and the face-swap-lab prompt/composite path is used."
+        : "Optional: draw face crop rectangles on the target. If none are drawn, the current full-frame face-swap workflow is used.";
+      swapFieldNote.textContent = usingCrop
+        ? "Crop mode is active. The model sees only the cropped target patch with the selected face region visible and a red-framed donor reference overlay."
+        : "The model sees the target image with a donor reference overlay. If xAI returns solid green censor areas, the original target pixels are restored there automatically.";
+      refreshSwapButtons();
+    }
+
+    function buildFaceSwapPrompt() {
+      if (hasSwapFaceCrop()) {
+        const parts = [
+          "The source image contains a cropped target patch with the selected face region visible, everything else in that patch masked pure black",
+          "there is a overlaid donor face reference in the upper right corner surrounded by a clear red frame",
+          "Use the red-framed donor face reference in the upper right corner as the identity source.",
+          "Replace the in face and hair in the main image with the face and hair from the red-framed donor reference overlay.",
+          "The person in the visible image area should become the donor person.",
+          "Remove the red-framed donor face reference from the final result.",
+          "do not let the face in the source image influence the output face, it should be a completely new face (the donor's).",
+          "The image will be coposited at a later stage so edge of mask must match perfectly with the original image.",
+          "Make sure not to move the visible area as it will ruin the compositing.",
+          "Keep the output lighting same as source",
+          "You will be judged on the likeness of the output to the donor reference and a seamless compositing",
+          "Only change the face and hair in the visible non-black face region.",
+          "Keep all black masked pixels pure black and do not fill them.",
+          "Do not change pixels outside the visible face region.",
+          "Keep the target image's pose, body, clothing, lighting, and surrounding pixels unchanged."
+        ];
+        if (swapState.extraInstructions.trim()) {
+          parts.push(`Additional instructions: ${swapState.extraInstructions.trim()}`);
+        }
+        return parts.join(" ");
+      }
+      const parts = [
+      "The source image contains the full target portrait and an overlaid donor face reference.",
+        "Replace the face with the face from the donor reference.",
+        "The person in the image area should become the donor person.",
+        "Remove the overlaid donor face reference from the final result.",
+        "Keep the output photorealistic and coherent.",
+        "If needed mask some areas with a flat solid green mask.",
+        "Any green mask must be fully opaque, hard-edged, and have no transparency, glow, gradient, or texture.",
+        "Areas surrondin masking must be kept EXACTLY the same as in the original image. Ie edge of mask must match perfectly with the original image.",
+        "Change only the face and hair region while keeping the rest of the image intact.",
+        "Keep the target image's pose, body, clothing, and lighting unchanged."
+      ];
+      if (swapState.maskInstructions.trim()) {
+        parts.push(`Mask instructions: ${swapState.maskInstructions.trim()}`);
+      }
+      if (swapState.extraInstructions.trim()) {
+        parts.push(`Additional instructions: ${swapState.extraInstructions.trim()}`);
+      }
+      return parts.join(" ");
+    }
+
+    function getCoverPlacement(image, width, height, options = {}) {
+      const sourceWidth = image?.naturalWidth || image?.videoWidth || image?.width || width;
+      const sourceHeight = image?.naturalHeight || image?.videoHeight || image?.height || height;
+      const alignX = typeof options.alignX === "number" ? options.alignX : 0.5;
+      const alignY = typeof options.alignY === "number" ? options.alignY : 0.5;
+      const scale = Math.max(width / Math.max(1, sourceWidth), height / Math.max(1, sourceHeight));
+      const drawWidth = sourceWidth * scale;
+      const drawHeight = sourceHeight * scale;
+      const maxOffsetX = Math.max(0, drawWidth - width);
+      const maxOffsetY = Math.max(0, drawHeight - height);
+      const x = -maxOffsetX * alignX;
+      const y = -maxOffsetY * alignY;
+      return { x, y, drawWidth, drawHeight };
+    }
+
+    function drawFaceSwapDonorReferenceIntoRect(context, donorImage, x, y, width, height) {
+      context.drawImage(donorImage, x, y, width, height);
+      context.save();
+      context.strokeStyle = "#ef4444";
+      context.lineWidth = Math.max(4, Math.round(Math.min(width, height) * 0.02));
+      context.strokeRect(x, y, width, height);
+      context.restore();
+    }
+
+    async function buildFaceSwapBoard() {
+      if (!swapState.target || !swapState.donor) {
+        throw new Error("Load both a target and donor image first.");
+      }
+      const targetImage = await loadImageElement(swapState.target);
+      const donorImage = await loadImageElement(swapState.donor);
+      const sourceWidth = targetImage.naturalWidth || targetImage.width;
+      const sourceHeight = targetImage.naturalHeight || targetImage.height;
+      if (!sourceWidth || !sourceHeight) {
+        throw new Error("Could not read the target image dimensions.");
+      }
+      const maxEdge = 1600;
+      const scaleDown = Math.min(1, maxEdge / Math.max(sourceWidth, sourceHeight));
+      const width = Math.max(1, Math.round(sourceWidth * scaleDown));
+      const height = Math.max(1, Math.round(sourceHeight * scaleDown));
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      const context = canvas.getContext("2d");
+      if (!context) {
+        throw new Error("Could not build the face swap board.");
+      }
+      if (hasSwapFaceCrop()) {
+        const cropRect = getSwapMaskedFaceCropRectPx();
+        if (!cropRect) {
+          throw new Error("Draw at least one face crop rectangle first.");
+        }
+        const cropScaleDown = Math.min(1, maxEdge / Math.max(cropRect.width, cropRect.height));
+        const cropWidth = Math.max(256, Math.round(cropRect.width * cropScaleDown));
+        const cropHeight = Math.max(256, Math.round(cropRect.height * cropScaleDown));
+        canvas.width = cropWidth;
+        canvas.height = cropHeight;
+        context.drawImage(
+          targetImage,
+          cropRect.x,
+          cropRect.y,
+          cropRect.width,
+          cropRect.height,
+          0,
+          0,
+          cropWidth,
+          cropHeight
+        );
+        context.drawImage(buildSwapProtectedMaskCanvas("#000000", {
+          width: cropWidth,
+          height: cropHeight,
+          cropRect
+        }), 0, 0);
+        const overlayMargin = Math.round(Math.min(cropWidth, cropHeight) * 0.045);
+        const overlayMaxWidth = Math.round(cropWidth * 0.34);
+        const overlayMaxHeight = Math.round(cropHeight * 0.3);
+        const donorAspectRatio = donorImage.naturalWidth && donorImage.naturalHeight
+          ? donorImage.naturalWidth / donorImage.naturalHeight
+          : 1;
+        let overlayWidth = overlayMaxWidth;
+        let overlayHeight = Math.max(1, Math.round(overlayWidth / donorAspectRatio));
+        if (overlayHeight > overlayMaxHeight) {
+          overlayHeight = overlayMaxHeight;
+          overlayWidth = Math.max(1, Math.round(overlayHeight * donorAspectRatio));
+        }
+        const overlayX = Math.max(0, cropWidth - overlayMargin - overlayWidth);
+        const overlayY = overlayMargin;
+        drawFaceSwapDonorReferenceIntoRect(context, donorImage, overlayX, overlayY, overlayWidth, overlayHeight);
+        return {
+          canvas,
+          outputWidth: cropWidth,
+          outputHeight: cropHeight,
+          targetWidth: sourceWidth,
+          targetHeight: sourceHeight,
+          cropRect,
+          mode: "crop"
+        };
+      }
+      context.drawImage(targetImage, 0, 0, width, height);
+      const overlayMargin = Math.round(Math.min(width, height) * 0.045);
+      const overlayWidth = Math.max(120, Math.round(Math.min(width, height) * 0.3));
+      const overlayHeight = overlayWidth;
+      const overlayX = Math.max(0, width - overlayMargin - overlayWidth);
+      const overlayY = overlayMargin;
+      const donorPlacement = getCoverPlacement(donorImage, overlayWidth, overlayHeight);
+      context.drawImage(
+        donorImage,
+        overlayX + donorPlacement.x,
+        overlayY + donorPlacement.y,
+        donorPlacement.drawWidth,
+        donorPlacement.drawHeight
+      );
+      return {
+        canvas,
+        outputWidth: width,
+        outputHeight: height,
+        targetWidth: sourceWidth,
+        targetHeight: sourceHeight,
+        mode: "full"
+      };
+    }
+
+    function buildDetectedGreenMaskCanvasForSwap(sourceCanvas) {
+      const width = sourceCanvas.width;
+      const height = sourceCanvas.height;
+      const sourceCtx = sourceCanvas.getContext("2d");
+      const sourceImageData = sourceCtx.getImageData(0, 0, width, height);
+      const detectedMaskCanvas = document.createElement("canvas");
+      detectedMaskCanvas.width = width;
+      detectedMaskCanvas.height = height;
+      const detectedMaskCtx = detectedMaskCanvas.getContext("2d");
+      const detectedMaskData = detectedMaskCtx.createImageData(width, height);
+      let greenPixelCount = 0;
+
+      for (let index = 0; index < sourceImageData.data.length; index += 4) {
+        const r = sourceImageData.data[index];
+        const g = sourceImageData.data[index + 1];
+        const b = sourceImageData.data[index + 2];
+        const a = sourceImageData.data[index + 3];
+        const isGreenMaskPixel =
+          a > 180 &&
+          g > 96 &&
+          g > r * 1.35 &&
+          g > b * 1.15 &&
+          g - r > 28 &&
+          g - b > 18;
+        if (isGreenMaskPixel) {
+          detectedMaskData.data[index + 3] = 255;
+          greenPixelCount += 1;
+        }
+      }
+
+      if (greenPixelCount < Math.max(48, Math.round(width * height * 0.0002))) {
+        return null;
+      }
+
+      detectedMaskCtx.putImageData(detectedMaskData, 0, 0);
+      return detectedMaskCanvas;
+    }
+
+    async function compositeFaceSwapResult(rawImageUrl, boardMeta) {
+      if (!swapState.target) {
+        return rawImageUrl;
+      }
+      if (boardMeta?.mode === "crop" && boardMeta.cropRect) {
+        const [targetImage, returnedImage] = await Promise.all([
+          loadImageElement(swapState.target),
+          loadImageElement(rawImageUrl)
+        ]);
+        const patchCanvas = document.createElement("canvas");
+        patchCanvas.width = boardMeta.cropRect.width;
+        patchCanvas.height = boardMeta.cropRect.height;
+        const patchCtx = patchCanvas.getContext("2d");
+        patchCtx.drawImage(returnedImage, 0, 0, patchCanvas.width, patchCanvas.height);
+        const visibleMaskCanvas = buildSwapMaskCanvas("#ffffff", {
+          width: patchCanvas.width,
+          height: patchCanvas.height,
+          cropRect: boardMeta.cropRect
+        });
+        const featherPx = Math.max(6, Math.round(Math.min(patchCanvas.width, patchCanvas.height) * 0.04));
+        const softMaskCanvas = document.createElement("canvas");
+        softMaskCanvas.width = patchCanvas.width;
+        softMaskCanvas.height = patchCanvas.height;
+        const softMaskCtx = softMaskCanvas.getContext("2d");
+        softMaskCtx.filter = `blur(${featherPx}px)`;
+        softMaskCtx.drawImage(visibleMaskCanvas, 0, 0);
+        softMaskCtx.filter = "none";
+        softMaskCtx.globalCompositeOperation = "destination-in";
+        softMaskCtx.drawImage(visibleMaskCanvas, 0, 0);
+        softMaskCtx.globalCompositeOperation = "source-over";
+        patchCtx.globalCompositeOperation = "destination-in";
+        patchCtx.drawImage(softMaskCanvas, 0, 0, patchCanvas.width, patchCanvas.height);
+        patchCtx.globalCompositeOperation = "source-over";
+        const finalCanvas = document.createElement("canvas");
+        finalCanvas.width = targetImage.naturalWidth || targetImage.width;
+        finalCanvas.height = targetImage.naturalHeight || targetImage.height;
+        const finalCtx = finalCanvas.getContext("2d");
+        finalCtx.drawImage(targetImage, 0, 0, finalCanvas.width, finalCanvas.height);
+        finalCtx.drawImage(
+          patchCanvas,
+          0,
+          0,
+          patchCanvas.width,
+          patchCanvas.height,
+          boardMeta.cropRect.x,
+          boardMeta.cropRect.y,
+          boardMeta.cropRect.width,
+          boardMeta.cropRect.height
+        );
+        return finalCanvas.toDataURL("image/png");
+      }
+      const [targetImage, returnedImage] = await Promise.all([
+        loadImageElement(swapState.target),
+        loadImageElement(rawImageUrl)
+      ]);
+      const returnedCanvas = document.createElement("canvas");
+      returnedCanvas.width = boardMeta.outputWidth;
+      returnedCanvas.height = boardMeta.outputHeight;
+      const returnedCtx = returnedCanvas.getContext("2d");
+      returnedCtx.drawImage(returnedImage, 0, 0, returnedCanvas.width, returnedCanvas.height);
+
+      const hardMaskCanvas = buildDetectedGreenMaskCanvasForSwap(returnedCanvas);
+      if (hardMaskCanvas) {
+        const featherPx = Math.max(4, Math.round(Math.min(returnedCanvas.width, returnedCanvas.height) * 0.015));
+        const featherMaskCanvas = document.createElement("canvas");
+        featherMaskCanvas.width = returnedCanvas.width;
+        featherMaskCanvas.height = returnedCanvas.height;
+        const featherMaskCtx = featherMaskCanvas.getContext("2d");
+        featherMaskCtx.filter = `blur(${featherPx}px)`;
+        featherMaskCtx.drawImage(hardMaskCanvas, 0, 0);
+        featherMaskCtx.filter = "none";
+        featherMaskCtx.globalCompositeOperation = "destination-out";
+        featherMaskCtx.drawImage(hardMaskCanvas, 0, 0);
+        featherMaskCtx.globalCompositeOperation = "source-over";
+        returnedCtx.globalCompositeOperation = "destination-out";
+        returnedCtx.drawImage(hardMaskCanvas, 0, 0);
+        returnedCtx.drawImage(featherMaskCanvas, 0, 0);
+        returnedCtx.globalCompositeOperation = "source-over";
+      }
+
+      const finalCanvas = document.createElement("canvas");
+      finalCanvas.width = targetImage.naturalWidth || targetImage.width;
+      finalCanvas.height = targetImage.naturalHeight || targetImage.height;
+      const finalCtx = finalCanvas.getContext("2d");
+      finalCtx.drawImage(targetImage, 0, 0, finalCanvas.width, finalCanvas.height);
+      finalCtx.drawImage(returnedCanvas, 0, 0, finalCanvas.width, finalCanvas.height);
+      return finalCanvas.toDataURL("image/png");
+    }
+
+    async function requestFaceSwapEdit() {
+      const token = getSharedTokenValue();
+      if (!token) {
+        throw new Error("Enter an xAI API key first.");
+      }
+      persistTokenIfNeeded();
+      const board = await buildFaceSwapBoard();
+      const requestPayload = {
+        model: "grok-imagine-image",
+        prompt: buildFaceSwapPrompt(),
+        response_format: "b64_json",
+        resolution: "2k",
+        image: {
+          url: board.canvas.toDataURL("image/png"),
+          type: "image_url"
+        }
+      };
+
+      let response;
+      try {
+        response = await fetch("https://api.x.ai/v1/images/edits", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          },
+          body: JSON.stringify(requestPayload)
+        });
+      } catch (_error) {
+        throw new Error("Direct browser request failed before completion. This is usually CORS, network, or browser policy.");
+      }
+
+      let data;
+      try {
+        data = await response.json();
+      } catch (_parseError) {
+        throw new Error("xAI returned an invalid response.");
+      }
+
+      if (!response.ok) {
+        if (isModerationMessage(data?.error || data?.error?.message || data?.message)) {
+          return {
+            editedUrl: "",
+            isModerated: true,
+            board
+          };
+        }
+        const errorMessage = typeof data?.error === "string"
+          ? data.error
+          : (data?.error?.message || data?.message || `Image generation failed (${response.status}).`);
+        throw new Error(errorMessage);
+      }
+
+      const imageData = data?.data?.[0];
+      const base64Image = imageData?.b64_json;
+      const mimeType = typeof imageData?.mime_type === "string" && imageData.mime_type
+        ? imageData.mime_type
+        : "image/png";
+      if (typeof base64Image !== "string" || !base64Image) {
+        throw new Error("xAI did not return b64_json for the face swap response.");
+      }
+
+      return {
+        editedUrl: `data:${mimeType};base64,${base64Image}`,
+        isModerated: false,
+        board
+      };
+    }
+
+    async function runFaceSwap() {
+      if (swapState.isGenerating) {
+        return;
+      }
+      if (!isSupportedImageSource(swapState.target) || !isSupportedImageSource(swapState.donor)) {
+        setStatus("Load both a target and donor image first.");
+        return;
+      }
+
+      swapState.isGenerating = true;
+      refreshSwapButtons();
+      renderSwapStage();
+      const runCount = Math.max(1, Math.min(4, Number(swapState.generateCount) || 1));
+      let successCount = 0;
+      let moderatedCount = 0;
+
+      try {
+        for (let index = 0; index < runCount; index += 1) {
+          setStatus(`Running face swap ${index + 1} of ${runCount}...`);
+          setSwapStageNote(`Generating face swap ${index + 1} of ${runCount}`);
+          const result = await requestFaceSwapEdit();
+          if (result.isModerated) {
+            moderatedCount += 1;
+            continue;
+          }
+          const compositedUrl = await compositeFaceSwapResult(result.editedUrl, result.board);
+          const storedVersion = await persistGeneratedVersion(compositedUrl);
+          const entry = normalizeSwapArchiveEntry({
+            id: makeId("faceswap"),
+            targetLabel: swapState.targetLabel,
+            donorLabel: swapState.donorLabel,
+            instructions: buildFaceSwapPrompt(),
+            createdAt: Date.now(),
+            version: storedVersion
+          });
+          swapState.archive.unshift(entry);
+          swapState.currentArchiveId = entry.id;
+          swapState.archiveOpen = true;
+          successCount += 1;
+          saveSwapArchive();
+          renderSwapWorkspace();
+        }
+        if (successCount) {
+          setSwapStageNote("Latest face swap ready. Open any saved result in fullscreen.");
+          const moderatedNote = moderatedCount ? ` ${moderatedCount} prompt${moderatedCount === 1 ? " was" : "s were"} moderated.` : "";
+          setStatus(successCount === 1
+            ? `Face swap generated successfully.${moderatedNote}`
+            : `${successCount} face swaps generated successfully.${moderatedNote}`);
+        } else if (moderatedCount) {
+          const moderationMessage = moderatedCount === 1
+            ? "1 prompt was moderated."
+            : `${moderatedCount} prompts were moderated.`;
+          setSwapStageNote(moderationMessage);
+          setStatus(moderationMessage);
+        } else {
+          throw new Error("Could not generate the face swap.");
+        }
+      } finally {
+        swapState.isGenerating = false;
+        refreshSwapButtons();
+      }
+    }
+
+    async function deleteSwapArchiveEntry(entryId) {
+      if (swapState.isGenerating) {
+        return;
+      }
+      const entry = swapState.archive.find((item) => item.id === entryId);
+      if (!entry) {
+        return;
+      }
+      await deleteBlobKeys(getSwapArchiveBlobKeys(entry));
+      swapState.archive = swapState.archive.filter((item) => item.id !== entryId);
+      if (swapState.currentArchiveId === entryId) {
+        swapState.currentArchiveId = "";
+      }
+      if (state.lightboxCollection === "swap" && state.lightboxKey === entryId) {
+        closeLightbox();
+      }
+      ensureCurrentSwapArchiveSelection();
+      saveSwapArchive();
+      renderSwapWorkspace();
+      setStatus("Saved face swap deleted.");
+    }
+
+    async function deleteAllSwapArchiveImages() {
+      if (swapState.isGenerating || !swapState.archive.length) {
+        return;
+      }
+      const blobKeys = swapState.archive.flatMap((entry) => getSwapArchiveBlobKeys(entry));
+      await deleteBlobKeys(blobKeys);
+      swapState.archive = [];
+      swapState.currentArchiveId = "";
+      if (state.lightboxCollection === "swap") {
+        closeLightbox();
+      }
+      saveSwapArchive();
+      renderSwapWorkspace();
+      setStatus("Deleted all saved face swaps.");
+    }
+
+    async function loadSwapSelectedFile(file, slot, label) {
+      if (!file || !file.type.startsWith("image/")) {
+        setStatus("Choose an image file.");
+        return;
+      }
+      const dataUrl = await blobToDataUrl(file);
+      await setSwapSlot(slot, dataUrl, label);
+    }
+
+    async function handleSwapPaste(event, slot) {
+      const clipboardData = event.clipboardData;
+      if (!clipboardData || swapState.isGenerating) {
+        return;
+      }
+      const items = Array.from(clipboardData.items || []);
+      const imageItem = items.find((item) => item.type.startsWith("image/"));
+      if (imageItem) {
+        event.preventDefault();
+        const blob = imageItem.getAsFile();
+        if (!blob) {
+          setStatus("Could not read the pasted image.");
+          return;
+        }
+        const dataUrl = await blobToDataUrl(blob);
+        await setSwapSlot(slot, dataUrl, "pasted image");
+        return;
+      }
+      const pastedText = clipboardData.getData("text/plain").trim();
+      if (isHttpUrl(pastedText)) {
+        event.preventDefault();
+        await setSwapSlot(slot, pastedText, "pasted image URL");
+        return;
+      }
+      setStatus("Paste an image or an http(s) image URL.");
+    }
+
+    async function pasteSwapFromClipboard(slot) {
+      if (swapState.isGenerating) {
+        setStatus("Wait for the current face swap to finish.");
+        return;
+      }
+      if (!navigator.clipboard) {
+        setStatus("Clipboard access is not available here. Long-press the paste area and use Paste.");
+        return;
+      }
+      if (typeof navigator.clipboard.read === "function") {
+        try {
+          const items = await navigator.clipboard.read();
+          for (const item of items) {
+            const imageType = (item.types || []).find((type) => type.startsWith("image/"));
+            if (imageType) {
+              const blob = await item.getType(imageType);
+              const dataUrl = await blobToDataUrl(blob);
+              await setSwapSlot(slot, dataUrl, "clipboard image");
+              return;
+            }
+            if ((item.types || []).includes("text/plain")) {
+              const textBlob = await item.getType("text/plain");
+              const pastedText = (await textBlob.text()).trim();
+              if (isHttpUrl(pastedText)) {
+                await setSwapSlot(slot, pastedText, "clipboard image URL");
+                return;
+              }
+            }
+          }
+        } catch (_error) {
+          // Fall through to readText below.
+        }
+      }
+      if (typeof navigator.clipboard.readText === "function") {
+        try {
+          const pastedText = (await navigator.clipboard.readText()).trim();
+          if (isHttpUrl(pastedText)) {
+            await setSwapSlot(slot, pastedText, "clipboard image URL");
+            return;
+          }
+        } catch (_error) {
+          // Ignore and use final status below.
+        }
+      }
+      setStatus("No image found in the clipboard. On iPhone, tap Paste From Clipboard after copying the image.");
+    }
+
+    async function loadSavedSourceIntoSwap(slot, selectionValue) {
+      const value = selectionValue || (slot === "target" ? swapState.targetPickerValue : swapState.donorPickerValue);
+      if (!value) {
+        setStatus("Choose a saved person source first.");
+        return;
+      }
+      const [personId, sourceId] = value.split("::");
+      const person = getPersonById(personId);
+      const source = getSourceById(personId, sourceId);
+      if (!person || !source) {
+        setStatus("That saved person source is no longer available.");
+        return;
+      }
+      const resolvedSource = (await hydrateSourceImage(source, { render: false })) || getSourceImageUrl(source) || source.image;
+      if (!resolvedSource) {
+        setStatus("Could not load that saved person source.");
+        return;
+      }
+      const label = `${person.name} • ${source.label || "saved source"}`;
+      await setSwapSlot(slot, resolvedSource, label, resolvedSource, { retainPickerValue: true });
+      setStatus(`${slot === "target" ? "Target" : "Donor"} loaded from saved people.`);
+    }
+
+    function getPreferredPersonSourceForSwap(person) {
+      if (!person?.sources?.length) {
+        return null;
+      }
+      if (person.id === state.activePersonId) {
+        const activeSource = person.sources.find((source) => source.id === state.activeSourceId);
+        if (activeSource) {
+          return activeSource;
+        }
+      }
+      return person.sources[0] || null;
+    }
+
+    async function usePersonForFaceSwap(person) {
+      const source = getPreferredPersonSourceForSwap(person);
+      if (!source) {
+        throw new Error("That person does not have a saved source image yet.");
+      }
+      const selectionValue = `${person.id}::${source.id}`;
+      swapState.donorPickerValue = selectionValue;
+      await loadSavedSourceIntoSwap("donor", selectionValue);
+      switchAppMode("swap");
+      setStatus(`Loaded ${person.name} as the face swap donor.`);
+    }
+
+    async function convertImageSourceToPersistentDataUrl(source) {
+      if (!source) {
+        throw new Error("No image source was available.");
+      }
+      if (isDataImageUrl(source)) {
+        return source;
+      }
+      const response = await fetch(source);
+      if (!response.ok) {
+        throw new Error(`Could not load the selected generated image (${response.status}).`);
+      }
+      const blob = await response.blob();
+      return blobToDataUrl(blob);
+    }
+
+    async function useVariationItemAsSwapTarget(item) {
+      const activeImageUrl = getResultImageUrl(item?.result);
+      if (!activeImageUrl) {
+        throw new Error("That variation does not have a generated image yet.");
+      }
+      const persistentDataUrl = await convertImageSourceToPersistentDataUrl(activeImageUrl);
+      const targetLabel = `${item.personName} • variation ${item.promptIndex + 1}`;
+      await setSwapSlot("target", persistentDataUrl, targetLabel);
+      switchAppMode("swap");
+      setStatus("Loaded the generated variation as the face swap target.");
+    }
+
+    async function useSwapArchiveEntryAsSwapTarget(entry) {
+      const imageUrl = getSwapArchiveImageUrl(entry);
+      if (!imageUrl) {
+        throw new Error("That saved face swap does not have an image available.");
+      }
+      const persistentDataUrl = await convertImageSourceToPersistentDataUrl(imageUrl);
+      const targetLabel = entry?.targetLabel
+        ? `${entry.targetLabel} • saved face swap`
+        : "saved face swap";
+      await setSwapSlot("target", persistentDataUrl, targetLabel);
+      switchAppMode("swap");
+      setStatus("Loaded the saved face swap as the new target image.");
+    }
+
+    async function loadActiveSourceIntoSwap(slot) {
+      const person = getActivePerson();
+      const source = getActiveSource();
+      if (!person || !source) {
+        setStatus("No active saved person source is available yet.");
+        return;
+      }
+      const resolvedSource = (await hydrateSourceImage(source, { render: false })) || getSourceImageUrl(source) || source.image;
+      if (!resolvedSource) {
+        setStatus("Could not load the active person source.");
+        return;
+      }
+      const selectionValue = `${person.id}::${source.id}`;
+      if (slot === "target") {
+        swapState.targetPickerValue = selectionValue;
+      } else {
+        swapState.donorPickerValue = selectionValue;
+      }
+      await setSwapSlot(slot, resolvedSource, `${person.name} • ${source.label || "active source"}`, resolvedSource, { retainPickerValue: true });
+      setStatus(`${slot === "target" ? "Target" : "Donor"} loaded from the active person source.`);
+    }
+
+    async function restoreSwapSession() {
+      const saved = loadSwapSession();
+      swapState.archive = loadSwapArchive();
+      if (!saved) {
+        renderSwapWorkspace();
+        return;
+      }
+      swapState.extraInstructions = typeof saved.extraInstructions === "string" ? saved.extraInstructions : "";
+      swapState.maskInstructions = typeof saved.maskInstructions === "string" ? saved.maskInstructions : "";
+      swapState.targetMaskRects = Array.isArray(saved.targetMaskRects)
+        ? saved.targetMaskRects
+          .map((rect) => ({
+            x: Math.max(0, Math.round(Number(rect?.x) || 0)),
+            y: Math.max(0, Math.round(Number(rect?.y) || 0)),
+            width: Math.max(0, Math.round(Number(rect?.width) || 0)),
+            height: Math.max(0, Math.round(Number(rect?.height) || 0))
+          }))
+          .filter((rect) => rect.width > 0 && rect.height > 0)
+        : [];
+      swapState.targetMaskMode = saved.targetMaskMode === "remove" ? "remove" : "add";
+      swapState.generateCount = Math.max(1, Math.min(4, Number(saved.generateCount) || 2));
+      swapState.targetPickerValue = typeof saved.targetPickerValue === "string" ? saved.targetPickerValue : "";
+      swapState.donorPickerValue = typeof saved.donorPickerValue === "string" ? saved.donorPickerValue : "";
+      renderSwapWorkspace();
+    }
+
     async function handlePaste(event) {
       const clipboardData = event.clipboardData;
       if (!clipboardData || state.isGenerating) {
@@ -7104,6 +9074,7 @@ body.solar-curator.person-variations-page .empty-state {
       state.people = loadPeople();
       editState.prompts = loadEditPrompts();
       editState.archive = loadEditArchive();
+      swapState.archive = loadSwapArchive();
       loadSavedToken();
       loadViewMode();
       loadActiveSelection();
@@ -7118,6 +9089,7 @@ body.solar-curator.person-variations-page .empty-state {
       renderArchivePanel();
       state.prompts = resolveInitialPrompts();
       await migrateInlineSourceImages();
+      await restoreSwapSession();
       state.archiveOpen = false;
       renderArchivePanel();
       renderAppMode();
@@ -7136,9 +9108,15 @@ body.solar-curator.person-variations-page .empty-state {
       editState.archiveOpen = !editState.archiveOpen;
       renderEditArchivePanel();
     });
+    swapToggleArchiveButton.addEventListener("click", () => {
+      swapState.archiveOpen = !swapState.archiveOpen;
+      renderSwapArchivePanel();
+      saveSwapSession();
+    });
     toggleFiltersButton.addEventListener("click", toggleFiltersPanel);
     variationModeButton.addEventListener("click", () => switchAppMode("variations"));
     sliderModeButton.addEventListener("click", () => switchAppMode("slider"));
+    swapModeButton.addEventListener("click", () => switchAppMode("swap"));
     showAllImagesButton.addEventListener("click", () => switchViewMode("all"));
     addPromptButton.addEventListener("click", addPrompt);
     editAddPromptButton.addEventListener("click", () => {
@@ -7164,6 +9142,11 @@ body.solar-curator.person-variations-page .empty-state {
         setStatus(error.message || "Could not delete saved slider edits.");
       });
     });
+    swapDeleteAllImagesButton.addEventListener("click", () => {
+      deleteAllSwapArchiveImages().catch((error) => {
+        setStatus(error.message || "Could not delete saved face swaps.");
+      });
+    });
     generateCountSelect.addEventListener("change", () => {
       state.generateCount = Number(generateCountSelect.value) || 1;
       saveGenerateCount();
@@ -7185,6 +9168,14 @@ body.solar-curator.person-variations-page .empty-state {
         setStatus(error.message || "Could not generate the slider edit.");
       });
     });
+    swapGenerateButton.addEventListener("click", () => {
+      runFaceSwap().catch((error) => {
+        swapState.isGenerating = false;
+        refreshSwapButtons();
+        setSwapStageNote("Face swap failed");
+        setStatus(error.message || "Could not generate the face swap.");
+      });
+    });
     clearSourceButton.addEventListener("click", () => {
       clearSource().catch((error) => {
         setStatus(error.message || "Could not clear the source image.");
@@ -7193,6 +9184,21 @@ body.solar-curator.person-variations-page .empty-state {
     editClearSourceButton.addEventListener("click", () => {
       clearEditSource().catch((error) => {
         setStatus(error.message || "Could not clear the slider edit source image.");
+      });
+    });
+    swapTargetClearButton.addEventListener("click", () => {
+      clearSwapSlot("target").catch((error) => {
+        setStatus(error.message || "Could not clear the target image.");
+      });
+    });
+    swapDonorClearButton.addEventListener("click", () => {
+      clearSwapSlot("donor").catch((error) => {
+        setStatus(error.message || "Could not clear the donor image.");
+      });
+    });
+    swapClearBothButton.addEventListener("click", () => {
+      Promise.all([clearSwapSlot("target"), clearSwapSlot("donor")]).catch((error) => {
+        setStatus(error.message || "Could not clear the face swap images.");
       });
     });
     pasteClipboardButton.addEventListener("click", () => {
@@ -7233,6 +9239,40 @@ body.solar-curator.person-variations-page .empty-state {
         setStatus(error.message || "Could not read the clipboard.");
       });
     });
+    swapTargetPasteClipboardButton.addEventListener("click", () => {
+      if (swapTargetMobilePasteField && window.getComputedStyle(swapTargetMobilePasteField).display !== "none") {
+        swapTargetMobilePasteField.value = "";
+        try {
+          swapTargetMobilePasteField.focus({
+            preventScroll: true
+          });
+        } catch (_error) {
+          swapTargetMobilePasteField.focus();
+        }
+        setStatus("On iPhone: tap and hold in the field, then tap Paste.");
+        return;
+      }
+      pasteSwapFromClipboard("target").catch((error) => {
+        setStatus(error.message || "Could not read the clipboard.");
+      });
+    });
+    swapDonorPasteClipboardButton.addEventListener("click", () => {
+      if (swapDonorMobilePasteField && window.getComputedStyle(swapDonorMobilePasteField).display !== "none") {
+        swapDonorMobilePasteField.value = "";
+        try {
+          swapDonorMobilePasteField.focus({
+            preventScroll: true
+          });
+        } catch (_error) {
+          swapDonorMobilePasteField.focus();
+        }
+        setStatus("On iPhone: tap and hold in the field, then tap Paste.");
+        return;
+      }
+      pasteSwapFromClipboard("donor").catch((error) => {
+        setStatus(error.message || "Could not read the clipboard.");
+      });
+    });
     clearTokenButton.addEventListener("click", () => {
       localStorage.removeItem(tokenStorageKey);
       setSharedTokenValue("");
@@ -7240,6 +9280,12 @@ body.solar-curator.person-variations-page .empty-state {
       setStatus("Saved token cleared.");
     });
     editClearTokenButton.addEventListener("click", () => {
+      localStorage.removeItem(tokenStorageKey);
+      setSharedTokenValue("");
+      setSharedSaveTokenChecked(false);
+      setStatus("Saved token cleared.");
+    });
+    swapClearTokenButton.addEventListener("click", () => {
       localStorage.removeItem(tokenStorageKey);
       setSharedTokenValue("");
       setSharedSaveTokenChecked(false);
@@ -7261,8 +9307,18 @@ body.solar-curator.person-variations-page .empty-state {
         localStorage.removeItem(tokenStorageKey);
       }
     });
+    swapTokenInput.addEventListener("input", () => {
+      setSharedTokenValue(swapTokenInput.value);
+      if (!isSaveTokenEnabled()) {
+        localStorage.removeItem(tokenStorageKey);
+      }
+    });
     saveTokenCheckbox.addEventListener("change", () => {
       setSharedSaveTokenChecked(saveTokenCheckbox.checked);
+      persistTokenIfNeeded();
+    });
+    swapSaveTokenCheckbox.addEventListener("change", () => {
+      setSharedSaveTokenChecked(swapSaveTokenCheckbox.checked);
       persistTokenIfNeeded();
     });
     pickImageButton.addEventListener("click", (event) => {
@@ -7288,6 +9344,20 @@ body.solar-curator.person-variations-page .empty-state {
         event.preventDefault();
         setStatus("Wait for the current slider edit to finish.");
       }
+    });
+    swapTargetPickImageInput.addEventListener("change", (event) => {
+      const file = event.target.files?.[0];
+      loadSwapSelectedFile(file, "target", "selected target image").catch((error) => {
+        setStatus(error.message || "Could not load selected target image.");
+      });
+      swapTargetPickImageInput.value = "";
+    });
+    swapDonorPickImageInput.addEventListener("change", (event) => {
+      const file = event.target.files?.[0];
+      loadSwapSelectedFile(file, "donor", "selected donor image").catch((error) => {
+        setStatus(error.message || "Could not load selected donor image.");
+      });
+      swapDonorPickImageInput.value = "";
     });
     pickImageInput.addEventListener("change", (event) => {
       const file = event.target.files?.[0];
@@ -7329,6 +9399,18 @@ body.solar-curator.person-variations-page .empty-state {
     editPasteTarget.addEventListener("click", () => editPasteTarget.focus());
     editPasteTarget.addEventListener("paste", (event) => {
       handleEditPaste(event).catch((error) => {
+        setStatus(error.message || "Could not read pasted content.");
+      });
+    });
+    swapTargetPasteTarget.addEventListener("click", () => swapTargetPasteTarget.focus());
+    swapTargetPasteTarget.addEventListener("paste", (event) => {
+      handleSwapPaste(event, "target").catch((error) => {
+        setStatus(error.message || "Could not read pasted content.");
+      });
+    });
+    swapDonorPasteTarget.addEventListener("click", () => swapDonorPasteTarget.focus());
+    swapDonorPasteTarget.addEventListener("paste", (event) => {
+      handleSwapPaste(event, "donor").catch((error) => {
         setStatus(error.message || "Could not read pasted content.");
       });
     });
@@ -7411,6 +9493,54 @@ body.solar-curator.person-variations-page .empty-state {
         }
       });
     }
+    if (swapTargetMobilePasteField) {
+      swapTargetMobilePasteField.addEventListener("focus", () => {
+        setStatus("On iPhone: tap and hold in the field, then tap Paste.");
+      });
+      swapTargetMobilePasteField.addEventListener("paste", (event) => {
+        handleSwapPaste(event, "target").then(() => {
+          swapTargetMobilePasteField.value = "";
+        }).catch((error) => {
+          setStatus(error.message || "Could not read pasted content.");
+        });
+      });
+      swapTargetMobilePasteField.addEventListener("input", () => {
+        const trimmedValue = (swapTargetMobilePasteField.value || "").trim();
+        if (!trimmedValue) {
+          return;
+        }
+        swapTargetMobilePasteField.value = "";
+        if (isHttpUrl(trimmedValue) || trimmedValue.startsWith("data:image/")) {
+          setSwapSlot("target", trimmedValue, trimmedValue.startsWith("data:image/") ? "pasted image" : "pasted image URL").catch((error) => {
+            setStatus(error.message || "Could not read pasted content.");
+          });
+        }
+      });
+    }
+    if (swapDonorMobilePasteField) {
+      swapDonorMobilePasteField.addEventListener("focus", () => {
+        setStatus("On iPhone: tap and hold in the field, then tap Paste.");
+      });
+      swapDonorMobilePasteField.addEventListener("paste", (event) => {
+        handleSwapPaste(event, "donor").then(() => {
+          swapDonorMobilePasteField.value = "";
+        }).catch((error) => {
+          setStatus(error.message || "Could not read pasted content.");
+        });
+      });
+      swapDonorMobilePasteField.addEventListener("input", () => {
+        const trimmedValue = (swapDonorMobilePasteField.value || "").trim();
+        if (!trimmedValue) {
+          return;
+        }
+        swapDonorMobilePasteField.value = "";
+        if (isHttpUrl(trimmedValue) || trimmedValue.startsWith("data:image/")) {
+          setSwapSlot("donor", trimmedValue, trimmedValue.startsWith("data:image/") ? "pasted image" : "pasted image URL").catch((error) => {
+            setStatus(error.message || "Could not read pasted content.");
+          });
+        }
+      });
+    }
     document.addEventListener("paste", (event) => {
       if (event.defaultPrevented) {
         return;
@@ -7421,13 +9551,76 @@ body.solar-curator.person-variations-page .empty-state {
         });
         return;
       }
-      const pasteHandler = isSliderMode() ? handleEditPaste : handlePaste;
+      const pasteHandler = isSwapMode()
+        ? ((nextEvent) => handleSwapPaste(nextEvent, "target"))
+        : isSliderMode()
+          ? handleEditPaste
+          : handlePaste;
       pasteHandler(event).catch((error) => {
         logSourceDebug("paste:document_error", {
           message: error?.message || String(error)
         });
         setStatus(error.message || "Could not read pasted content.");
       });
+    });
+    swapTargetSourceSelect.addEventListener("change", () => {
+      swapState.targetPickerValue = swapTargetSourceSelect.value;
+      saveSwapSession();
+      refreshSwapButtons();
+    });
+    swapDonorSourceSelect.addEventListener("change", () => {
+      swapState.donorPickerValue = swapDonorSourceSelect.value;
+      saveSwapSession();
+      refreshSwapButtons();
+    });
+    swapTargetLoadSavedButton.addEventListener("click", () => {
+      loadSavedSourceIntoSwap("target", swapTargetSourceSelect.value).catch((error) => {
+        setStatus(error.message || "Could not load the saved target source.");
+      });
+    });
+    swapDonorLoadSavedButton.addEventListener("click", () => {
+      loadSavedSourceIntoSwap("donor", swapDonorSourceSelect.value).catch((error) => {
+        setStatus(error.message || "Could not load the saved donor source.");
+      });
+    });
+    swapTargetUseActiveButton.addEventListener("click", () => {
+      loadActiveSourceIntoSwap("target").catch((error) => {
+        setStatus(error.message || "Could not load the active target source.");
+      });
+    });
+    swapDonorUseActiveButton.addEventListener("click", () => {
+      loadActiveSourceIntoSwap("donor").catch((error) => {
+        setStatus(error.message || "Could not load the active donor source.");
+      });
+    });
+    swapTargetMaskAddButton.addEventListener("click", () => {
+      swapState.targetMaskMode = "add";
+      refreshSwapButtons();
+      saveSwapSession();
+    });
+    swapTargetMaskRemoveButton.addEventListener("click", () => {
+      swapState.targetMaskMode = "remove";
+      refreshSwapButtons();
+      saveSwapSession();
+    });
+    swapTargetMaskClearButton.addEventListener("click", () => {
+      clearSwapTargetMask();
+    });
+    swapTargetMaskCanvas.addEventListener("pointerdown", startSwapMaskDraw);
+    swapTargetMaskCanvas.addEventListener("pointermove", continueSwapMaskDraw);
+    window.addEventListener("pointerup", stopSwapMaskDraw);
+    window.addEventListener("pointercancel", stopSwapMaskDraw);
+    swapGenerateCountSelect.addEventListener("change", () => {
+      swapState.generateCount = Math.max(1, Math.min(4, Number(swapGenerateCountSelect.value) || 2));
+      saveSwapSession();
+    });
+    swapExtraInstructionsInput.addEventListener("input", () => {
+      swapState.extraInstructions = swapExtraInstructionsInput.value;
+      saveSwapSession();
+    });
+    swapMaskInstructionsInput.addEventListener("input", () => {
+      swapState.maskInstructions = swapMaskInstructionsInput.value;
+      saveSwapSession();
     });
     editCompareRange.addEventListener("input", () => {
       editState.sliderPercent = Number(editCompareRange.value) || 0;
@@ -7479,6 +9672,8 @@ body.solar-curator.person-variations-page .empty-state {
       if (state.lightboxIndex >= 0) {
         applyLightboxTransform();
       }
+      updateSwapTargetMaskViewport();
+      renderSwapTargetMaskCanvas();
     });
     window.addEventListener("beforeunload", () => {
       blobUrlCache.forEach((value) => URL.revokeObjectURL(value));
@@ -7490,7 +9685,13 @@ body.solar-curator.person-variations-page .empty-state {
     initialize().catch((error) => {
       setStatus(error.message || "Could not initialize saved data.");
     });
-    pasteTarget.focus();
+    if (isSwapMode()) {
+      swapTargetPasteTarget.focus();
+    } else if (isSliderMode()) {
+      editPasteTarget.focus();
+    } else {
+      pasteTarget.focus();
+    }
   </script>
 </body>
 </html>
