@@ -1079,7 +1079,7 @@
       position: fixed;
       top: max(10px, calc(env(safe-area-inset-top) + 6px));
       right: max(10px, calc(env(safe-area-inset-right) + 6px));
-      z-index: 6;
+      z-index: 30050;
       width: 48px;
       height: 48px;
       border-radius: 14px;
@@ -1091,14 +1091,7 @@
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-    }
-
-    .lightbox-nav.prev {
-      left: 8px;
-    }
-
-    .lightbox-nav.next {
-      right: 8px;
+      z-index: 30040;
     }
 
     .lightbox-nav.up {
@@ -1127,7 +1120,7 @@
       left: 50%;
       bottom: max(92px, calc(env(safe-area-inset-bottom) + 84px));
       transform: translateX(-50%);
-      z-index: 6;
+      z-index: 30040;
       justify-self: center;
       padding: 8px 12px;
       border-radius: 999px;
@@ -1152,14 +1145,6 @@
       .lightbox-image {
         height: 100%;
         max-height: none;
-      }
-
-      .lightbox-nav.prev {
-        left: 8px;
-      }
-
-      .lightbox-nav.next {
-        right: 8px;
       }
     }
 
@@ -2195,6 +2180,7 @@ body.solar-curator.person-variations-page .empty-state {
   border-radius: 1.6rem;
   background: rgba(255, 255, 255, 0.58);
   box-shadow: var(--sc-ghost-border);
+  min-width: 0;
 }
 
 .swap-source-card-head {
@@ -2248,7 +2234,9 @@ body.solar-curator.person-variations-page .empty-state {
 }
 
 .swap-target-preview {
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 100%;
+  min-width: 0;
 }
 
 .swap-target-preview .source-copy {
@@ -2260,23 +2248,53 @@ body.solar-curator.person-variations-page .empty-state {
 }
 
 .swap-source-card .swap-target-preview {
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 100%;
+  min-width: 0;
+}
+
+.swap-target-hit-ring {
+  position: relative;
+  box-sizing: border-box;
+  padding: 20px 0;
+  margin: -20px 0;
+  max-width: 100%;
+  min-width: 0;
+  align-self: start;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.swap-target-hit-ring.swap-draw-active {
+  cursor: crosshair;
 }
 
 .swap-target-media {
   position: relative;
   width: 100%;
-  min-height: 320px;
+  max-width: 100%;
+  min-width: 0;
+  min-height: 0;
   border-radius: 0;
   overflow: hidden;
   background: #0d1016;
   display: grid;
   place-items: center;
   align-self: start;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .swap-target-media img {
+  display: block;
   width: 100%;
+  max-width: 100%;
   height: 100%;
   aspect-ratio: auto;
   object-fit: contain;
@@ -2294,6 +2312,7 @@ body.solar-curator.person-variations-page .empty-state {
   opacity: 0.55;
   cursor: crosshair;
   touch-action: none;
+  pointer-events: none;
 }
 
 .swap-crop-actions {
@@ -2341,16 +2360,24 @@ body.solar-curator.person-variations-page .empty-state {
   border-radius: 2rem;
   background: var(--sc-surface-low);
   box-shadow: var(--sc-ghost-border);
+  min-width: 0;
+  max-width: 100%;
 }
 
 .swap-stage {
   position: relative;
-  min-height: 360px;
+  min-width: 0;
+  max-width: 100%;
+  min-height: 0;
   border-radius: 2rem;
   overflow: hidden;
   background:
     radial-gradient(circle at top left, rgba(240, 101, 67, 0.08), transparent 34%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(246, 239, 230, 0.98));
+}
+
+.swap-stage.empty {
+  min-height: min(360px, 52vh);
 }
 
 .swap-stage.empty::before {
@@ -2370,6 +2397,7 @@ body.solar-curator.person-variations-page .empty-state {
 
 .swap-stage img {
   width: 100%;
+  max-width: 100%;
   height: 100%;
   object-fit: contain;
   display: block;
@@ -2792,13 +2820,15 @@ body.solar-curator.person-variations-page .empty-state {
               <textarea id="swap-target-mobile-paste-field" class="mobile-paste-field" rows="2" autocapitalize="off" autocomplete="off" spellcheck="false" placeholder="On iPhone: tap here, then tap Paste from the native menu." aria-label="Tap and paste a target image on mobile"></textarea>
               </label>
               <div id="swap-target-preview" class="source-preview swap-target-preview no-image">
-                <div id="swap-target-media" class="swap-target-media">
-                  <img id="swap-target-image" alt="Face swap target preview" />
-                  <canvas id="swap-target-mask-canvas" class="swap-target-mask-canvas" width="720" height="720" aria-label="Optional face swap crop selection"></canvas>
+                <div id="swap-target-hit-ring" class="swap-target-hit-ring">
+                  <div id="swap-target-media" class="swap-target-media">
+                    <img id="swap-target-image" alt="Face swap target preview" />
+                    <canvas id="swap-target-mask-canvas" class="swap-target-mask-canvas" width="720" height="720" aria-label="Optional face swap crop selection"></canvas>
+                  </div>
                 </div>
                 <div class="source-copy">
                   <strong id="swap-target-title">No portrait</strong>
-                  <span id="swap-target-description">Paste or choose a target portrait, or pull one from your saved people.</span>
+                  <span id="swap-target-description">Paste or choose a target portrait.</span>
                 </div>
               </div>
               <div class="swap-crop-actions">
@@ -2806,16 +2836,8 @@ body.solar-curator.person-variations-page .empty-state {
                 <button id="swap-target-mask-remove-btn" class="ghost-btn" type="button">Remove Rectangle</button>
                 <button id="swap-target-mask-clear-btn" class="ghost-btn" type="button">Clear Crop</button>
               </div>
-              <p id="swap-target-crop-note" class="swap-crop-note">Optional: draw face crop rectangles on the target. If none are drawn, the current full-frame face-swap workflow is used.</p>
-              <div class="swap-saved-source-row">
-                <label class="swap-field">
-                  <span class="field-label">Saved person source</span>
-                  <select id="swap-target-source-select" aria-label="Choose a saved person source for target"></select>
-                </label>
-                <button id="swap-target-load-saved-btn" class="ghost-btn" type="button">Use Saved</button>
-              </div>
+              <p id="swap-target-crop-note" class="swap-crop-note">Required: draw at least one face crop rectangle on the target. The API patch uses a pure green mask outside your rectangles.</p>
               <div class="swap-action-row">
-                <button id="swap-target-use-active-btn" class="ghost-btn" type="button">Use Active Person</button>
                 <button id="swap-target-clear-btn" class="ghost-btn" type="button">Clear Target</button>
               </div>
             </section>
@@ -2888,11 +2910,11 @@ body.solar-curator.person-variations-page .empty-state {
             <span class="field-label">Extra Instructions</span>
             <textarea id="swap-extra-instructions-input" spellcheck="false" placeholder="Examples: keep eyeglasses, keep freckles, keep natural skin texture, preserve original lighting."></textarea>
           </label>
-          <label class="swap-field">
+          <label class="swap-field" hidden>
             <span class="field-label">Mask Instructions</span>
             <textarea id="swap-mask-instructions-input" spellcheck="false" placeholder="Examples: if censoring is needed, use a flat solid green mask for explicit body areas only."></textarea>
           </label>
-          <p id="swap-field-note" class="swap-field-note">The model sees the target image with a donor reference overlay. If xAI returns solid green censor areas, the original target pixels are restored there automatically.</p>
+          <p id="swap-field-note" class="swap-field-note">Face swap uses a cropped patch with a pure green mask outside the face rectangles, then composites the edit back with feathering, color matching, and auto-realignment when needed.</p>
         </div>
       </div>
 
@@ -2931,19 +2953,9 @@ body.solar-curator.person-variations-page .empty-state {
 
   <div id="lightbox" class="lightbox" aria-hidden="true">
     <div class="lightbox-content">
-      <button id="lightbox-prev-btn" class="ghost-btn icon-btn lightbox-nav prev" type="button" aria-label="Previous generation">
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
-        </svg>
-      </button>
       <button id="lightbox-up-btn" class="ghost-btn icon-btn lightbox-nav up" type="button" aria-label="Previous prompt">
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <path d="m12 8.83 5.59 5.58L19 13l-7-7-7 7 1.41 1.41z"/>
-        </svg>
-      </button>
-      <button id="lightbox-next-btn" class="ghost-btn icon-btn lightbox-nav next" type="button" aria-label="Next generation">
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="m8.59 16.59 1.41 1.41 6-6-6-6-1.41 1.41L13.17 12z"/>
         </svg>
       </button>
       <button id="lightbox-down-btn" class="ghost-btn icon-btn lightbox-nav down" type="button" aria-label="Next prompt">
@@ -3065,11 +3077,10 @@ body.solar-curator.person-variations-page .empty-state {
     const lightboxDots = document.getElementById("lightbox-dots");
     const lightboxTitle = document.getElementById("lightbox-title");
     const lightboxVersionLabel = document.getElementById("lightbox-version-label");
-    const lightboxPrevButton = document.getElementById("lightbox-prev-btn");
     const lightboxUpButton = document.getElementById("lightbox-up-btn");
-    const lightboxNextButton = document.getElementById("lightbox-next-btn");
     const lightboxDownButton = document.getElementById("lightbox-down-btn");
     const lightboxCloseButton = document.getElementById("lightbox-close-btn");
+    let tearDownLightboxVisualViewport = null;
     const editPasteTarget = document.getElementById("edit-paste-target");
     const editSourcePreview = document.getElementById("edit-source-preview");
     const editSourceImage = document.getElementById("edit-source-image");
@@ -3106,6 +3117,7 @@ body.solar-curator.person-variations-page .empty-state {
     const swapTargetMobilePasteField = document.getElementById("swap-target-mobile-paste-field");
     const swapTargetPickImageInput = document.getElementById("swap-target-pick-image-input");
     const swapTargetPreview = document.getElementById("swap-target-preview");
+    const swapTargetHitRing = document.getElementById("swap-target-hit-ring");
     const swapTargetMedia = document.getElementById("swap-target-media");
     const swapTargetImage = document.getElementById("swap-target-image");
     const swapTargetMaskCanvas = document.getElementById("swap-target-mask-canvas");
@@ -3115,9 +3127,6 @@ body.solar-curator.person-variations-page .empty-state {
     const swapTargetMaskRemoveButton = document.getElementById("swap-target-mask-remove-btn");
     const swapTargetMaskClearButton = document.getElementById("swap-target-mask-clear-btn");
     const swapTargetCropNote = document.getElementById("swap-target-crop-note");
-    const swapTargetSourceSelect = document.getElementById("swap-target-source-select");
-    const swapTargetLoadSavedButton = document.getElementById("swap-target-load-saved-btn");
-    const swapTargetUseActiveButton = document.getElementById("swap-target-use-active-btn");
     const swapTargetClearButton = document.getElementById("swap-target-clear-btn");
     const swapDonorPasteTarget = document.getElementById("swap-donor-paste-target");
     const swapDonorPasteClipboardButton = document.getElementById("swap-donor-paste-clipboard-btn");
@@ -3234,9 +3243,15 @@ body.solar-curator.person-variations-page .empty-state {
       archiveOpen: false,
       generateCount: 2,
       currentArchiveId: "",
-      targetPickerValue: "",
       donorPickerValue: ""
     };
+
+    const SWAP_FACE_MASK_COLOR = {
+      hex: "#00FF00",
+      name: "pure green",
+      rgb: "(0,255,0)"
+    };
+
     const swapTargetMaskCtx = swapTargetMaskCanvas.getContext("2d");
     let swapTargetMaskDraw = null;
 
@@ -3572,7 +3587,6 @@ body.solar-curator.person-variations-page .empty-state {
         swapState.extraInstructions.trim() ||
         swapState.maskInstructions.trim() ||
         swapState.targetMaskRects.length ||
-        swapState.targetPickerValue ||
         swapState.donorPickerValue ||
         Math.max(1, Math.min(4, Number(swapState.generateCount) || 2)) !== 2
       );
@@ -3587,7 +3601,6 @@ body.solar-curator.person-variations-page .empty-state {
           targetMaskRects: swapState.targetMaskRects,
           targetMaskMode: swapState.targetMaskMode,
           generateCount: swapState.generateCount,
-          targetPickerValue: swapState.targetPickerValue,
           donorPickerValue: swapState.donorPickerValue
         }));
       } catch (error) {
@@ -5692,27 +5705,14 @@ body.solar-curator.person-variations-page .empty-state {
     }
 
     function updateLightboxNav() {
-      const item = getLightboxItem();
-      if (isSliderLightboxCollection()) {
-        const hasMultipleItems = editState.archive.length > 1;
-        lightboxPrevButton.disabled = !hasMultipleItems;
-        lightboxNextButton.disabled = !hasMultipleItems;
-        lightboxUpButton.disabled = true;
-        lightboxDownButton.disabled = true;
-        return;
-      }
-      if (isSwapLightboxCollection()) {
-        const hasMultipleItems = swapState.archive.length > 1;
-        lightboxPrevButton.disabled = !hasMultipleItems;
-        lightboxNextButton.disabled = !hasMultipleItems;
-        lightboxUpButton.disabled = true;
-        lightboxDownButton.disabled = true;
+      if (isSliderLightboxCollection() || isSwapLightboxCollection()) {
+        lightboxUpButton.hidden = true;
+        lightboxDownButton.hidden = true;
         return;
       }
       const hasMultiplePrompts = state.visibleItems.length > 1;
-      const hasMultipleImages = getVisibleItemVariantCount(item) > 1;
-      lightboxPrevButton.disabled = !hasMultipleImages;
-      lightboxNextButton.disabled = !hasMultipleImages;
+      lightboxUpButton.hidden = false;
+      lightboxDownButton.hidden = false;
       lightboxUpButton.disabled = !hasMultiplePrompts;
       lightboxDownButton.disabled = !hasMultiplePrompts;
     }
@@ -5737,9 +5737,11 @@ body.solar-curator.person-variations-page .empty-state {
         lightboxImage.onload = () => {
           applyLightboxTransform();
           updateLightboxCompareReveal();
+          requestAnimationFrame(() => syncLightboxVisualChrome());
         };
         lightboxCompareOverlay.onload = () => {
           updateLightboxCompareReveal();
+          requestAnimationFrame(() => syncLightboxVisualChrome());
         };
         lightboxTitle.textContent = editState.archive.length > 1
           ? `Compare edit ${state.lightboxIndex + 1} of ${editState.archive.length}`
@@ -5761,6 +5763,7 @@ body.solar-curator.person-variations-page .empty-state {
         lightboxImage.alt = `Full size saved slider edit ${state.lightboxIndex + 1}`;
         lightboxImage.onload = () => {
           applyLightboxTransform();
+          requestAnimationFrame(() => syncLightboxVisualChrome());
         };
         lightboxTitle.textContent = editState.archive.length > 1
           ? `Saved edit ${state.lightboxIndex + 1} of ${editState.archive.length}`
@@ -5781,6 +5784,7 @@ body.solar-curator.person-variations-page .empty-state {
         lightboxImage.alt = `Full size saved face swap ${state.lightboxIndex + 1}`;
         lightboxImage.onload = () => {
           applyLightboxTransform();
+          requestAnimationFrame(() => syncLightboxVisualChrome());
         };
         lightboxTitle.textContent = swapState.archive.length > 1
           ? `Saved face swap ${state.lightboxIndex + 1} of ${swapState.archive.length}`
@@ -5801,6 +5805,7 @@ body.solar-curator.person-variations-page .empty-state {
       lightboxImage.alt = `Full size generated variation ${item.promptIndex + 1}`;
       lightboxImage.onload = () => {
         applyLightboxTransform();
+        requestAnimationFrame(() => syncLightboxVisualChrome());
       };
       lightboxImage.onerror = () => {
         handleVisibleItemImageError(item);
@@ -5815,6 +5820,43 @@ body.solar-curator.person-variations-page .empty-state {
       updateLightboxNav();
     }
 
+    function resetLightboxChromePosition() {
+      ["left", "top", "right", "bottom", "transform"].forEach((key) => {
+        lightboxCloseButton.style.removeProperty(key);
+      });
+    }
+
+    function syncLightboxVisualChrome() {
+      const vv = window.visualViewport;
+      if (!vv || !lightbox.classList.contains("open")) {
+        return;
+      }
+      const pad = 12;
+      const cw = lightboxCloseButton.offsetWidth || 48;
+      lightboxCloseButton.style.right = "auto";
+      lightboxCloseButton.style.bottom = "auto";
+      lightboxCloseButton.style.left = `${Math.round(vv.offsetLeft + vv.width - cw - pad)}px`;
+      lightboxCloseButton.style.top = `${Math.round(vv.offsetTop + pad)}px`;
+    }
+
+    function installLightboxVisualViewportSync() {
+      tearDownLightboxVisualViewport?.();
+      const vv = window.visualViewport;
+      if (!vv) {
+        return;
+      }
+      const handler = () => {
+        syncLightboxVisualChrome();
+      };
+      vv.addEventListener("resize", handler);
+      vv.addEventListener("scroll", handler);
+      tearDownLightboxVisualViewport = () => {
+        vv.removeEventListener("resize", handler);
+        vv.removeEventListener("scroll", handler);
+        tearDownLightboxVisualViewport = null;
+      };
+    }
+
     function openLightbox(index, collection = "variations") {
       state.lightboxIndex = index;
       state.lightboxCollection = collection;
@@ -5826,6 +5868,10 @@ body.solar-curator.person-variations-page .empty-state {
       updateLightboxContent();
       lightbox.classList.add("open");
       lightbox.setAttribute("aria-hidden", "false");
+      requestAnimationFrame(() => {
+        syncLightboxVisualChrome();
+        installLightboxVisualViewportSync();
+      });
       lightboxCloseButton.focus();
     }
 
@@ -5833,6 +5879,8 @@ body.solar-curator.person-variations-page .empty-state {
       if (state.lightboxIndex < 0) {
         return;
       }
+      tearDownLightboxVisualViewport?.();
+      resetLightboxChromePosition();
       resetLightboxZoom();
       state.lightboxIndex = -1;
       state.lightboxKey = "";
@@ -7321,7 +7369,7 @@ body.solar-curator.person-variations-page .empty-state {
           title: swapTargetTitle,
           description: swapTargetDescription,
           emptyTitle: "No portrait",
-          emptyDescription: "Paste or choose a target portrait, or pull one from your saved people.",
+          emptyDescription: "Paste or choose a target portrait.",
           waitingMessage: "Target image loading...",
           clearStatus: "Face swap target cleared."
         };
@@ -7481,6 +7529,320 @@ body.solar-curator.person-variations-page .empty-state {
       return maskCanvas;
     }
 
+    function colorMatchSwapPatchToTarget(patchCtx, cropRect, featherPx, ctx) {
+      const targetImage = ctx?.targetImage;
+      const maskRects = ctx?.maskRects;
+      if (!targetImage || !maskRects?.length) {
+        return;
+      }
+
+      const patchWidth = patchCtx.canvas.width;
+      const patchHeight = patchCtx.canvas.height;
+
+      const targetSampleCanvas = document.createElement("canvas");
+      targetSampleCanvas.width = patchWidth;
+      targetSampleCanvas.height = patchHeight;
+      const targetSampleCtx = targetSampleCanvas.getContext("2d");
+      targetSampleCtx.drawImage(
+        targetImage,
+        cropRect.x, cropRect.y, cropRect.width, cropRect.height,
+        0, 0, patchWidth, patchHeight
+      );
+
+      const scaleX = patchWidth / Math.max(1, cropRect.width);
+      const scaleY = patchHeight / Math.max(1, cropRect.height);
+      const ringOuter = Math.max(2, Math.round(featherPx * scaleX));
+      const ringThickness = Math.max(2, Math.round(featherPx * 0.8 * scaleX));
+
+      const ringMaskCanvas = document.createElement("canvas");
+      ringMaskCanvas.width = patchWidth;
+      ringMaskCanvas.height = patchHeight;
+      const ringMaskCtx = ringMaskCanvas.getContext("2d");
+      ringMaskCtx.fillStyle = "#ffffff";
+      for (const rect of maskRects) {
+        const x = Math.round((rect.x - cropRect.x) * scaleX) + ringOuter;
+        const y = Math.round((rect.y - cropRect.y) * scaleY) + ringOuter;
+        const w = Math.round(rect.width * scaleX) - 2 * ringOuter;
+        const h = Math.round(rect.height * scaleY) - 2 * ringOuter;
+        if (w > 0 && h > 0) {
+          ringMaskCtx.fillRect(x, y, w, h);
+        }
+      }
+      ringMaskCtx.globalCompositeOperation = "destination-out";
+      for (const rect of maskRects) {
+        const x = Math.round((rect.x - cropRect.x) * scaleX) + ringOuter + ringThickness;
+        const y = Math.round((rect.y - cropRect.y) * scaleY) + ringOuter + ringThickness;
+        const w = Math.round(rect.width * scaleX) - 2 * (ringOuter + ringThickness);
+        const h = Math.round(rect.height * scaleY) - 2 * (ringOuter + ringThickness);
+        if (w > 0 && h > 0) {
+          ringMaskCtx.fillRect(x, y, w, h);
+        }
+      }
+      ringMaskCtx.globalCompositeOperation = "source-over";
+
+      const patchPixels = patchCtx.getImageData(0, 0, patchWidth, patchHeight);
+      const targetPixels = targetSampleCtx.getImageData(0, 0, patchWidth, patchHeight);
+      const ringPixels = ringMaskCtx.getImageData(0, 0, patchWidth, patchHeight);
+
+      let sumPatchR = 0, sumPatchG = 0, sumPatchB = 0;
+      let sumTargetR = 0, sumTargetG = 0, sumTargetB = 0;
+      let sampleCount = 0;
+      for (let index = 0; index < ringPixels.data.length; index += 4) {
+        if (ringPixels.data[index + 3] <= 10) {
+          continue;
+        }
+        sumPatchR += patchPixels.data[index];
+        sumPatchG += patchPixels.data[index + 1];
+        sumPatchB += patchPixels.data[index + 2];
+        sumTargetR += targetPixels.data[index];
+        sumTargetG += targetPixels.data[index + 1];
+        sumTargetB += targetPixels.data[index + 2];
+        sampleCount += 1;
+      }
+
+      if (sampleCount < 64) {
+        return;
+      }
+
+      const meanDiffR = (sumTargetR - sumPatchR) / sampleCount;
+      const meanDiffG = (sumTargetG - sumPatchG) / sampleCount;
+      const meanDiffB = (sumTargetB - sumPatchB) / sampleCount;
+
+      const cap = 18;
+      const clampOffset = (value) => Math.max(-cap, Math.min(cap, value));
+      const offsetR = clampOffset(meanDiffR);
+      const offsetG = clampOffset(meanDiffG);
+      const offsetB = clampOffset(meanDiffB);
+
+      if (Math.abs(offsetR) < 0.5 && Math.abs(offsetG) < 0.5 && Math.abs(offsetB) < 0.5) {
+        return;
+      }
+
+      for (let index = 0; index < patchPixels.data.length; index += 4) {
+        patchPixels.data[index] = Math.max(0, Math.min(255, patchPixels.data[index] + offsetR));
+        patchPixels.data[index + 1] = Math.max(0, Math.min(255, patchPixels.data[index + 1] + offsetG));
+        patchPixels.data[index + 2] = Math.max(0, Math.min(255, patchPixels.data[index + 2] + offsetB));
+      }
+      patchCtx.putImageData(patchPixels, 0, 0);
+    }
+
+    function buildSwapErodedFeatherAlphaCanvas(targetWidth, targetHeight, featherPx, maskRects) {
+      const rects = maskRects || [];
+      const hardCanvas = document.createElement("canvas");
+      hardCanvas.width = targetWidth;
+      hardCanvas.height = targetHeight;
+      const hardCtx = hardCanvas.getContext("2d");
+      hardCtx.fillStyle = "#ffffff";
+      for (const rect of rects) {
+        hardCtx.fillRect(rect.x, rect.y, rect.width, rect.height);
+      }
+
+      if (featherPx <= 0) {
+        return hardCanvas;
+      }
+
+      const erodedCanvas = document.createElement("canvas");
+      erodedCanvas.width = targetWidth;
+      erodedCanvas.height = targetHeight;
+      const erodedCtx = erodedCanvas.getContext("2d");
+      erodedCtx.fillStyle = "#ffffff";
+      for (const rect of rects) {
+        const x = rect.x + featherPx;
+        const y = rect.y + featherPx;
+        const w = rect.width - 2 * featherPx;
+        const h = rect.height - 2 * featherPx;
+        if (w > 0 && h > 0) {
+          erodedCtx.fillRect(x, y, w, h);
+        } else {
+          const cx = rect.x + rect.width / 2;
+          const cy = rect.y + rect.height / 2;
+          erodedCtx.fillRect(cx - 1, cy - 1, 2, 2);
+        }
+      }
+
+      const softCanvas = document.createElement("canvas");
+      softCanvas.width = targetWidth;
+      softCanvas.height = targetHeight;
+      const softCtx = softCanvas.getContext("2d");
+      softCtx.filter = `blur(${featherPx}px)`;
+      softCtx.drawImage(erodedCanvas, 0, 0);
+      softCtx.filter = "none";
+      softCtx.globalCompositeOperation = "destination-in";
+      softCtx.drawImage(hardCanvas, 0, 0);
+      softCtx.globalCompositeOperation = "source-over";
+      return softCanvas;
+    }
+
+    function swapHexToRgb(hex) {
+      const clean = hex.replace("#", "");
+      return {
+        r: parseInt(clean.substring(0, 2), 16),
+        g: parseInt(clean.substring(2, 4), 16),
+        b: parseInt(clean.substring(4, 6), 16)
+      };
+    }
+
+    function detectSwapNonMaskBoundingBox(patchCtx, width, height, maskRgb, toleranceSq) {
+      const data = patchCtx.getImageData(0, 0, width, height).data;
+      const step = Math.max(1, Math.floor(Math.min(width, height) / 300));
+      let minX = width;
+      let minY = height;
+      let maxX = -1;
+      let maxY = -1;
+      for (let y = 0; y < height; y += step) {
+        for (let x = 0; x < width; x += step) {
+          const i = (y * width + x) * 4;
+          const dr = data[i] - maskRgb.r;
+          const dg = data[i + 1] - maskRgb.g;
+          const db = data[i + 2] - maskRgb.b;
+          if (dr * dr + dg * dg + db * db > toleranceSq) {
+            if (x < minX) minX = x;
+            if (y < minY) minY = y;
+            if (x > maxX) maxX = x;
+            if (y > maxY) maxY = y;
+          }
+        }
+      }
+      if (maxX < 0) return null;
+      return {
+        x: minX,
+        y: minY,
+        width: Math.max(1, maxX - minX + step),
+        height: Math.max(1, maxY - minY + step)
+      };
+    }
+
+    function realignSwapPatchByMaskColor(patchCanvas, patchCtx, cropRect, maskColor, maskRects) {
+      const rects = maskRects || [];
+      if (maskColor.name === "pure black") return false;
+      if (!rects.length) return false;
+      const rgb = swapHexToRgb(maskColor.hex);
+      const tolerance = 60;
+      const actualBox = detectSwapNonMaskBoundingBox(
+        patchCtx,
+        patchCanvas.width,
+        patchCanvas.height,
+        rgb,
+        tolerance * tolerance
+      );
+      if (!actualBox) return false;
+      let minX = Infinity;
+      let minY = Infinity;
+      let maxX = -Infinity;
+      let maxY = -Infinity;
+      for (const rect of rects) {
+        minX = Math.min(minX, rect.x - cropRect.x);
+        minY = Math.min(minY, rect.y - cropRect.y);
+        maxX = Math.max(maxX, rect.x - cropRect.x + rect.width);
+        maxY = Math.max(maxY, rect.y - cropRect.y + rect.height);
+      }
+      const scaleX = patchCanvas.width / Math.max(1, cropRect.width);
+      const scaleY = patchCanvas.height / Math.max(1, cropRect.height);
+      const expectedBox = {
+        x: minX * scaleX,
+        y: minY * scaleY,
+        width: Math.max(1, (maxX - minX) * scaleX),
+        height: Math.max(1, (maxY - minY) * scaleY)
+      };
+      const offsetTol = Math.max(8, Math.round(Math.min(patchCanvas.width, patchCanvas.height) * 0.02));
+      const sizeTol = 0.05;
+      const needsRealign =
+        Math.abs(actualBox.x - expectedBox.x) > offsetTol ||
+        Math.abs(actualBox.y - expectedBox.y) > offsetTol ||
+        Math.abs(actualBox.width - expectedBox.width) / expectedBox.width > sizeTol ||
+        Math.abs(actualBox.height - expectedBox.height) / expectedBox.height > sizeTol;
+      if (!needsRealign) return false;
+      const uniformScale = Math.max(
+        expectedBox.width / actualBox.width,
+        expectedBox.height / actualBox.height
+      );
+      const newWidth = actualBox.width * uniformScale;
+      const newHeight = actualBox.height * uniformScale;
+      const expectedCx = expectedBox.x + expectedBox.width / 2;
+      const expectedCy = expectedBox.y + expectedBox.height / 2;
+      const destX = expectedCx - newWidth / 2;
+      const destY = expectedCy - newHeight / 2;
+      const temp = document.createElement("canvas");
+      temp.width = patchCanvas.width;
+      temp.height = patchCanvas.height;
+      const tctx = temp.getContext("2d");
+      tctx.drawImage(patchCanvas, 0, 0);
+      patchCtx.fillStyle = maskColor.hex;
+      patchCtx.fillRect(0, 0, patchCanvas.width, patchCanvas.height);
+      patchCtx.drawImage(
+        temp,
+        actualBox.x, actualBox.y, actualBox.width, actualBox.height,
+        destX, destY, newWidth, newHeight
+      );
+      return true;
+    }
+
+    async function compositeSwapPatchIntoTarget(patchUrl, cropRect, contextOverride) {
+      const ctx = contextOverride || {};
+      const targetImage = ctx.targetImage;
+      const maskRects = ctx.maskRects || [];
+      const maskColor = ctx.maskColor || SWAP_FACE_MASK_COLOR;
+      const doColorMatch = ctx.doColorMatch !== false;
+      const doFeather = ctx.doFeather !== false;
+      const doRealign = ctx.doRealign !== false;
+
+      if (!targetImage || !cropRect) {
+        return patchUrl;
+      }
+      const patchImage = await loadImageElement(patchUrl);
+      const targetWidth = targetImage.naturalWidth;
+      const targetHeight = targetImage.naturalHeight;
+
+      const patchCanvas = document.createElement("canvas");
+      patchCanvas.width = cropRect.width;
+      patchCanvas.height = cropRect.height;
+      const patchCtx = patchCanvas.getContext("2d");
+      patchCtx.drawImage(patchImage, 0, 0, patchCanvas.width, patchCanvas.height);
+
+      if (doRealign) {
+        realignSwapPatchByMaskColor(patchCanvas, patchCtx, cropRect, maskColor, maskRects);
+      }
+
+      let minEdge = Infinity;
+      for (const rect of maskRects) {
+        minEdge = Math.min(minEdge, rect.width, rect.height);
+      }
+      if (!Number.isFinite(minEdge)) {
+        minEdge = Math.min(patchCanvas.width, patchCanvas.height);
+      }
+      const featherPx = doFeather
+        ? Math.max(6, Math.min(32, Math.round(minEdge * 0.04)))
+        : 0;
+
+      if (doColorMatch) {
+        colorMatchSwapPatchToTarget(patchCtx, cropRect, Math.max(6, featherPx || 6), { targetImage, maskRects });
+      }
+
+      const alphaCanvas = buildSwapErodedFeatherAlphaCanvas(targetWidth, targetHeight, featherPx, maskRects);
+
+      const patchFullCanvas = document.createElement("canvas");
+      patchFullCanvas.width = targetWidth;
+      patchFullCanvas.height = targetHeight;
+      const patchFullCtx = patchFullCanvas.getContext("2d");
+      patchFullCtx.drawImage(
+        patchCanvas,
+        0, 0, patchCanvas.width, patchCanvas.height,
+        cropRect.x, cropRect.y, cropRect.width, cropRect.height
+      );
+      patchFullCtx.globalCompositeOperation = "destination-in";
+      patchFullCtx.drawImage(alphaCanvas, 0, 0);
+      patchFullCtx.globalCompositeOperation = "source-over";
+
+      const outputCanvas = document.createElement("canvas");
+      outputCanvas.width = targetWidth;
+      outputCanvas.height = targetHeight;
+      const outputCtx = outputCanvas.getContext("2d");
+      outputCtx.drawImage(targetImage, 0, 0);
+      outputCtx.drawImage(patchFullCanvas, 0, 0);
+
+      return outputCanvas.toDataURL("image/png");
+    }
+
     function renderSwapTargetMaskCanvas(tempRect = null) {
       swapTargetMaskCtx.clearRect(0, 0, swapTargetMaskCanvas.width, swapTargetMaskCanvas.height);
       if (!swapState.target) {
@@ -7562,7 +7924,8 @@ body.solar-curator.person-variations-page .empty-state {
         startPoint: point,
         currentPoint: point
       };
-      swapTargetMaskCanvas.setPointerCapture?.(event.pointerId);
+      swapTargetHitRing.setPointerCapture?.(event.pointerId);
+      swapTargetHitRing.classList.add("swap-draw-active");
       renderSwapTargetMaskCanvas(normalizeSwapMaskRect(point, point));
       event.preventDefault();
     }
@@ -7581,7 +7944,8 @@ body.solar-curator.person-variations-page .empty-state {
       if (!swapTargetMaskDraw || swapTargetMaskDraw.pointerId !== event.pointerId) {
         return;
       }
-      swapTargetMaskCanvas.releasePointerCapture?.(event.pointerId);
+      swapTargetHitRing.releasePointerCapture?.(event.pointerId);
+      swapTargetHitRing.classList.remove("swap-draw-active");
       const point = "clientX" in event ? getSwapMaskCanvasPoint(event) : swapTargetMaskDraw.currentPoint;
       const rect = normalizeSwapMaskRect(swapTargetMaskDraw.startPoint, point);
       if (rect.width >= 6 && rect.height >= 6) {
@@ -7622,50 +7986,41 @@ body.solar-curator.person-variations-page .empty-state {
       const activeSelectionValue = state.activePersonId && state.activeSourceId
         ? `${state.activePersonId}::${state.activeSourceId}`
         : "";
-      if (!swapState.targetPickerValue && activeSelectionValue) {
-        swapState.targetPickerValue = activeSelectionValue;
-      }
       if (!swapState.donorPickerValue && activeSelectionValue) {
         swapState.donorPickerValue = activeSelectionValue;
       }
-      [swapTargetSourceSelect, swapDonorSourceSelect].forEach((select, selectIndex) => {
-        const currentValue = selectIndex === 0 ? swapState.targetPickerValue : swapState.donorPickerValue;
-        select.innerHTML = "";
-        const placeholder = document.createElement("option");
-        placeholder.value = "";
-        placeholder.textContent = choices.length ? "Choose a saved person source" : "No saved person sources yet";
-        select.appendChild(placeholder);
-        choices.forEach((choice) => {
-          const option = document.createElement("option");
-          option.value = choice.value;
-          option.textContent = choice.label;
-          select.appendChild(option);
-        });
-        if (currentValue && choices.some((choice) => choice.value === currentValue)) {
-          select.value = currentValue;
-        } else if (activeSelectionValue && choices.some((choice) => choice.value === activeSelectionValue)) {
-          select.value = activeSelectionValue;
-          if (selectIndex === 0) {
-            swapState.targetPickerValue = activeSelectionValue;
-          } else {
-            swapState.donorPickerValue = activeSelectionValue;
-          }
-        } else {
-          select.value = "";
-        }
+      const select = swapDonorSourceSelect;
+      const currentValue = swapState.donorPickerValue;
+      select.innerHTML = "";
+      const placeholder = document.createElement("option");
+      placeholder.value = "";
+      placeholder.textContent = choices.length ? "Choose a saved person source" : "No saved person sources yet";
+      select.appendChild(placeholder);
+      choices.forEach((choice) => {
+        const option = document.createElement("option");
+        option.value = choice.value;
+        option.textContent = choice.label;
+        select.appendChild(option);
       });
+      if (currentValue && choices.some((choice) => choice.value === currentValue)) {
+        select.value = currentValue;
+      } else if (activeSelectionValue && choices.some((choice) => choice.value === activeSelectionValue)) {
+        select.value = activeSelectionValue;
+        swapState.donorPickerValue = activeSelectionValue;
+      } else {
+        select.value = "";
+      }
     }
 
     function refreshSwapButtons() {
       const hasTarget = Boolean(swapState.target);
       const hasDonor = Boolean(swapState.donor);
-      swapGenerateButton.disabled = !hasTarget || !hasDonor || swapState.isGenerating;
+      const hasCrop = hasSwapFaceCrop();
+      swapGenerateButton.disabled = !hasTarget || !hasDonor || !hasCrop || swapState.isGenerating;
       swapClearBothButton.disabled = (!hasTarget && !hasDonor) || swapState.isGenerating;
       swapTargetClearButton.disabled = !hasTarget || swapState.isGenerating;
       swapDonorClearButton.disabled = !hasDonor || swapState.isGenerating;
-      swapTargetLoadSavedButton.disabled = !swapTargetSourceSelect.value || swapState.isGenerating;
       swapDonorLoadSavedButton.disabled = !swapDonorSourceSelect.value || swapState.isGenerating;
-      swapTargetUseActiveButton.disabled = !getActiveSource() || swapState.isGenerating;
       swapDonorUseActiveButton.disabled = !getActiveSource() || swapState.isGenerating;
       swapDeleteAllImagesButton.disabled = swapState.isGenerating || !swapState.archive.length;
       swapTargetPasteTarget.classList.toggle("ready", hasTarget);
@@ -7709,9 +8064,6 @@ body.solar-curator.person-variations-page .empty-state {
       const image = await loadImageElement(source);
       const retainPickerValue = Boolean(options.retainPickerValue);
       if (slot === "target") {
-        if (!retainPickerValue) {
-          swapState.targetPickerValue = "";
-        }
         swapState.target = source;
         swapState.targetPreviewUrl = previewUrl;
         swapState.targetLabel = label;
@@ -7896,9 +8248,7 @@ body.solar-curator.person-variations-page .empty-state {
         swapStage.classList.add("empty");
         swapStage.dataset.emptyMessage = "Load a target and donor image, then generate a face swap.";
         swapStageImage.removeAttribute("src");
-        swapStage.style.aspectRatio = swapState.targetWidth && swapState.targetHeight
-          ? `${swapState.targetWidth} / ${swapState.targetHeight}`
-          : "";
+        swapStage.style.aspectRatio = "";
         setSwapStageNote("Waiting for a target and donor image");
         refreshSwapButtons();
         return;
@@ -7929,79 +8279,40 @@ body.solar-curator.person-variations-page .empty-state {
       if (swapMaskInstructionsInput.value !== swapState.maskInstructions) {
         swapMaskInstructionsInput.value = swapState.maskInstructions;
       }
-      const usingCrop = hasSwapFaceCrop();
       const swapMaskInstructionsField = swapMaskInstructionsInput.closest(".swap-field");
       if (swapMaskInstructionsField) {
-        swapMaskInstructionsField.hidden = usingCrop;
+        swapMaskInstructionsField.hidden = true;
       }
-      swapMaskInstructionsInput.disabled = usingCrop;
-      swapTargetCropNote.textContent = usingCrop
-        ? "Cropped mode active: only the selected face region is sent visibly, everything else in the patch is masked black, and the face-swap-lab prompt/composite path is used."
-        : "Optional: draw face crop rectangles on the target. If none are drawn, the current full-frame face-swap workflow is used.";
-      swapFieldNote.textContent = usingCrop
-        ? "Crop mode is active. The model sees only the cropped target patch with the selected face region visible and a red-framed donor reference overlay."
-        : "The model sees the target image with a donor reference overlay. If xAI returns solid green censor areas, the original target pixels are restored there automatically.";
+      swapMaskInstructionsInput.disabled = true;
+      swapTargetCropNote.textContent = "Required: draw at least one face crop rectangle on the target. The API sees a cropped patch: your rectangles stay visible, everything else in the patch is pure green, plus a red-framed donor in the corner.";
+      swapFieldNote.textContent = "Face swap uses a green-masked crop patch and the lab-style prompt. After the edit, the result is composited back with feathered mask edges, color matching, and auto-realignment when the model reframes the visible region.";
       refreshSwapButtons();
     }
 
     function buildFaceSwapPrompt() {
-      if (hasSwapFaceCrop()) {
-        const parts = [
-          "The source image contains a cropped target patch with the selected face region visible, everything else in that patch masked pure black",
-          "there is a overlaid donor face reference in the upper right corner surrounded by a clear red frame",
-          "Use the red-framed donor face reference in the upper right corner as the identity source.",
-          "Replace the in face and hair in the main image with the face and hair from the red-framed donor reference overlay.",
-          "The person in the visible image area should become the donor person.",
-          "Remove the red-framed donor face reference from the final result.",
-          "do not let the face in the source image influence the output face, it should be a completely new face (the donor's).",
-          "The image will be coposited at a later stage so edge of mask must match perfectly with the original image.",
-          "Make sure not to move the visible area as it will ruin the compositing.",
-          "Keep the output lighting same as source",
-          "You will be judged on the likeness of the output to the donor reference and a seamless compositing",
-          "Only change the face and hair in the visible non-black face region.",
-          "Keep all black masked pixels pure black and do not fill them.",
-          "Do not change pixels outside the visible face region.",
-          "Keep the target image's pose, body, clothing, lighting, and surrounding pixels unchanged."
-        ];
-        if (swapState.extraInstructions.trim()) {
-          parts.push(`Additional instructions: ${swapState.extraInstructions.trim()}`);
-        }
-        return parts.join(" ");
-      }
+      const mask = SWAP_FACE_MASK_COLOR;
+      const extra = swapState.extraInstructions.trim();
       const parts = [
-      "The source image contains the full target portrait and an overlaid donor face reference.",
-        "Replace the face with the face from the donor reference.",
-        "The person in the image area should become the donor person.",
-        "Remove the overlaid donor face reference from the final result.",
-        "Keep the output photorealistic and coherent.",
-        "If needed mask some areas with a flat solid green mask.",
-        "Any green mask must be fully opaque, hard-edged, and have no transparency, glow, gradient, or texture.",
-        "Areas surrondin masking must be kept EXACTLY the same as in the original image. Ie edge of mask must match perfectly with the original image.",
-        "Change only the face and hair region while keeping the rest of the image intact.",
-        "Keep the target image's pose, body, clothing, and lighting unchanged."
+        `The source image contains a cropped target patch with the selected face region visible, everything else in that patch masked ${mask.name}.`,
+        "There is an overlaid donor reference in the upper right corner surrounded by a clear red frame.",
+        "Use the red-framed donor reference ONLY as the source of the face (skin, facial features, facial proportions) and the hair (color, cut, texture). Nothing else about the donor transfers.",
+        "Do NOT copy the donor's clothing, neckline, collar, jewelry, earrings, necklaces, scarf, coat, makeup style beyond what naturally belongs to the face, skin tone of the neck and shoulders, body shape, or pose. The donor reference is a face-and-hair reference, not a whole-person reference.",
+        "In the visible region of the source image, replace ONLY the face and the hair. Keep the original clothing, shirt, collar, neck, skin of the neck and shoulders, body, pose, and background exactly as they appear in the source. The neck skin must remain the original source person's neck, only blended at the jawline to the new face.",
+        "Do not let the original source face influence the new face; the new face must be fully the donor's identity.",
+        "Remove the red-framed donor reference from the final output.",
+        "The image will be composited later, so the edge of the mask region must match the source pixel-perfectly. Do not move, scale, or reframe the visible region.",
+        "Keep exposure, white balance, and lighting direction the same as the source so the new face blends seamlessly with the unchanged neck and shoulders.",
+        `Only modify face and hair inside the visible non-${mask.name} face region. Do not modify anything else inside that region (clothing, neck, shoulders, body, background all stay identical to the source).`,
+        `Keep every ${mask.name} ${mask.rgb} masked pixel ${mask.name} ${mask.rgb} and do not fill them.`,
+        "Do not change pixels outside the visible face region.",
+        `CRITICAL HAIR RULE: The new hair must end fully inside the visible (non-${mask.name}) region with clear empty margin between the hair and the mask boundary on all sides. Never let any hair strand, lock, flyaway, or shadow touch or cross the edge of the visible region. If the donor has long or wide hair that would naturally extend beyond the visible region, shorten it, tuck it behind the shoulders, or style it so that all hair ends are safely inside the visible region. Hair that reaches the mask boundary will be sliced mid-strand when the image is composited and will produce a very visible seam.`,
+        `Same rule applies to the face, ears, and any jewelry or accessories: keep everything you draw inside the visible region with margin, never touching the edge of the ${mask.name} mask.`,
+        "You will be judged on (1) face and hair identity likeness to the donor, (2) the original source clothing, neck, and shoulders being preserved bit-exact, (3) seamless compositing at the mask edge."
       ];
-      if (swapState.maskInstructions.trim()) {
-        parts.push(`Mask instructions: ${swapState.maskInstructions.trim()}`);
-      }
-      if (swapState.extraInstructions.trim()) {
-        parts.push(`Additional instructions: ${swapState.extraInstructions.trim()}`);
+      if (extra) {
+        parts.push(`Additional instructions: ${extra}`);
       }
       return parts.join(" ");
-    }
-
-    function getCoverPlacement(image, width, height, options = {}) {
-      const sourceWidth = image?.naturalWidth || image?.videoWidth || image?.width || width;
-      const sourceHeight = image?.naturalHeight || image?.videoHeight || image?.height || height;
-      const alignX = typeof options.alignX === "number" ? options.alignX : 0.5;
-      const alignY = typeof options.alignY === "number" ? options.alignY : 0.5;
-      const scale = Math.max(width / Math.max(1, sourceWidth), height / Math.max(1, sourceHeight));
-      const drawWidth = sourceWidth * scale;
-      const drawHeight = sourceHeight * scale;
-      const maxOffsetX = Math.max(0, drawWidth - width);
-      const maxOffsetY = Math.max(0, drawHeight - height);
-      const x = -maxOffsetX * alignX;
-      const y = -maxOffsetY * alignY;
-      return { x, y, drawWidth, drawHeight };
     }
 
     function drawFaceSwapDonorReferenceIntoRect(context, donorImage, x, y, width, height) {
@@ -8025,216 +8336,73 @@ body.solar-curator.person-variations-page .empty-state {
         throw new Error("Could not read the target image dimensions.");
       }
       const maxEdge = 1600;
-      const scaleDown = Math.min(1, maxEdge / Math.max(sourceWidth, sourceHeight));
-      const width = Math.max(1, Math.round(sourceWidth * scaleDown));
-      const height = Math.max(1, Math.round(sourceHeight * scaleDown));
+      const cropRect = getSwapMaskedFaceCropRectPx();
+      if (!swapState.targetMaskRects.length || !cropRect) {
+        throw new Error("Draw at least one face crop rectangle on the target first.");
+      }
+      const cropScaleDown = Math.min(1, maxEdge / Math.max(cropRect.width, cropRect.height));
+      const cropWidth = Math.max(256, Math.round(cropRect.width * cropScaleDown));
+      const cropHeight = Math.max(256, Math.round(cropRect.height * cropScaleDown));
       const canvas = document.createElement("canvas");
-      canvas.width = width;
-      canvas.height = height;
+      canvas.width = cropWidth;
+      canvas.height = cropHeight;
       const context = canvas.getContext("2d");
       if (!context) {
         throw new Error("Could not build the face swap board.");
       }
-      if (hasSwapFaceCrop()) {
-        const cropRect = getSwapMaskedFaceCropRectPx();
-        if (!cropRect) {
-          throw new Error("Draw at least one face crop rectangle first.");
-        }
-        const cropScaleDown = Math.min(1, maxEdge / Math.max(cropRect.width, cropRect.height));
-        const cropWidth = Math.max(256, Math.round(cropRect.width * cropScaleDown));
-        const cropHeight = Math.max(256, Math.round(cropRect.height * cropScaleDown));
-        canvas.width = cropWidth;
-        canvas.height = cropHeight;
-        context.drawImage(
-          targetImage,
-          cropRect.x,
-          cropRect.y,
-          cropRect.width,
-          cropRect.height,
-          0,
-          0,
-          cropWidth,
-          cropHeight
-        );
-        context.drawImage(buildSwapProtectedMaskCanvas("#000000", {
-          width: cropWidth,
-          height: cropHeight,
-          cropRect
-        }), 0, 0);
-        const overlayMargin = Math.round(Math.min(cropWidth, cropHeight) * 0.045);
-        const overlayMaxWidth = Math.round(cropWidth * 0.34);
-        const overlayMaxHeight = Math.round(cropHeight * 0.3);
-        const donorAspectRatio = donorImage.naturalWidth && donorImage.naturalHeight
-          ? donorImage.naturalWidth / donorImage.naturalHeight
-          : 1;
-        let overlayWidth = overlayMaxWidth;
-        let overlayHeight = Math.max(1, Math.round(overlayWidth / donorAspectRatio));
-        if (overlayHeight > overlayMaxHeight) {
-          overlayHeight = overlayMaxHeight;
-          overlayWidth = Math.max(1, Math.round(overlayHeight * donorAspectRatio));
-        }
-        const overlayX = Math.max(0, cropWidth - overlayMargin - overlayWidth);
-        const overlayY = overlayMargin;
-        drawFaceSwapDonorReferenceIntoRect(context, donorImage, overlayX, overlayY, overlayWidth, overlayHeight);
-        return {
-          canvas,
-          outputWidth: cropWidth,
-          outputHeight: cropHeight,
-          targetWidth: sourceWidth,
-          targetHeight: sourceHeight,
-          cropRect,
-          mode: "crop"
-        };
-      }
-      context.drawImage(targetImage, 0, 0, width, height);
-      const overlayMargin = Math.round(Math.min(width, height) * 0.045);
-      const overlayWidth = Math.max(120, Math.round(Math.min(width, height) * 0.3));
-      const overlayHeight = overlayWidth;
-      const overlayX = Math.max(0, width - overlayMargin - overlayWidth);
-      const overlayY = overlayMargin;
-      const donorPlacement = getCoverPlacement(donorImage, overlayWidth, overlayHeight);
       context.drawImage(
-        donorImage,
-        overlayX + donorPlacement.x,
-        overlayY + donorPlacement.y,
-        donorPlacement.drawWidth,
-        donorPlacement.drawHeight
+        targetImage,
+        cropRect.x,
+        cropRect.y,
+        cropRect.width,
+        cropRect.height,
+        0,
+        0,
+        cropWidth,
+        cropHeight
       );
+      context.drawImage(buildSwapProtectedMaskCanvas(SWAP_FACE_MASK_COLOR.hex, {
+        width: cropWidth,
+        height: cropHeight,
+        cropRect
+      }), 0, 0);
+      const overlayMargin = Math.round(Math.min(cropWidth, cropHeight) * 0.045);
+      const overlayMaxWidth = Math.round(cropWidth * 0.34);
+      const overlayMaxHeight = Math.round(cropHeight * 0.3);
+      const donorAspectRatio = donorImage.naturalWidth && donorImage.naturalHeight
+        ? donorImage.naturalWidth / donorImage.naturalHeight
+        : 1;
+      let overlayWidth = overlayMaxWidth;
+      let overlayHeight = Math.max(1, Math.round(overlayWidth / donorAspectRatio));
+      if (overlayHeight > overlayMaxHeight) {
+        overlayHeight = overlayMaxHeight;
+        overlayWidth = Math.max(1, Math.round(overlayHeight * donorAspectRatio));
+      }
+      const overlayX = Math.max(0, cropWidth - overlayMargin - overlayWidth);
+      const overlayY = overlayMargin;
+      drawFaceSwapDonorReferenceIntoRect(context, donorImage, overlayX, overlayY, overlayWidth, overlayHeight);
       return {
         canvas,
-        outputWidth: width,
-        outputHeight: height,
+        outputWidth: cropWidth,
+        outputHeight: cropHeight,
         targetWidth: sourceWidth,
         targetHeight: sourceHeight,
-        mode: "full"
+        cropRect,
+        mode: "crop"
       };
     }
 
-    function buildDetectedGreenMaskCanvasForSwap(sourceCanvas) {
-      const width = sourceCanvas.width;
-      const height = sourceCanvas.height;
-      const sourceCtx = sourceCanvas.getContext("2d");
-      const sourceImageData = sourceCtx.getImageData(0, 0, width, height);
-      const detectedMaskCanvas = document.createElement("canvas");
-      detectedMaskCanvas.width = width;
-      detectedMaskCanvas.height = height;
-      const detectedMaskCtx = detectedMaskCanvas.getContext("2d");
-      const detectedMaskData = detectedMaskCtx.createImageData(width, height);
-      let greenPixelCount = 0;
-
-      for (let index = 0; index < sourceImageData.data.length; index += 4) {
-        const r = sourceImageData.data[index];
-        const g = sourceImageData.data[index + 1];
-        const b = sourceImageData.data[index + 2];
-        const a = sourceImageData.data[index + 3];
-        const isGreenMaskPixel =
-          a > 180 &&
-          g > 96 &&
-          g > r * 1.35 &&
-          g > b * 1.15 &&
-          g - r > 28 &&
-          g - b > 18;
-        if (isGreenMaskPixel) {
-          detectedMaskData.data[index + 3] = 255;
-          greenPixelCount += 1;
-        }
-      }
-
-      if (greenPixelCount < Math.max(48, Math.round(width * height * 0.0002))) {
-        return null;
-      }
-
-      detectedMaskCtx.putImageData(detectedMaskData, 0, 0);
-      return detectedMaskCanvas;
-    }
-
     async function compositeFaceSwapResult(rawImageUrl, boardMeta) {
-      if (!swapState.target) {
+      if (!swapState.target || !boardMeta?.cropRect) {
         return rawImageUrl;
       }
-      if (boardMeta?.mode === "crop" && boardMeta.cropRect) {
-        const [targetImage, returnedImage] = await Promise.all([
-          loadImageElement(swapState.target),
-          loadImageElement(rawImageUrl)
-        ]);
-        const patchCanvas = document.createElement("canvas");
-        patchCanvas.width = boardMeta.cropRect.width;
-        patchCanvas.height = boardMeta.cropRect.height;
-        const patchCtx = patchCanvas.getContext("2d");
-        patchCtx.drawImage(returnedImage, 0, 0, patchCanvas.width, patchCanvas.height);
-        const visibleMaskCanvas = buildSwapMaskCanvas("#ffffff", {
-          width: patchCanvas.width,
-          height: patchCanvas.height,
-          cropRect: boardMeta.cropRect
-        });
-        const featherPx = Math.max(6, Math.round(Math.min(patchCanvas.width, patchCanvas.height) * 0.04));
-        const softMaskCanvas = document.createElement("canvas");
-        softMaskCanvas.width = patchCanvas.width;
-        softMaskCanvas.height = patchCanvas.height;
-        const softMaskCtx = softMaskCanvas.getContext("2d");
-        softMaskCtx.filter = `blur(${featherPx}px)`;
-        softMaskCtx.drawImage(visibleMaskCanvas, 0, 0);
-        softMaskCtx.filter = "none";
-        softMaskCtx.globalCompositeOperation = "destination-in";
-        softMaskCtx.drawImage(visibleMaskCanvas, 0, 0);
-        softMaskCtx.globalCompositeOperation = "source-over";
-        patchCtx.globalCompositeOperation = "destination-in";
-        patchCtx.drawImage(softMaskCanvas, 0, 0, patchCanvas.width, patchCanvas.height);
-        patchCtx.globalCompositeOperation = "source-over";
-        const finalCanvas = document.createElement("canvas");
-        finalCanvas.width = targetImage.naturalWidth || targetImage.width;
-        finalCanvas.height = targetImage.naturalHeight || targetImage.height;
-        const finalCtx = finalCanvas.getContext("2d");
-        finalCtx.drawImage(targetImage, 0, 0, finalCanvas.width, finalCanvas.height);
-        finalCtx.drawImage(
-          patchCanvas,
-          0,
-          0,
-          patchCanvas.width,
-          patchCanvas.height,
-          boardMeta.cropRect.x,
-          boardMeta.cropRect.y,
-          boardMeta.cropRect.width,
-          boardMeta.cropRect.height
-        );
-        return finalCanvas.toDataURL("image/png");
-      }
-      const [targetImage, returnedImage] = await Promise.all([
-        loadImageElement(swapState.target),
-        loadImageElement(rawImageUrl)
-      ]);
-      const returnedCanvas = document.createElement("canvas");
-      returnedCanvas.width = boardMeta.outputWidth;
-      returnedCanvas.height = boardMeta.outputHeight;
-      const returnedCtx = returnedCanvas.getContext("2d");
-      returnedCtx.drawImage(returnedImage, 0, 0, returnedCanvas.width, returnedCanvas.height);
-
-      const hardMaskCanvas = buildDetectedGreenMaskCanvasForSwap(returnedCanvas);
-      if (hardMaskCanvas) {
-        const featherPx = Math.max(4, Math.round(Math.min(returnedCanvas.width, returnedCanvas.height) * 0.015));
-        const featherMaskCanvas = document.createElement("canvas");
-        featherMaskCanvas.width = returnedCanvas.width;
-        featherMaskCanvas.height = returnedCanvas.height;
-        const featherMaskCtx = featherMaskCanvas.getContext("2d");
-        featherMaskCtx.filter = `blur(${featherPx}px)`;
-        featherMaskCtx.drawImage(hardMaskCanvas, 0, 0);
-        featherMaskCtx.filter = "none";
-        featherMaskCtx.globalCompositeOperation = "destination-out";
-        featherMaskCtx.drawImage(hardMaskCanvas, 0, 0);
-        featherMaskCtx.globalCompositeOperation = "source-over";
-        returnedCtx.globalCompositeOperation = "destination-out";
-        returnedCtx.drawImage(hardMaskCanvas, 0, 0);
-        returnedCtx.drawImage(featherMaskCanvas, 0, 0);
-        returnedCtx.globalCompositeOperation = "source-over";
-      }
-
-      const finalCanvas = document.createElement("canvas");
-      finalCanvas.width = targetImage.naturalWidth || targetImage.width;
-      finalCanvas.height = targetImage.naturalHeight || targetImage.height;
-      const finalCtx = finalCanvas.getContext("2d");
-      finalCtx.drawImage(targetImage, 0, 0, finalCanvas.width, finalCanvas.height);
-      finalCtx.drawImage(returnedCanvas, 0, 0, finalCanvas.width, finalCanvas.height);
-      return finalCanvas.toDataURL("image/png");
+      const targetImage = await loadImageElement(swapState.target);
+      const maskRects = swapState.targetMaskRects.map((rect) => ({ ...rect }));
+      return compositeSwapPatchIntoTarget(rawImageUrl, boardMeta.cropRect, {
+        targetImage,
+        maskRects,
+        maskColor: SWAP_FACE_MASK_COLOR
+      });
     }
 
     async function requestFaceSwapEdit() {
@@ -8312,6 +8480,10 @@ body.solar-curator.person-variations-page .empty-state {
       }
       if (!isSupportedImageSource(swapState.target) || !isSupportedImageSource(swapState.donor)) {
         setStatus("Load both a target and donor image first.");
+        return;
+      }
+      if (!hasSwapFaceCrop()) {
+        setStatus("Draw at least one face crop rectangle on the target first.");
         return;
       }
 
@@ -8491,7 +8663,7 @@ body.solar-curator.person-variations-page .empty-state {
     }
 
     async function loadSavedSourceIntoSwap(slot, selectionValue) {
-      const value = selectionValue || (slot === "target" ? swapState.targetPickerValue : swapState.donorPickerValue);
+      const value = selectionValue || (slot === "donor" ? swapState.donorPickerValue : "");
       if (!value) {
         setStatus("Choose a saved person source first.");
         return;
@@ -8579,7 +8751,7 @@ body.solar-curator.person-variations-page .empty-state {
       setStatus("Loaded the saved face swap as the new target image.");
     }
 
-    async function loadActiveSourceIntoSwap(slot) {
+    async function loadActiveSourceIntoSwap() {
       const person = getActivePerson();
       const source = getActiveSource();
       if (!person || !source) {
@@ -8591,14 +8763,9 @@ body.solar-curator.person-variations-page .empty-state {
         setStatus("Could not load the active person source.");
         return;
       }
-      const selectionValue = `${person.id}::${source.id}`;
-      if (slot === "target") {
-        swapState.targetPickerValue = selectionValue;
-      } else {
-        swapState.donorPickerValue = selectionValue;
-      }
-      await setSwapSlot(slot, resolvedSource, `${person.name} • ${source.label || "active source"}`, resolvedSource, { retainPickerValue: true });
-      setStatus(`${slot === "target" ? "Target" : "Donor"} loaded from the active person source.`);
+      swapState.donorPickerValue = `${person.id}::${source.id}`;
+      await setSwapSlot("donor", resolvedSource, `${person.name} • ${source.label || "active source"}`, resolvedSource, { retainPickerValue: true });
+      setStatus("Donor loaded from the active person source.");
     }
 
     async function restoreSwapSession() {
@@ -8622,7 +8789,6 @@ body.solar-curator.person-variations-page .empty-state {
         : [];
       swapState.targetMaskMode = saved.targetMaskMode === "remove" ? "remove" : "add";
       swapState.generateCount = Math.max(1, Math.min(4, Number(saved.generateCount) || 2));
-      swapState.targetPickerValue = typeof saved.targetPickerValue === "string" ? saved.targetPickerValue : "";
       swapState.donorPickerValue = typeof saved.donorPickerValue === "string" ? saved.donorPickerValue : "";
       renderSwapWorkspace();
     }
@@ -9563,33 +9729,18 @@ body.solar-curator.person-variations-page .empty-state {
         setStatus(error.message || "Could not read pasted content.");
       });
     });
-    swapTargetSourceSelect.addEventListener("change", () => {
-      swapState.targetPickerValue = swapTargetSourceSelect.value;
-      saveSwapSession();
-      refreshSwapButtons();
-    });
     swapDonorSourceSelect.addEventListener("change", () => {
       swapState.donorPickerValue = swapDonorSourceSelect.value;
       saveSwapSession();
       refreshSwapButtons();
-    });
-    swapTargetLoadSavedButton.addEventListener("click", () => {
-      loadSavedSourceIntoSwap("target", swapTargetSourceSelect.value).catch((error) => {
-        setStatus(error.message || "Could not load the saved target source.");
-      });
     });
     swapDonorLoadSavedButton.addEventListener("click", () => {
       loadSavedSourceIntoSwap("donor", swapDonorSourceSelect.value).catch((error) => {
         setStatus(error.message || "Could not load the saved donor source.");
       });
     });
-    swapTargetUseActiveButton.addEventListener("click", () => {
-      loadActiveSourceIntoSwap("target").catch((error) => {
-        setStatus(error.message || "Could not load the active target source.");
-      });
-    });
     swapDonorUseActiveButton.addEventListener("click", () => {
-      loadActiveSourceIntoSwap("donor").catch((error) => {
+      loadActiveSourceIntoSwap().catch((error) => {
         setStatus(error.message || "Could not load the active donor source.");
       });
     });
@@ -9606,8 +9757,8 @@ body.solar-curator.person-variations-page .empty-state {
     swapTargetMaskClearButton.addEventListener("click", () => {
       clearSwapTargetMask();
     });
-    swapTargetMaskCanvas.addEventListener("pointerdown", startSwapMaskDraw);
-    swapTargetMaskCanvas.addEventListener("pointermove", continueSwapMaskDraw);
+    swapTargetHitRing.addEventListener("pointerdown", startSwapMaskDraw);
+    swapTargetHitRing.addEventListener("pointermove", continueSwapMaskDraw);
     window.addEventListener("pointerup", stopSwapMaskDraw);
     window.addEventListener("pointercancel", stopSwapMaskDraw);
     swapGenerateCountSelect.addEventListener("change", () => {
@@ -9632,8 +9783,6 @@ body.solar-curator.person-variations-page .empty-state {
         closeLightbox();
       }
     });
-    lightboxPrevButton.addEventListener("click", () => stepLightboxVersion(-1));
-    lightboxNextButton.addEventListener("click", () => stepLightboxVersion(1));
     lightboxUpButton.addEventListener("click", () => stepLightboxPrompt(-1));
     lightboxDownButton.addEventListener("click", () => stepLightboxPrompt(1));
     lightboxCloseButton.addEventListener("click", closeLightbox);
