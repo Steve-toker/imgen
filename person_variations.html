@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Funny Person Variations</title>
+  <title>Qwen Person Variations</title>
   <link rel="icon" href="data:," />
   <style>
     :root {
@@ -417,6 +417,29 @@
       padding: 11px 12px;
       font: inherit;
       line-height: 1.4;
+    }
+
+    .prompt-copy {
+      min-width: 0;
+      display: grid;
+      gap: 10px;
+    }
+
+    .random-prompt-fields {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .random-prompt-field {
+      display: grid;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    .prompt-row .random-prompt-field textarea {
+      min-height: 64px;
     }
 
     .prompt-tools {
@@ -1193,6 +1216,10 @@
         grid-auto-flow: column;
         align-items: center;
       }
+
+      .random-prompt-fields {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
   <style>
@@ -1340,6 +1367,12 @@ body.solar-curator .hero::after {
   border-radius: 50%;
   background: radial-gradient(circle, rgba(240, 101, 67, 0.28), rgba(240, 101, 67, 0.08) 48%, transparent 72%);
   filter: blur(3px);
+  pointer-events: none;
+}
+
+body.solar-curator .hero > * {
+  position: relative;
+  z-index: 1;
 }
 
 body.solar-curator .hero p {
@@ -2008,10 +2041,20 @@ body.solar-curator.person-variations-page .empty-state {
   flex-wrap: wrap;
   gap: 0.8rem;
   align-items: center;
+  position: relative;
+  z-index: 2;
 }
 
 .mode-tab {
   min-width: 168px;
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+  cursor: pointer;
+  pointer-events: auto;
 }
 
 .mode-tab.active {
@@ -2507,11 +2550,11 @@ body.solar-curator.person-variations-page .empty-state {
 <body class="solar-curator person-variations-page">
   <div class="wrap">
     <section class="hero">
-      <h1>Character Lab</h1>
-      <p>Paste a photo of one person, adjust the prompts, then generate a full set of variations that keep that same person in the scene.</p>
+      <h1>Qwen Character Lab</h1>
+      <p>Paste a photo of one person, adjust the prompts, then generate identity-preserving variations with Qwen-Image-Edit-2511 and Rapid-AIO v18.</p>
       <p class="status" id="status">Paste, upload, or choose a saved person source to start generating.</p>
       <div class="mode-switch" role="tablist" aria-label="Workspace mode">
-        <button id="variation-mode-btn" class="ghost-btn mode-tab" type="button" role="tab" aria-selected="true" aria-controls="variation-layout">Character Variations</button>
+        <button id="variation-mode-btn" class="ghost-btn mode-tab" type="button" role="tab" aria-selected="true" aria-controls="variation-layout">Qwen Variations</button>
         <button id="slider-mode-btn" class="ghost-btn mode-tab" type="button" role="tab" aria-selected="false" aria-controls="slider-layout">Slider Edit</button>
         <button id="swap-mode-btn" class="ghost-btn mode-tab" type="button" role="tab" aria-selected="false" aria-controls="swap-layout">Face Swap</button>
       </div>
@@ -2585,8 +2628,8 @@ body.solar-curator.person-variations-page .empty-state {
 
           <form id="token-form" class="token-panel">
             <label class="field" for="token-input">
-              <span class="field-label">xAI API key for frontend-only image edits</span>
-              <input id="token-input" type="password" placeholder="xai-..." autocomplete="off" spellcheck="false" />
+              <span class="field-label">Hugging Face token for Qwen requests</span>
+              <input id="token-input" type="password" placeholder="hf_..." autocomplete="off" spellcheck="false" />
             </label>
             <div class="controls">
               <label class="toggle-row" for="save-token-checkbox">
@@ -2596,6 +2639,11 @@ body.solar-curator.person-variations-page .empty-state {
               <button id="clear-token-btn" class="ghost-btn" type="button">Clear Token</button>
             </div>
           </form>
+
+          <div class="token-panel">
+            <strong>Qwen-Image-Edit-2511 + Rapid-AIO v18</strong>
+            <span class="field-label">Runs directly from this browser to the Hugging Face Space. No local server is used.</span>
+          </div>
 
           <div id="prompt-editor" class="prompt-editor">
             <div class="prompt-actions">
@@ -2721,8 +2769,8 @@ body.solar-curator.person-variations-page .empty-state {
 
           <form class="token-panel">
             <label class="field" for="edit-token-input">
-              <span class="field-label">xAI API key for browser-only image edits</span>
-              <input id="edit-token-input" type="password" placeholder="xai-..." autocomplete="off" spellcheck="false" />
+              <span class="field-label">Hugging Face token for Qwen requests</span>
+              <input id="edit-token-input" type="password" placeholder="hf_..." autocomplete="off" spellcheck="false" />
             </label>
             <div class="controls">
               <label class="toggle-row" for="edit-save-token-checkbox">
@@ -2732,6 +2780,11 @@ body.solar-curator.person-variations-page .empty-state {
               <button id="edit-clear-token-btn" class="ghost-btn" type="button">Clear Token</button>
             </div>
           </form>
+
+          <div class="token-panel">
+            <strong>Qwen slider editing</strong>
+            <span class="field-label">Runs directly from this browser to Qwen and preserves the source dimensions for comparison.</span>
+          </div>
 
           <div id="edit-prompt-editor" class="prompt-editor">
             <div class="prompt-actions">
@@ -2823,7 +2876,7 @@ body.solar-curator.person-variations-page .empty-state {
                 <div id="swap-target-hit-ring" class="swap-target-hit-ring">
                   <div id="swap-target-media" class="swap-target-media">
                     <img id="swap-target-image" alt="Face swap target preview" />
-                    <canvas id="swap-target-mask-canvas" class="swap-target-mask-canvas" width="720" height="720" aria-label="Optional face swap crop selection"></canvas>
+                    <canvas id="swap-target-mask-canvas" class="swap-target-mask-canvas" width="720" height="720" aria-label="Face swap crop selection" hidden></canvas>
                   </div>
                 </div>
                 <div class="source-copy">
@@ -2831,12 +2884,12 @@ body.solar-curator.person-variations-page .empty-state {
                   <span id="swap-target-description">Paste or choose a target portrait.</span>
                 </div>
               </div>
-              <div class="swap-crop-actions">
+              <div class="swap-crop-actions" hidden>
                 <button id="swap-target-mask-add-btn" class="ghost-btn" type="button">Add Crop Rectangle</button>
                 <button id="swap-target-mask-remove-btn" class="ghost-btn" type="button">Remove Rectangle</button>
                 <button id="swap-target-mask-clear-btn" class="ghost-btn" type="button">Clear Crop</button>
               </div>
-              <p id="swap-target-crop-note" class="swap-crop-note">Required: draw at least one face crop rectangle on the target. The API patch uses a pure green mask outside your rectangles.</p>
+              <p id="swap-target-crop-note" class="swap-crop-note">No crop or mask is used. Qwen receives the complete target as image 1 and the donor as image 2.</p>
               <div class="swap-action-row">
                 <button id="swap-target-clear-btn" class="ghost-btn" type="button">Clear Target</button>
               </div>
@@ -2878,14 +2931,17 @@ body.solar-curator.person-variations-page .empty-state {
             </section>
           </div>
 
+          <label class="swap-field">
+            <span class="field-label">Face Swap Prompt</span>
+            <textarea id="swap-prompt-input" rows="4" spellcheck="true" placeholder="Describe how Qwen should swap the face while preserving the target image."></textarea>
+          </label>
+          <p id="swap-field-note" class="swap-field-note">This prompt is sent exactly as written with the target as image 1 and donor as image 2.</p>
+
           <div class="source-controls">
             <label class="field-inline" for="swap-generate-count-select">
               <span class="field-label">Images</span>
               <select id="swap-generate-count-select" aria-label="Number of face swap images to generate">
                 <option value="1">1</option>
-                <option value="2" selected>2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
               </select>
             </label>
             <button id="swap-generate-btn" type="button">Generate Face Swap</button>
@@ -2894,8 +2950,8 @@ body.solar-curator.person-variations-page .empty-state {
 
           <form class="token-panel">
             <label class="field" for="swap-token-input">
-              <span class="field-label">xAI API key for browser-only face swaps</span>
-              <input id="swap-token-input" type="password" placeholder="xai-..." autocomplete="off" spellcheck="false" />
+              <span class="field-label">Hugging Face token</span>
+              <input id="swap-token-input" type="password" placeholder="hf_..." autocomplete="off" spellcheck="false" />
             </label>
             <div class="controls">
               <label class="toggle-row" for="swap-save-token-checkbox">
@@ -2906,15 +2962,15 @@ body.solar-curator.person-variations-page .empty-state {
             </div>
           </form>
 
-          <label class="swap-field">
-            <span class="field-label">Extra Instructions</span>
-            <textarea id="swap-extra-instructions-input" spellcheck="false" placeholder="Examples: keep eyeglasses, keep freckles, keep natural skin texture, preserve original lighting."></textarea>
-          </label>
+          <div class="token-panel">
+            <strong>Qwen-Image-Edit-2511 + Rapid-AIO v18</strong>
+            <span class="field-label">Uses both complete images and the simple face-swap prompt, matching the Qwen Hugging Face workflow.</span>
+          </div>
+
           <label class="swap-field" hidden>
             <span class="field-label">Mask Instructions</span>
             <textarea id="swap-mask-instructions-input" spellcheck="false" placeholder="Examples: if censoring is needed, use a flat solid green mask for explicit body areas only."></textarea>
           </label>
-          <p id="swap-field-note" class="swap-field-note">Face swap uses a cropped patch with a pure green mask outside the face rectangles, then composites the edit back with feathering, color matching, and auto-realignment when needed.</p>
         </div>
       </div>
 
@@ -2982,6 +3038,103 @@ body.solar-curator.person-variations-page .empty-state {
   </div>
 
   <script>
+    const qwenGradioLibraryPromise = import("https://cdn.jsdelivr.net/npm/buffer@6.0.3/+esm")
+      .then(({ Buffer }) => {
+        globalThis.Buffer = Buffer;
+        return import("https://cdn.jsdelivr.net/npm/@gradio/client@2.3.1/dist/index.min.js");
+      });
+    const qwenSpaceId = "Sneak-Moose/Pro-Realism-Edit-Studio";
+    let qwenClientPromise = null;
+    let qwenClientToken = null;
+
+    async function getQwenClient() {
+      const { Client } = await qwenGradioLibraryPromise;
+      const token = getSharedTokenValue();
+      if (!qwenClientPromise || token !== qwenClientToken) {
+        qwenClientToken = token;
+        qwenClientPromise = Client.connect(qwenSpaceId, token ? { token } : {});
+      }
+      return qwenClientPromise;
+    }
+
+    async function prepareQwenImage(source) {
+      const { handle_file } = await qwenGradioLibraryPromise;
+      if (isHttpUrl(source)) {
+        return handle_file(source);
+      }
+      const response = await fetch(source);
+      if (!response.ok) {
+        throw new Error("Could not prepare the source image for Hugging Face.");
+      }
+      return handle_file(await response.blob());
+    }
+
+    function extractQwenImageUrl(result) {
+      const gallery = result?.data?.[0];
+      const firstItem = Array.isArray(gallery) ? gallery[0] : gallery;
+      const image = firstItem?.image || firstItem;
+      const imageUrl = image?.url || image?.path || (typeof image === "string" ? image : "");
+      if (!imageUrl) {
+        throw new Error("The Qwen Space did not return an image.");
+      }
+      return imageUrl;
+    }
+
+    function getQwenErrorMessage(error) {
+      const candidates = [
+        error?.message,
+        error?.error,
+        error?.detail,
+        error?.details,
+        error?.data?.error,
+        error?.data?.message
+      ];
+      for (const candidate of candidates) {
+        if (typeof candidate === "string" && candidate.trim()) {
+          return candidate.trim();
+        }
+      }
+      if (typeof error === "string" && error.trim()) {
+        return error.trim();
+      }
+      return "The Qwen request failed without returning an error message.";
+    }
+
+    function friendlyQwenError(error) {
+      const message = getQwenErrorMessage(error);
+      const lower = message.toLowerCase();
+      if (["quota", "zero gpu", "zerogpu", "exceeded", "gpu task"].some((marker) => lower.includes(marker))) {
+        return new Error("Hugging Face ZeroGPU quota is exhausted for this token. Wait for the reset, add credits, or use a token with available quota.");
+      }
+      return new Error(message);
+    }
+
+    async function requestQwenImage({ source, secondSource = null, prompt, width, height }) {
+      try {
+        const app = await getQwenClient();
+        const result = await app.predict("/infer", {
+          image_1: await prepareQwenImage(source),
+          image_2: secondSource ? await prepareQwenImage(secondSource) : null,
+          prompt,
+          seed: 0,
+          randomize_seed: true,
+          true_guidance_scale: 1,
+          num_inference_steps: 4,
+          height,
+          width
+        });
+        const remoteUrl = extractQwenImageUrl(result);
+        const imageResponse = await fetch(remoteUrl);
+        if (!imageResponse.ok) {
+          throw new Error("Qwen generated an image, but the browser could not download it.");
+        }
+        return blobToDataUrl(await imageResponse.blob());
+      } catch (error) {
+        qwenClientPromise = null;
+        throw friendlyQwenError(error);
+      }
+    }
+
     const peopleStorageKey = "personVariations.people.v2";
     const activePersonStorageKey = "personVariations.activePerson.v2";
     const activeSourceStorageKey = "personVariations.activeSource.v2";
@@ -2995,7 +3148,7 @@ body.solar-curator.person-variations-page .empty-state {
     const swapSessionStorageKey = "personVariations.faceSwap.session.v1";
     const resultsStorageKey = "personVariations.results.v1";
     const sourceStorageKey = "personVariations.source.v1";
-    const tokenStorageKey = "personVariations.token.v1";
+    const tokenStorageKey = "qwenPersonVariations.hfToken.v1";
     const generateCountStorageKey = "personVariations.generateCount.v1";
     const imageDbName = "personVariations.images.v1";
     const imageStoreName = "images";
@@ -3017,10 +3170,11 @@ body.solar-curator.person-variations-page .empty-state {
       "Edit only the headwear: place a soft red holiday cap on each visible person while preserving the original crop and lighting.",
       "Keep the photo unchanged except for adding realistic red winter hats to the people in the image."
     ];
+    const qwenIdentityPrefix = "Image 1 defines the subject's identity. Preserve the exact same recognizable person, facial structure, approximate age, skin tone, hair, and distinctive features. Do not replace, duplicate, or blend the subject with another person.";
     const verticalRecomposeSuffix = "Recompose into a tall vertical scene. Expand beyond the original crop. Show the same person fully integrated in a new environment. Replace the original background completely. Do not preserve the original photo frame, square crop or black padding. Fill the entire image naturally from top to bottom.";
     const verticalAspectRatio = 9 / 16;
     const preparedSourceMaxLongSide = 2048;
-    const maxParallelGenerations = 2;
+    const maxParallelGenerations = 1;
     const maxLightboxZoom = 6;
     const lightboxTapZoom = 3;
     const lightboxWheelZoomStep = 0.45;
@@ -3146,7 +3300,7 @@ body.solar-curator.person-variations-page .empty-state {
     const swapTokenInput = document.getElementById("swap-token-input");
     const swapSaveTokenCheckbox = document.getElementById("swap-save-token-checkbox");
     const swapClearTokenButton = document.getElementById("swap-clear-token-btn");
-    const swapExtraInstructionsInput = document.getElementById("swap-extra-instructions-input");
+    const swapPromptInput = document.getElementById("swap-prompt-input");
     const swapMaskInstructionsInput = document.getElementById("swap-mask-instructions-input");
     const swapFieldNote = document.getElementById("swap-field-note");
     const swapToggleArchiveButton = document.getElementById("swap-toggle-archive-btn");
@@ -3223,6 +3377,9 @@ body.solar-curator.person-variations-page .empty-state {
       dragIndex: -1
     };
 
+    const defaultFaceSwapPromptVersion = 2;
+    const defaultFaceSwapPrompt = "Use image 2 as the authoritative identity reference for a precise head replacement in image 1. Transfer the complete recognizable likeness: skull and face proportions, forehead, eyes, brows, nose, lips, smile, jawline, chin, ears, skin characteristics, hairline, hair, hairstyle, and glasses or lack of glasses. Adapt only pose and lighting to fit image 1. Keep image 1’s body, clothing, jewellery, hands, background, and composition unchanged. The resulting image should be image 1 left as is, for most pixels, apart from the identity change.";
+
     const swapState = {
       target: "",
       targetPreviewUrl: "",
@@ -3236,7 +3393,7 @@ body.solar-curator.person-variations-page .empty-state {
       donorLabel: "",
       donorWidth: 0,
       donorHeight: 0,
-      extraInstructions: "",
+      prompt: defaultFaceSwapPrompt,
       maskInstructions: "",
       archive: [],
       isGenerating: false,
@@ -3271,6 +3428,8 @@ body.solar-curator.person-variations-page .empty-state {
       return {
         text: String(text || ""),
         enabled: Boolean(enabled),
+        randomAddition1: String(stats?.randomAddition1 || ""),
+        randomAddition2: String(stats?.randomAddition2 || ""),
         trackedAttempts,
         trackedSuccesses
       };
@@ -3288,8 +3447,9 @@ body.solar-curator.person-variations-page .empty-state {
       return Math.max(1, Math.min(maxCount, numericValue));
     }
 
-    function setStatus(message) {
+    function setStatus(message, tone = "") {
       statusEl.textContent = message;
+      statusEl.classList.toggle("error", tone === "error");
     }
 
     function clampNumber(value, min, max) {
@@ -3584,7 +3744,7 @@ body.solar-curator.person-variations-page .empty-state {
 
     function saveSwapSession() {
       const hasAnyState = Boolean(
-        swapState.extraInstructions.trim() ||
+        swapState.prompt.trim() ||
         swapState.maskInstructions.trim() ||
         swapState.targetMaskRects.length ||
         swapState.donorPickerValue ||
@@ -3596,7 +3756,8 @@ body.solar-curator.person-variations-page .empty-state {
       }
       try {
         localStorage.setItem(swapSessionStorageKey, JSON.stringify({
-          extraInstructions: swapState.extraInstructions,
+          prompt: swapState.prompt,
+          promptVersion: defaultFaceSwapPromptVersion,
           maskInstructions: swapState.maskInstructions,
           targetMaskRects: swapState.targetMaskRects,
           targetMaskMode: swapState.targetMaskMode,
@@ -3657,7 +3818,7 @@ body.solar-curator.person-variations-page .empty-state {
     }
 
     function buildApiPrompt(prompt) {
-      return `${String(prompt || "").trim()} ${verticalRecomposeSuffix}`.trim();
+      return `${qwenIdentityPrefix} ${String(prompt || "").trim()} ${verticalRecomposeSuffix}`.trim();
     }
 
     function logSourceDebug(stage, details = {}) {
@@ -6797,6 +6958,7 @@ body.solar-curator.person-variations-page .empty-state {
         textarea.id = `edit-prompt-${index + 1}`;
         textarea.name = `edit-prompt-${index + 1}`;
         textarea.setAttribute("aria-label", `Fallback prompt ${index + 1}`);
+        textarea.disabled = editState.isGenerating;
 
         const metric = document.createElement("div");
         metric.className = "prompt-metric";
@@ -6811,6 +6973,46 @@ body.solar-curator.person-variations-page .empty-state {
           }
           saveEditPrompts();
         });
+
+        const promptCopy = document.createElement("div");
+        promptCopy.className = "prompt-copy";
+
+        const randomFields = document.createElement("div");
+        randomFields.className = "random-prompt-fields";
+
+        const makeRandomField = (property, labelText, additionNumber) => {
+          const label = document.createElement("label");
+          label.className = "random-prompt-field";
+
+          const caption = document.createElement("span");
+          caption.textContent = labelText;
+
+          const randomTextarea = document.createElement("textarea");
+          randomTextarea.value = prompt[property];
+          randomTextarea.rows = 2;
+          randomTextarea.spellcheck = false;
+          randomTextarea.disabled = editState.isGenerating;
+          randomTextarea.setAttribute("aria-label", `Random addition ${additionNumber} for fallback prompt ${index + 1}`);
+          randomTextarea.placeholder = "One of the two additions is selected for every run";
+          randomTextarea.addEventListener("input", () => {
+            const nextText = randomTextarea.value;
+            if (editState.prompts[index][property] !== nextText) {
+              editState.prompts[index][property] = nextText;
+              resetEditPromptTracking(editState.prompts[index]);
+              metric.textContent = getEditPromptSuccessRateLabel(editState.prompts[index]);
+            }
+            saveEditPrompts();
+          });
+
+          label.append(caption, randomTextarea);
+          return label;
+        };
+
+        randomFields.append(
+          makeRandomField("randomAddition1", "Option 1 — 50% chance", 1),
+          makeRandomField("randomAddition2", "Option 2 — 50% chance", 2)
+        );
+        promptCopy.append(textarea, randomFields);
 
         const tools = document.createElement("div");
         tools.className = "prompt-tools";
@@ -6854,7 +7056,7 @@ body.solar-curator.person-variations-page .empty-state {
         });
 
         tools.append(badge, metric, enabledLabel, removeButton);
-        row.append(dragHandle, textarea, tools);
+        row.append(dragHandle, promptCopy, tools);
         editPromptList.appendChild(row);
       });
     }
@@ -7014,14 +7216,14 @@ body.solar-curator.person-variations-page .empty-state {
       editState.sliderPercent = 100;
       renderEditWorkspace();
       if (!getSharedTokenValue()) {
-        setStatus("Slider edit source ready. Enter an xAI API key to start generating automatically.");
+        setStatus("Slider edit source ready. Enter a Hugging Face token to generate automatically.");
         return;
       }
       if (!getEnabledEditPromptIndices().length) {
-        setStatus("Slider edit source ready. Enable at least one fallback prompt to start generating automatically.");
+        setStatus("Slider edit source ready. Enable at least one fallback prompt.");
         return;
       }
-      setStatus("Slider edit source ready. Starting edit...");
+      setStatus("Slider edit source ready. Starting Qwen edit...");
       await runSliderEdit();
     }
 
@@ -7185,69 +7387,31 @@ body.solar-curator.person-variations-page .empty-state {
     }
 
     async function requestSliderEdit(prompt) {
-      const token = getSharedTokenValue();
-      if (!token) {
-        throw new Error("Enter an xAI API key first.");
-      }
-      persistTokenIfNeeded();
       const preparedSource = await buildPreparedEditSource();
-      const requestPayload = {
-        model: "grok-imagine-image",
-        prompt: String(prompt || "").trim(),
-        response_format: "b64_json",
-        resolution: "2k",
-        image: {
-          url: preparedSource,
-          type: "image_url"
-        }
+      return {
+        edited_url: await requestQwenImage({
+          source: preparedSource,
+          prompt: String(prompt || "").trim(),
+          width: 256,
+          height: 256
+        }),
+        is_moderated: false
       };
+    }
 
-      let response;
-      try {
-        response = await fetch("https://api.x.ai/v1/images/edits", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-          },
-          body: JSON.stringify(requestPayload)
-        });
-      } catch (_error) {
-        throw new Error("Direct browser request failed before completion. This is usually CORS, network, or browser policy.");
+    function buildRandomizedSliderEditPrompt(prompt) {
+      const parts = [String(prompt?.text || "").trim()];
+      const additions = [
+        String(prompt?.randomAddition1 || "").trim(),
+        String(prompt?.randomAddition2 || "").trim()
+      ].filter(Boolean);
+      const selectedAddition = additions.length === 2
+        ? additions[Math.random() < 0.5 ? 0 : 1]
+        : additions[0];
+      if (selectedAddition) {
+        parts.push(selectedAddition);
       }
-
-      let data;
-      try {
-        data = await response.json();
-      } catch (_parseError) {
-        throw new Error("xAI returned an invalid response.");
-      }
-
-      if (!response.ok) {
-        if (isModerationMessage(data?.error || data?.error?.message || data?.message)) {
-          return {
-            edited_url: "",
-            is_moderated: true
-          };
-        }
-        const errorMessage = typeof data?.error === "string"
-          ? data.error
-          : (data?.error?.message || data?.message || `Image generation failed (${response.status}).`);
-        throw new Error(errorMessage);
-      }
-
-      const imageData = data?.data?.[0];
-      const base64Image = imageData?.b64_json;
-      const mimeType = typeof imageData?.mime_type === "string" && imageData.mime_type
-        ? imageData.mime_type
-        : "image/png";
-      if (typeof base64Image === "string" && base64Image) {
-        return {
-          edited_url: `data:${mimeType};base64,${base64Image}`,
-          is_moderated: false
-        };
-      }
-      throw new Error("xAI did not return b64_json for the edit response.");
+      return parts.filter(Boolean).join(" ");
     }
 
     async function runSliderEdit() {
@@ -7275,7 +7439,7 @@ body.solar-curator.person-variations-page .empty-state {
         let moderatedCount = 0;
         for (let cursor = 0; cursor < enabledIndices.length; cursor += 1) {
           const promptIndex = enabledIndices[cursor];
-          const prompt = (editState.prompts[promptIndex]?.text || "").trim();
+          const prompt = buildRandomizedSliderEditPrompt(editState.prompts[promptIndex]);
           if (!prompt) {
             continue;
           }
@@ -8015,14 +8179,14 @@ body.solar-curator.person-variations-page .empty-state {
     function refreshSwapButtons() {
       const hasTarget = Boolean(swapState.target);
       const hasDonor = Boolean(swapState.donor);
-      const hasCrop = hasSwapFaceCrop();
-      swapGenerateButton.disabled = !hasTarget || !hasDonor || !hasCrop || swapState.isGenerating;
+      swapGenerateButton.disabled = !hasTarget || !hasDonor || swapState.isGenerating;
       swapClearBothButton.disabled = (!hasTarget && !hasDonor) || swapState.isGenerating;
       swapTargetClearButton.disabled = !hasTarget || swapState.isGenerating;
       swapDonorClearButton.disabled = !hasDonor || swapState.isGenerating;
       swapDonorLoadSavedButton.disabled = !swapDonorSourceSelect.value || swapState.isGenerating;
       swapDonorUseActiveButton.disabled = !getActiveSource() || swapState.isGenerating;
       swapDeleteAllImagesButton.disabled = swapState.isGenerating || !swapState.archive.length;
+      swapPromptInput.disabled = swapState.isGenerating;
       swapTargetPasteTarget.classList.toggle("ready", hasTarget);
       swapDonorPasteTarget.classList.toggle("ready", hasDonor);
       refreshSwapTargetMaskButtons();
@@ -8272,10 +8436,16 @@ body.solar-curator.person-variations-page .empty-state {
       renderSwapArchivePanel();
       renderSwapArchive();
       renderSwapStage();
-      swapGenerateCountSelect.value = String(Math.max(1, Math.min(4, Number(swapState.generateCount) || 2)));
-      if (swapExtraInstructionsInput.value !== swapState.extraInstructions) {
-        swapExtraInstructionsInput.value = swapState.extraInstructions;
+      swapState.generateCount = 1;
+      swapGenerateCountSelect.value = "1";
+      if (swapPromptInput.value !== swapState.prompt) {
+        swapPromptInput.value = swapState.prompt;
       }
+      const swapPromptField = swapPromptInput.closest(".swap-field");
+      if (swapPromptField) {
+        swapPromptField.hidden = false;
+      }
+      swapPromptInput.disabled = swapState.isGenerating;
       if (swapMaskInstructionsInput.value !== swapState.maskInstructions) {
         swapMaskInstructionsInput.value = swapState.maskInstructions;
       }
@@ -8284,44 +8454,31 @@ body.solar-curator.person-variations-page .empty-state {
         swapMaskInstructionsField.hidden = true;
       }
       swapMaskInstructionsInput.disabled = true;
-      swapTargetCropNote.textContent = "Required: draw at least one face crop rectangle on the target. The API sees a cropped patch: your rectangles stay visible, everything else in the patch is pure green, plus a red-framed donor in the corner.";
-      swapFieldNote.textContent = "Face swap uses a green-masked crop patch and the lab-style prompt. After the edit, the result is composited back with feathered mask edges, color matching, and auto-realignment when the model reframes the visible region.";
+      swapTargetCropNote.textContent = "No crop or mask is used. Qwen receives the complete target as image 1 and the donor as image 2.";
+      swapFieldNote.textContent = "This prompt is sent exactly as written with the target as image 1 and donor as image 2.";
       refreshSwapButtons();
     }
 
     function buildFaceSwapPrompt() {
-      const mask = SWAP_FACE_MASK_COLOR;
-      const extra = swapState.extraInstructions.trim();
-      const parts = [
-        `The source image contains a cropped target patch with the selected face region visible, everything else in that patch masked ${mask.name}.`,
-        "There is an overlaid donor reference in the upper right corner surrounded by a clear red frame.",
-        "Use the red-framed donor reference ONLY as the source of the face (skin, facial features, facial proportions) and the hair (color, cut, texture). Nothing else about the donor transfers.",
-        "Do NOT copy the donor's clothing, neckline, collar, jewelry, earrings, necklaces, scarf, coat, makeup style beyond what naturally belongs to the face, skin tone of the neck and shoulders, body shape, or pose. The donor reference is a face-and-hair reference, not a whole-person reference.",
-        "In the visible region of the source image, replace ONLY the face and the hair. Keep the original clothing, shirt, collar, neck, skin of the neck and shoulders, body, pose, and background exactly as they appear in the source. The neck skin must remain the original source person's neck, only blended at the jawline to the new face.",
-        "Do not let the original source face influence the new face; the new face must be fully the donor's identity.",
-        "Remove the red-framed donor reference from the final output.",
-        "The image will be composited later, so the edge of the mask region must match the source pixel-perfectly. Do not move, scale, or reframe the visible region.",
-        "Keep exposure, white balance, and lighting direction the same as the source so the new face blends seamlessly with the unchanged neck and shoulders.",
-        `Only modify face and hair inside the visible non-${mask.name} face region. Do not modify anything else inside that region (clothing, neck, shoulders, body, background all stay identical to the source).`,
-        `Keep every ${mask.name} ${mask.rgb} masked pixel ${mask.name} ${mask.rgb} and do not fill them.`,
-        "Do not change pixels outside the visible face region.",
-        `CRITICAL HAIR RULE: The new hair must end fully inside the visible (non-${mask.name}) region with clear empty margin between the hair and the mask boundary on all sides. Never let any hair strand, lock, flyaway, or shadow touch or cross the edge of the visible region. If the donor has long or wide hair that would naturally extend beyond the visible region, shorten it, tuck it behind the shoulders, or style it so that all hair ends are safely inside the visible region. Hair that reaches the mask boundary will be sliced mid-strand when the image is composited and will produce a very visible seam.`,
-        `Same rule applies to the face, ears, and any jewelry or accessories: keep everything you draw inside the visible region with margin, never touching the edge of the ${mask.name} mask.`,
-        "You will be judged on (1) face and hair identity likeness to the donor, (2) the original source clothing, neck, and shoulders being preserved bit-exact, (3) seamless compositing at the mask edge."
-      ];
-      if (extra) {
-        parts.push(`Additional instructions: ${extra}`);
+      const prompt = swapPromptInput.value.trim();
+      if (!prompt) {
+        throw new Error("Enter a face-swap prompt before generating.");
       }
-      return parts.join(" ");
+      return prompt;
     }
 
-    function drawFaceSwapDonorReferenceIntoRect(context, donorImage, x, y, width, height) {
-      context.drawImage(donorImage, x, y, width, height);
-      context.save();
-      context.strokeStyle = "#ef4444";
-      context.lineWidth = Math.max(4, Math.round(Math.min(width, height) * 0.02));
-      context.strokeRect(x, y, width, height);
-      context.restore();
+    async function getFaceSwapQwenDimensions() {
+      const targetImage = await loadImageElement(swapState.target);
+      const sourceWidth = targetImage.naturalWidth || targetImage.width;
+      const sourceHeight = targetImage.naturalHeight || targetImage.height;
+      if (!sourceWidth || !sourceHeight) {
+        throw new Error("Could not read the target image dimensions.");
+      }
+      const scaleDown = Math.min(1, 2048 / Math.max(sourceWidth, sourceHeight));
+      return {
+        width: Math.max(256, Math.min(2048, Math.round((sourceWidth * scaleDown) / 8) * 8)),
+        height: Math.max(256, Math.min(2048, Math.round((sourceHeight * scaleDown) / 8) * 8))
+      };
     }
 
     async function buildFaceSwapBoard() {
@@ -8329,148 +8486,49 @@ body.solar-curator.person-variations-page .empty-state {
         throw new Error("Load both a target and donor image first.");
       }
       const targetImage = await loadImageElement(swapState.target);
-      const donorImage = await loadImageElement(swapState.donor);
       const sourceWidth = targetImage.naturalWidth || targetImage.width;
       const sourceHeight = targetImage.naturalHeight || targetImage.height;
       if (!sourceWidth || !sourceHeight) {
         throw new Error("Could not read the target image dimensions.");
       }
       const maxEdge = 1600;
-      const cropRect = getSwapMaskedFaceCropRectPx();
-      if (!swapState.targetMaskRects.length || !cropRect) {
-        throw new Error("Draw at least one face crop rectangle on the target first.");
-      }
-      const cropScaleDown = Math.min(1, maxEdge / Math.max(cropRect.width, cropRect.height));
-      const cropWidth = Math.max(256, Math.round(cropRect.width * cropScaleDown));
-      const cropHeight = Math.max(256, Math.round(cropRect.height * cropScaleDown));
+      const scaleDown = Math.min(1, maxEdge / Math.max(sourceWidth, sourceHeight));
+      const outputWidth = Math.max(256, Math.round(sourceWidth * scaleDown));
+      const outputHeight = Math.max(256, Math.round(sourceHeight * scaleDown));
       const canvas = document.createElement("canvas");
-      canvas.width = cropWidth;
-      canvas.height = cropHeight;
+      canvas.width = outputWidth;
+      canvas.height = outputHeight;
       const context = canvas.getContext("2d");
       if (!context) {
-        throw new Error("Could not build the face swap board.");
+        throw new Error("Could not prepare the target image.");
       }
-      context.drawImage(
-        targetImage,
-        cropRect.x,
-        cropRect.y,
-        cropRect.width,
-        cropRect.height,
-        0,
-        0,
-        cropWidth,
-        cropHeight
-      );
-      context.drawImage(buildSwapProtectedMaskCanvas(SWAP_FACE_MASK_COLOR.hex, {
-        width: cropWidth,
-        height: cropHeight,
-        cropRect
-      }), 0, 0);
-      const overlayMargin = Math.round(Math.min(cropWidth, cropHeight) * 0.045);
-      const overlayMaxWidth = Math.round(cropWidth * 0.34);
-      const overlayMaxHeight = Math.round(cropHeight * 0.3);
-      const donorAspectRatio = donorImage.naturalWidth && donorImage.naturalHeight
-        ? donorImage.naturalWidth / donorImage.naturalHeight
-        : 1;
-      let overlayWidth = overlayMaxWidth;
-      let overlayHeight = Math.max(1, Math.round(overlayWidth / donorAspectRatio));
-      if (overlayHeight > overlayMaxHeight) {
-        overlayHeight = overlayMaxHeight;
-        overlayWidth = Math.max(1, Math.round(overlayHeight * donorAspectRatio));
-      }
-      const overlayX = Math.max(0, cropWidth - overlayMargin - overlayWidth);
-      const overlayY = overlayMargin;
-      drawFaceSwapDonorReferenceIntoRect(context, donorImage, overlayX, overlayY, overlayWidth, overlayHeight);
+      context.drawImage(targetImage, 0, 0, outputWidth, outputHeight);
       return {
         canvas,
-        outputWidth: cropWidth,
-        outputHeight: cropHeight,
+        outputWidth,
+        outputHeight,
         targetWidth: sourceWidth,
         targetHeight: sourceHeight,
-        cropRect,
-        mode: "crop"
+        mode: "full-frame"
       };
     }
 
-    async function compositeFaceSwapResult(rawImageUrl, boardMeta) {
-      if (!swapState.target || !boardMeta?.cropRect) {
-        return rawImageUrl;
-      }
-      const targetImage = await loadImageElement(swapState.target);
-      const maskRects = swapState.targetMaskRects.map((rect) => ({ ...rect }));
-      return compositeSwapPatchIntoTarget(rawImageUrl, boardMeta.cropRect, {
-        targetImage,
-        maskRects,
-        maskColor: SWAP_FACE_MASK_COLOR
-      });
+    async function compositeFaceSwapResult(rawImageUrl) {
+      return rawImageUrl;
     }
 
     async function requestFaceSwapEdit() {
-      const token = getSharedTokenValue();
-      if (!token) {
-        throw new Error("Enter an xAI API key first.");
-      }
-      persistTokenIfNeeded();
-      const board = await buildFaceSwapBoard();
-      const requestPayload = {
-        model: "grok-imagine-image",
-        prompt: buildFaceSwapPrompt(),
-        response_format: "b64_json",
-        resolution: "2k",
-        image: {
-          url: board.canvas.toDataURL("image/png"),
-          type: "image_url"
-        }
-      };
-
-      let response;
-      try {
-        response = await fetch("https://api.x.ai/v1/images/edits", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-          },
-          body: JSON.stringify(requestPayload)
-        });
-      } catch (_error) {
-        throw new Error("Direct browser request failed before completion. This is usually CORS, network, or browser policy.");
-      }
-
-      let data;
-      try {
-        data = await response.json();
-      } catch (_parseError) {
-        throw new Error("xAI returned an invalid response.");
-      }
-
-      if (!response.ok) {
-        if (isModerationMessage(data?.error || data?.error?.message || data?.message)) {
-          return {
-            editedUrl: "",
-            isModerated: true,
-            board
-          };
-        }
-        const errorMessage = typeof data?.error === "string"
-          ? data.error
-          : (data?.error?.message || data?.message || `Image generation failed (${response.status}).`);
-        throw new Error(errorMessage);
-      }
-
-      const imageData = data?.data?.[0];
-      const base64Image = imageData?.b64_json;
-      const mimeType = typeof imageData?.mime_type === "string" && imageData.mime_type
-        ? imageData.mime_type
-        : "image/png";
-      if (typeof base64Image !== "string" || !base64Image) {
-        throw new Error("xAI did not return b64_json for the face swap response.");
-      }
-
+      const dimensions = await getFaceSwapQwenDimensions();
       return {
-        editedUrl: `data:${mimeType};base64,${base64Image}`,
+        editedUrl: await requestQwenImage({
+          source: swapState.target,
+          secondSource: swapState.donor,
+          prompt: buildFaceSwapPrompt(),
+          width: dimensions.width,
+          height: dimensions.height
+        }),
         isModerated: false,
-        board
+        board: null
       };
     }
 
@@ -8482,15 +8540,10 @@ body.solar-curator.person-variations-page .empty-state {
         setStatus("Load both a target and donor image first.");
         return;
       }
-      if (!hasSwapFaceCrop()) {
-        setStatus("Draw at least one face crop rectangle on the target first.");
-        return;
-      }
-
       swapState.isGenerating = true;
       refreshSwapButtons();
       renderSwapStage();
-      const runCount = Math.max(1, Math.min(4, Number(swapState.generateCount) || 1));
+      const runCount = 1;
       let successCount = 0;
       let moderatedCount = 0;
 
@@ -8775,7 +8828,9 @@ body.solar-curator.person-variations-page .empty-state {
         renderSwapWorkspace();
         return;
       }
-      swapState.extraInstructions = typeof saved.extraInstructions === "string" ? saved.extraInstructions : "";
+      swapState.prompt = saved.promptVersion === defaultFaceSwapPromptVersion && typeof saved.prompt === "string" && saved.prompt.trim()
+        ? saved.prompt
+        : defaultFaceSwapPrompt;
       swapState.maskInstructions = typeof saved.maskInstructions === "string" ? saved.maskInstructions : "";
       swapState.targetMaskRects = Array.isArray(saved.targetMaskRects)
         ? saved.targetMaskRects
@@ -8915,70 +8970,17 @@ body.solar-curator.person-variations-page .empty-state {
     }
 
     async function requestImage(prompt) {
-      const token = getSharedTokenValue();
-      if (!token) {
-        throw new Error("Enter an xAI API key first.");
-      }
-      persistTokenIfNeeded();
       const preparedSource = await buildPreparedSource();
       const apiPrompt = buildApiPrompt(prompt);
-      const requestPayload = {
-        model: "grok-imagine-image",
-        prompt: apiPrompt,
-        response_format: "b64_json",
-        resolution: "2k",
-        image: {
-          url: preparedSource,
-          type: "image_url"
-        }
+      return {
+        edited_url: await requestQwenImage({
+          source: preparedSource,
+          prompt: apiPrompt,
+          width: 720,
+          height: 1280
+        }),
+        is_moderated: false
       };
-
-      let response;
-      try {
-        response = await fetch("https://api.x.ai/v1/images/edits", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-          },
-          body: JSON.stringify(requestPayload)
-        });
-      } catch (_error) {
-        throw new Error("Direct browser request failed before completion. This is usually CORS, network, or browser policy.");
-      }
-
-      let data;
-      try {
-        data = await response.json();
-      } catch (_parseError) {
-        throw new Error("xAI returned an invalid response.");
-      }
-
-      if (!response.ok) {
-        if (isModerationMessage(data?.error || data?.error?.message || data?.message)) {
-          return {
-            edited_url: "",
-            is_moderated: true
-          };
-        }
-        const errorMessage = typeof data?.error === "string"
-          ? data.error
-          : (data?.error?.message || data?.message || `Image generation failed (${response.status}).`);
-        throw new Error(errorMessage);
-      }
-
-      const imageData = data?.data?.[0];
-      const base64Image = imageData?.b64_json;
-      const mimeType = typeof imageData?.mime_type === "string" && imageData.mime_type
-        ? imageData.mime_type
-        : "image/png";
-      if (typeof base64Image === "string" && base64Image) {
-        return {
-          edited_url: `data:${mimeType};base64,${base64Image}`,
-          is_moderated: false
-        };
-      }
-      throw new Error("xAI did not return b64_json for the edit response.");
     }
 
     async function generatePromptAtIndex(index, options = {}) {
@@ -9336,10 +9338,12 @@ body.solar-curator.person-variations-page .empty-state {
     });
     swapGenerateButton.addEventListener("click", () => {
       runFaceSwap().catch((error) => {
+        const message = getQwenErrorMessage(error);
         swapState.isGenerating = false;
         refreshSwapButtons();
-        setSwapStageNote("Face swap failed");
-        setStatus(error.message || "Could not generate the face swap.");
+        setSwapStageNote(`Face swap failed: ${message}`);
+        setStatus(`Face swap failed: ${message}`, "error");
+        console.error("Qwen face swap failed", error);
       });
     });
     clearSourceButton.addEventListener("click", () => {
@@ -9765,8 +9769,8 @@ body.solar-curator.person-variations-page .empty-state {
       swapState.generateCount = Math.max(1, Math.min(4, Number(swapGenerateCountSelect.value) || 2));
       saveSwapSession();
     });
-    swapExtraInstructionsInput.addEventListener("input", () => {
-      swapState.extraInstructions = swapExtraInstructionsInput.value;
+    swapPromptInput.addEventListener("input", () => {
+      swapState.prompt = swapPromptInput.value;
       saveSwapSession();
     });
     swapMaskInstructionsInput.addEventListener("input", () => {
