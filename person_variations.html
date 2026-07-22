@@ -2783,7 +2783,7 @@ body.solar-curator.person-variations-page .empty-state {
 
           <div class="token-panel">
             <strong>Qwen slider editing</strong>
-            <span class="field-label">Runs directly from this browser to Qwen and preserves the source dimensions for comparison.</span>
+            <span class="field-label">Runs directly from this browser to the private Qwen Space.</span>
           </div>
 
           <div id="edit-prompt-editor" class="prompt-editor">
@@ -2964,7 +2964,7 @@ body.solar-curator.person-variations-page .empty-state {
 
           <div class="token-panel">
             <strong>Qwen-Image-Edit-2511 + Rapid-AIO v18</strong>
-            <span class="field-label">Uses both complete images and the simple face-swap prompt, matching the Qwen Hugging Face workflow.</span>
+            <span class="field-label">Uses both complete images and the face-swap prompt through the private Qwen Hugging Face Space.</span>
           </div>
 
           <label class="swap-field" hidden>
@@ -3043,7 +3043,7 @@ body.solar-curator.person-variations-page .empty-state {
         globalThis.Buffer = Buffer;
         return import("https://cdn.jsdelivr.net/npm/@gradio/client@2.3.1/dist/index.min.js");
       });
-    const qwenSpaceId = "Sneak-Moose/Pro-Realism-Edit-Studio";
+    const qwenSpaceId = "AdamGustavsson/Pro-Realism-Edit-Studio-Private";
     let qwenClientPromise = null;
     let qwenClientToken = null;
 
@@ -3082,17 +3082,24 @@ body.solar-curator.person-variations-page .empty-state {
 
     function getQwenErrorMessage(error) {
       const candidates = [
-        error?.message,
-        error?.error,
         error?.detail,
         error?.details,
         error?.data?.error,
-        error?.data?.message
-      ];
-      for (const candidate of candidates) {
-        if (typeof candidate === "string" && candidate.trim()) {
-          return candidate.trim();
-        }
+        error?.data?.message,
+        error?.cause?.message,
+        error?.error,
+        error?.message
+      ].filter((candidate) => typeof candidate === "string" && candidate.trim())
+        .map((candidate) => candidate.trim());
+      const detailedMessage = candidates.find((candidate) => {
+        const normalized = candidate.toLowerCase().replace(/\s+/g, "");
+        return !["error", "runtimeerror", "internalservererror"].includes(normalized);
+      });
+      if (detailedMessage) {
+        return detailedMessage;
+      }
+      if (candidates.length) {
+        return candidates[0];
       }
       if (typeof error === "string" && error.trim()) {
         return error.trim();
@@ -3102,8 +3109,9 @@ body.solar-curator.person-variations-page .empty-state {
 
     function friendlyQwenError(error) {
       const message = getQwenErrorMessage(error);
-      const lower = message.toLowerCase();
-      if (["quota", "zero gpu", "zerogpu", "exceeded", "gpu task"].some((marker) => lower.includes(marker))) {
+      const isExplicitQuotaError = /(?:zero\s*gpu|zerogpu|gpu)?\s*quota[^.\n]*(?:exhaust|exceed|ran out|running out|left|remaining)/i.test(message)
+        || /(?:exhaust|exceed|ran out|running out)[^.\n]*(?:zero\s*gpu|zerogpu|gpu)?\s*quota/i.test(message);
+      if (isExplicitQuotaError) {
         return new Error("Hugging Face ZeroGPU quota is exhausted for this token. Wait for the reset, add credits, or use a token with available quota.");
       }
       return new Error(message);
@@ -3124,12 +3132,18 @@ body.solar-curator.person-variations-page .empty-state {
           width
         });
         const remoteUrl = extractQwenImageUrl(result);
-        const imageResponse = await fetch(remoteUrl);
+        const spaceOrigin = `https://${qwenSpaceId.replace("/", "-").toLowerCase()}.hf.space/`;
+        const downloadUrl = new URL(remoteUrl, spaceOrigin).href;
+        const token = getSharedTokenValue();
+        const imageResponse = await fetch(downloadUrl, token
+          ? { headers: { Authorization: `Bearer ${token}` } }
+          : undefined);
         if (!imageResponse.ok) {
-          throw new Error("Qwen generated an image, but the browser could not download it.");
+          throw new Error(`Qwen generated an image, but the private result download failed (${imageResponse.status}).`);
         }
         return blobToDataUrl(await imageResponse.blob());
       } catch (error) {
+        console.error("Qwen request failed with the original Hugging Face error:", error);
         qwenClientPromise = null;
         throw friendlyQwenError(error);
       }
@@ -3377,8 +3391,8 @@ body.solar-curator.person-variations-page .empty-state {
       dragIndex: -1
     };
 
-    const defaultFaceSwapPromptVersion = 2;
-    const defaultFaceSwapPrompt = "Use image 2 as the authoritative identity reference for a precise head replacement in image 1. Transfer the complete recognizable likeness: skull and face proportions, forehead, eyes, brows, nose, lips, smile, jawline, chin, ears, skin characteristics, hairline, hair, hairstyle, and glasses or lack of glasses. Adapt only pose and lighting to fit image 1. Keep image 1’s body, clothing, jewellery, hands, background, and composition unchanged. The resulting image should be image 1 left as is, for most pixels, apart from the identity change.";
+    const defaultFaceSwapPromptVersion = 3;
+    const defaultFaceSwapPrompt = "Swap the face in image 1 with the one on image 2. keep everything else in image 1 intact";
 
     const swapState = {
       target: "",
@@ -7388,12 +7402,19 @@ body.solar-curator.person-variations-page .empty-state {
 
     async function requestSliderEdit(prompt) {
       const preparedSource = await buildPreparedEditSource();
+      const sourceWidth = editState.sourceWidth || 1024;
+      const sourceHeight = editState.sourceHeight || 1024;
+      const targetPixels = 921600;
+      const outputScale = Math.sqrt(targetPixels / (sourceWidth * sourceHeight));
+      const roundDimension = (value) => Math.max(256, Math.min(2048, Math.round(value / 32) * 32));
+      const width = roundDimension(sourceWidth * outputScale);
+      const height = roundDimension(sourceHeight * outputScale);
       return {
         edited_url: await requestQwenImage({
           source: preparedSource,
           prompt: String(prompt || "").trim(),
-          width: 256,
-          height: 256
+          width,
+          height
         }),
         is_moderated: false
       };
@@ -9126,6 +9147,7 @@ body.solar-curator.person-variations-page .empty-state {
         setStatus("Choose at least one image to generate.");
         return;
       }
+      const selectedIndices = enabledIndices.slice(0, targetCount);
 
       state.isGenerating = true;
       refreshButtons();
@@ -9144,10 +9166,10 @@ body.solar-curator.person-variations-page .empty-state {
           while (
             !stopLaunching &&
             activeCount < Math.min(maxParallelGenerations, Math.max(targetCount - successCount, 1)) &&
-            nextCursor < enabledIndices.length &&
+            nextCursor < selectedIndices.length &&
             successCount < targetCount
           ) {
-            const promptIndex = enabledIndices[nextCursor];
+            const promptIndex = selectedIndices[nextCursor];
             nextCursor += 1;
             activeCount += 1;
 
@@ -9173,7 +9195,7 @@ body.solar-curator.person-variations-page .empty-state {
                 if (successCount >= targetCount) {
                   stopLaunching = true;
                 }
-                if ((stopLaunching || nextCursor >= enabledIndices.length) && activeCount === 0) {
+                if ((stopLaunching || nextCursor >= selectedIndices.length) && activeCount === 0) {
                   resolve();
                   return;
                 }
@@ -9181,7 +9203,7 @@ body.solar-curator.person-variations-page .empty-state {
               });
           }
 
-          if ((stopLaunching || nextCursor >= enabledIndices.length) && activeCount === 0) {
+          if ((stopLaunching || nextCursor >= selectedIndices.length) && activeCount === 0) {
             resolve();
           }
         }
@@ -9207,7 +9229,7 @@ body.solar-curator.person-variations-page .empty-state {
       } else if (failedCount) {
         const failureNote = firstFailure?.error ? ` First failure: ${firstFailure.error}` : "";
         const moderatedNote = moderatedCount ? ` ${moderatedCount} prompt${moderatedCount === 1 ? " was" : "s were"} moderated.` : "";
-        setStatus(`Generated ${successCount}/${targetCount} requested images. ${failedCount} prompts failed before the list ran out.${failureNote}${moderatedNote}`);
+        setStatus(`Generated ${successCount}/${targetCount} requested images. ${failedCount} attempted prompt${failedCount === 1 ? "" : "s"} failed.${failureNote}${moderatedNote}`);
       } else {
         const moderatedNote = moderatedCount ? ` ${moderatedCount} prompt${moderatedCount === 1 ? " was" : "s were"} moderated.` : "";
         setStatus(`Generated ${successCount}/${targetCount} requested images.${moderatedNote}`);
