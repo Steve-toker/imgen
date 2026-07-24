@@ -3047,12 +3047,80 @@ body.solar-curator.person-variations-page .empty-state {
     let qwenClientPromise = null;
     let qwenClientToken = null;
 
-    async function getQwenClient() {
+    function normalizeHuggingFaceToken(value) {
+      return String(value || "")
+        .trim()
+        .replace(/^Bearer\s+/i, "")
+        .replace(/^(['"])(.*)\1$/, "$2")
+        .trim();
+    }
+
+    async function resolveQwenSpaceHost(token) {
+      const metadataUrl = `https://huggingface.co/api/spaces/${qwenSpaceId}/host`;
+      let response;
+      try {
+        response = await fetch(metadataUrl, {
+          headers: token ? { Authorization: `Bearer ${token}` } : {}
+        });
+      } catch (error) {
+        throw new Error(`Could not contact Hugging Face to load the Qwen Space metadata. ${getQwenErrorMessage(error)}`);
+      }
+
+      if (response.status === 401 || response.status === 403) {
+        throw new Error(token
+          ? "Hugging Face rejected the token. It may be expired, invalid, or missing read access to the private Qwen Space. Create or select a token with access to AdamGustavsson/Pro-Realism-Edit-Studio-Private, then paste it again."
+          : "A Hugging Face token with read access to the private Qwen Space is required.");
+      }
+      if (response.status === 404) {
+        throw new Error(`The Qwen Space ${qwenSpaceId} was not found. It may have been renamed, deleted, or made unavailable.`);
+      }
+      if (!response.ok) {
+        throw new Error(`Hugging Face could not load the Qwen Space metadata (HTTP ${response.status}).`);
+      }
+
+      const metadata = await response.json();
+      if (typeof metadata?.host !== "string" || !metadata.host.trim()) {
+        throw new Error("Hugging Face returned Qwen Space metadata without a valid host.");
+      }
+      return metadata.host;
+    }
+
+    function isTransientQwenMetadataError(error) {
+      const message = getQwenErrorMessage(error);
+      return /space metadata could not be loaded|body\s*stream\s*buffer was aborted|failed to fetch|network(?:error)?|load failed|temporar(?:y|ily) unavailable|http 5\d{2}/i.test(message);
+    }
+
+    async function connectQwenClient(token) {
       const { Client } = await qwenGradioLibraryPromise;
+      let lastError;
+      for (let attempt = 0; attempt < 3; attempt += 1) {
+        try {
+          const host = await resolveQwenSpaceHost(token);
+          return await Client.connect(host, token ? { token } : {});
+        } catch (error) {
+          lastError = error;
+          if (!isTransientQwenMetadataError(error) || attempt === 2) {
+            throw error;
+          }
+          await new Promise((resolve) => window.setTimeout(resolve, 600 * (attempt + 1)));
+        }
+      }
+      throw lastError;
+    }
+
+    async function getQwenClient() {
       const token = getSharedTokenValue();
       if (!qwenClientPromise || token !== qwenClientToken) {
         qwenClientToken = token;
-        qwenClientPromise = Client.connect(qwenSpaceId, token ? { token } : {});
+        const connectionPromise = connectQwenClient(token).catch((error) => {
+          // A rejected cached promise would make every later generation fail
+          // instantly even after a transient Hugging Face metadata outage.
+          if (qwenClientPromise === connectionPromise) {
+            qwenClientPromise = null;
+          }
+          throw error;
+        });
+        qwenClientPromise = connectionPromise;
       }
       return qwenClientPromise;
     }
@@ -3113,6 +3181,9 @@ body.solar-curator.person-variations-page .empty-state {
         || /(?:exhaust|exceed|ran out|running out)[^.\n]*(?:zero\s*gpu|zerogpu|gpu)?\s*quota/i.test(message);
       if (isExplicitQuotaError) {
         return new Error("Hugging Face ZeroGPU quota is exhausted for this token. Wait for the reset, add credits, or use a token with available quota.");
+      }
+      if (isTransientQwenMetadataError(error)) {
+        return new Error("Hugging Face temporarily failed to load the private Space metadata after three attempts. The Space may still be running; wait a moment and try the generation again.");
       }
       return new Error(message);
     }
@@ -3796,7 +3867,7 @@ body.solar-curator.person-variations-page .empty-state {
     }
 
     function getSharedTokenValue() {
-      return String(editTokenInput?.value || tokenInput.value || "").trim();
+      return normalizeHuggingFaceToken(editTokenInput?.value || tokenInput.value || swapTokenInput?.value);
     }
 
     function setSharedTokenValue(value) {
