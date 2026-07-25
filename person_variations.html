@@ -402,6 +402,17 @@
       font-size: 1.1rem;
     }
 
+    .drag-grip {
+      font-size: 1.25rem;
+      line-height: 1;
+      letter-spacing: -0.22em;
+      transform: rotate(90deg);
+    }
+
+    .drag-handle-label {
+      display: none;
+    }
+
     .drag-handle:active {
       cursor: grabbing;
     }
@@ -1241,19 +1252,71 @@
         gap: 12px;
       }
 
+      .drag-handle {
+        width: 100%;
+        min-height: 46px;
+        padding: 0 16px;
+        grid-template-columns: auto 1fr auto;
+        gap: 10px;
+        place-items: center start;
+        border-radius: 16px;
+        background: rgba(172, 52, 22, 0.08);
+        border-color: rgba(172, 52, 22, 0.16);
+        touch-action: none;
+      }
+
+      .drag-grip {
+        font-size: 1.4rem;
+      }
+
+      .drag-handle-label {
+        display: inline;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .drag-handle::after {
+        content: "Hold and drag";
+        justify-self: end;
+        color: var(--sc-text-soft);
+        font-size: 0.72rem;
+      }
+
       /* Keep long generation prompts comfortably readable on phones. */
       .prompt-row > textarea,
       .prompt-row .prompt-copy > textarea {
-        min-height: 168px;
+        min-height: 220px;
+        max-height: 60vh;
+        overflow-y: auto;
         font-size: 16px;
         line-height: 1.55;
         padding: 14px 15px;
       }
 
       .prompt-tools {
-        justify-items: start;
-        grid-auto-flow: column;
+        display: flex;
+        flex-wrap: wrap;
+        justify-items: initial;
+        justify-content: flex-start;
         align-items: center;
+        width: 100%;
+      }
+
+      .prompt-tools > * {
+        max-width: 100%;
+      }
+
+      .prompt-tools .prompt-remove {
+        flex-basis: 100%;
+        width: fit-content;
+        margin-top: 4px;
+        opacity: 0.72;
+      }
+
+      .prompt-tools .prompt-remove.armed {
+        opacity: 1;
       }
 
       .random-prompt-fields {
@@ -3307,6 +3370,7 @@ body.solar-curator.person-variations-page .empty-state {
     const maxLightboxZoom = 6;
     const lightboxTapZoom = 3;
     const lightboxWheelZoomStep = 0.45;
+    const lightboxSwipeNavigationZoomThreshold = 1.25;
 
     const pasteTarget = document.getElementById("paste-target");
     const statusEl = document.getElementById("status");
@@ -3964,6 +4028,23 @@ body.solar-curator.person-variations-page .empty-state {
         return false;
       }
       return Boolean(target.closest("input, textarea, [contenteditable='true'], [contenteditable=''], select"));
+    }
+
+    function syncMobilePromptHeight(textarea) {
+      if (!textarea) {
+        return;
+      }
+      if (!window.matchMedia("(max-width: 640px)").matches) {
+        textarea.style.removeProperty("height");
+        textarea.style.removeProperty("overflow-y");
+        return;
+      }
+      textarea.style.height = "auto";
+      const minHeight = 220;
+      const maxHeight = Math.max(minHeight, Math.round(window.innerHeight * 0.6));
+      const nextHeight = Math.min(Math.max(textarea.scrollHeight, minHeight), maxHeight);
+      textarea.style.height = `${nextHeight}px`;
+      textarea.style.overflowY = textarea.scrollHeight > maxHeight ? "auto" : "hidden";
     }
 
     function isMobilePasteFieldVisible() {
@@ -6285,7 +6366,7 @@ body.solar-curator.person-variations-page .empty-state {
           return;
         }
         event.preventDefault();
-        if (state.lightboxZoom > 1.01) {
+        if (state.lightboxZoom > lightboxSwipeNavigationZoomThreshold) {
           resetLightboxZoom();
         } else {
           setLightboxZoom(lightboxTapZoom);
@@ -6411,7 +6492,7 @@ body.solar-curator.person-variations-page .empty-state {
           return;
         }
 
-        if (gestureMode === "swipe" && hadSinglePointer && state.lightboxZoom <= 1.01) {
+        if (gestureMode === "swipe" && hadSinglePointer && state.lightboxZoom <= lightboxSwipeNavigationZoomThreshold) {
           const deltaX = endX - swipeStartX;
           const deltaY = endY - swipeStartY;
           const now = Date.now();
@@ -6515,7 +6596,7 @@ body.solar-curator.person-variations-page .empty-state {
 
         const dragHandle = document.createElement("div");
         dragHandle.className = "drag-handle";
-        dragHandle.textContent = ":::";
+        dragHandle.innerHTML = '<span class="drag-grip" aria-hidden="true">⠿</span><span class="drag-handle-label">Drag to reorder</span>';
         dragHandle.draggable = !state.isGenerating;
         dragHandle.title = "Drag to reorder prompt";
         dragHandle.addEventListener("dragstart", (event) => {
@@ -6544,6 +6625,7 @@ body.solar-curator.person-variations-page .empty-state {
         metric.textContent = getEditPromptSuccessRateLabel(prompt);
 
         textarea.addEventListener("input", () => {
+          syncMobilePromptHeight(textarea);
           const nextText = textarea.value;
           if (state.prompts[index].text !== nextText) {
             state.prompts[index].text = nextText;
@@ -6595,20 +6677,41 @@ body.solar-curator.person-variations-page .empty-state {
           });
         });
 
+        const moveTopButton = document.createElement("button");
+        moveTopButton.className = "ghost-btn tiny-btn";
+        moveTopButton.type = "button";
+        moveTopButton.textContent = "Move to Top";
+        moveTopButton.disabled = index === 0 || state.isGenerating;
+        moveTopButton.addEventListener("click", () => {
+          movePrompt(index, 0);
+        });
+
         const removeButton = document.createElement("button");
-        removeButton.className = "danger-btn tiny-btn";
+        removeButton.className = "danger-btn tiny-btn prompt-remove";
         removeButton.type = "button";
-        removeButton.textContent = "Remove";
+        removeButton.textContent = "Remove prompt";
         removeButton.disabled = state.prompts.length <= 1 || state.isGenerating;
         removeButton.addEventListener("click", () => {
+          if (removeButton.dataset.armed !== "true") {
+            removeButton.dataset.armed = "true";
+            removeButton.classList.add("armed");
+            removeButton.textContent = "Tap again to remove";
+            window.setTimeout(() => {
+              removeButton.dataset.armed = "";
+              removeButton.classList.remove("armed");
+              removeButton.textContent = "Remove prompt";
+            }, 3000);
+            return;
+          }
           removePromptAtIndex(index).catch((error) => {
             setStatus(error.message || `Could not remove prompt ${index + 1}.`);
           });
         });
 
-        tools.append(badge, metric, enabledLabel, runButton, removeButton);
+        tools.append(badge, metric, enabledLabel, runButton, moveTopButton, removeButton);
         row.append(dragHandle, textarea, tools);
         promptList.appendChild(row);
+        requestAnimationFrame(() => syncMobilePromptHeight(textarea));
       });
     }
 
@@ -7095,7 +7198,7 @@ body.solar-curator.person-variations-page .empty-state {
 
         const dragHandle = document.createElement("div");
         dragHandle.className = "drag-handle";
-        dragHandle.textContent = ":::";
+        dragHandle.innerHTML = '<span class="drag-grip" aria-hidden="true">⠿</span><span class="drag-handle-label">Drag to reorder</span>';
         dragHandle.draggable = !editState.isGenerating;
         dragHandle.title = "Drag to reorder prompt";
         dragHandle.addEventListener("dragstart", (event) => {
@@ -7125,6 +7228,7 @@ body.solar-curator.person-variations-page .empty-state {
         metric.textContent = getEditPromptSuccessRateLabel(prompt);
 
         textarea.addEventListener("input", () => {
+          syncMobilePromptHeight(textarea);
           const nextText = textarea.value;
           if (editState.prompts[index].text !== nextText) {
             editState.prompts[index].text = nextText;
@@ -7201,11 +7305,22 @@ body.solar-curator.person-variations-page .empty-state {
         enabledLabel.append(enabledInput, enabledText);
 
         const removeButton = document.createElement("button");
-        removeButton.className = "danger-btn tiny-btn";
+        removeButton.className = "danger-btn tiny-btn prompt-remove";
         removeButton.type = "button";
-        removeButton.textContent = "Remove";
+        removeButton.textContent = "Remove prompt";
         removeButton.disabled = editState.prompts.length <= 1 || editState.isGenerating;
         removeButton.addEventListener("click", () => {
+          if (removeButton.dataset.armed !== "true") {
+            removeButton.dataset.armed = "true";
+            removeButton.classList.add("armed");
+            removeButton.textContent = "Tap again to remove";
+            window.setTimeout(() => {
+              removeButton.dataset.armed = "";
+              removeButton.classList.remove("armed");
+              removeButton.textContent = "Remove prompt";
+            }, 3000);
+            return;
+          }
           if (editState.prompts.length <= 1 || editState.isGenerating) {
             return;
           }
@@ -7215,9 +7330,19 @@ body.solar-curator.person-variations-page .empty-state {
           refreshEditButtons();
         });
 
-        tools.append(badge, metric, enabledLabel, removeButton);
+        const moveTopButton = document.createElement("button");
+        moveTopButton.className = "ghost-btn tiny-btn";
+        moveTopButton.type = "button";
+        moveTopButton.textContent = "Move to Top";
+        moveTopButton.disabled = index === 0 || editState.isGenerating;
+        moveTopButton.addEventListener("click", () => {
+          moveEditPrompt(index, 0);
+        });
+
+        tools.append(badge, metric, enabledLabel, moveTopButton, removeButton);
         row.append(dragHandle, promptCopy, tools);
         editPromptList.appendChild(row);
+        requestAnimationFrame(() => syncMobilePromptHeight(textarea));
       });
     }
 
@@ -9994,6 +10119,7 @@ body.solar-curator.person-variations-page .empty-state {
       if (state.lightboxIndex >= 0) {
         applyLightboxTransform();
       }
+      document.querySelectorAll(".prompt-row > textarea, .prompt-row .prompt-copy > textarea").forEach(syncMobilePromptHeight);
       updateSwapTargetMaskViewport();
       renderSwapTargetMaskCanvas();
     });
