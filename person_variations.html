@@ -5600,10 +5600,10 @@ body.solar-curator.person-variations-page .empty-state {
       }
       ensureResultVersions(result);
       if (!result.versions.length) {
-        if (result.status === "error" || result.notice) {
+        if (result.status === "error" || result.notice || result.status === "loading") {
           resetResultImages(index);
           renderResults();
-          setStatus(`Removed the failed generation for variation ${index + 1}.`);
+          setStatus(`Removed the unfinished generation for variation ${index + 1}.`);
         }
         return;
       }
@@ -5699,12 +5699,13 @@ body.solar-curator.person-variations-page .empty-state {
     }
 
     function syncItemVariantContext(item) {
-      if (!item?.currentVariant) {
+      const variant = item?.currentVariant || item;
+      if (!variant?.personId || !variant?.sourceId) {
         return;
       }
-      activateItemContext(item.currentVariant, false);
-      if (item.currentVariant.versionIndex >= 0 && state.results[item.promptIndex]) {
-        state.results[item.promptIndex].currentVersion = item.currentVariant.versionIndex;
+      activateItemContext(variant, false);
+      if (variant.versionIndex >= 0 && state.results[item.promptIndex]) {
+        state.results[item.promptIndex].currentVersion = variant.versionIndex;
         state.results[item.promptIndex].imageUrl = getResultImageUrl(state.results[item.promptIndex]);
       }
     }
@@ -5968,14 +5969,19 @@ body.solar-curator.person-variations-page .empty-state {
         } else {
           frame.textContent = "Waiting to generate.";
         }
-        const canDeleteResult = variantCount > 0 || result.status === "error" || result.notice;
+        const canDeleteResult = variantCount > 0
+          || result.status === "error"
+          || result.notice
+          || (result.status === "loading" && !state.isGenerating);
         if (canDeleteResult) {
           const deleteButton = document.createElement("button");
           deleteButton.className = "ghost-btn mini-icon-btn result-delete";
           deleteButton.type = "button";
           const deleteLabel = variantCount > 0
             ? `Delete current generation for variation ${index + 1}`
-            : `Remove failed generation for variation ${index + 1}`;
+            : result.status === "loading"
+              ? `Remove unfinished generation for variation ${index + 1}`
+              : `Remove failed generation for variation ${index + 1}`;
           deleteButton.title = deleteLabel;
           deleteButton.setAttribute("aria-label", deleteLabel);
           deleteButton.innerHTML = `
