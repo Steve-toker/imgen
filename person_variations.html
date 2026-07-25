@@ -5600,17 +5600,31 @@ body.solar-curator.person-variations-page .empty-state {
       }
       ensureResultVersions(result);
       if (!result.versions.length) {
+        if (result.status === "error" || result.notice) {
+          resetResultImages(index);
+          renderResults();
+          setStatus(`Removed the failed generation for variation ${index + 1}.`);
+        }
         return;
       }
       const removedVersion = result.versions[result.currentVersion];
+      const lightboxWasShowing = isLightboxShowingPrompt(index);
+      const previousLightboxIndex = state.lightboxIndex;
       await deleteBlobKeys(removedVersion?.blobKey ? [removedVersion.blobKey] : []);
       result.versions.splice(result.currentVersion, 1);
       if (!result.versions.length) {
         resetResultImages(index);
-        if (isLightboxShowingPrompt(index)) {
-          closeLightbox();
+        if (lightboxWasShowing) {
+          state.lightboxIndex = -1;
+          state.lightboxKey = "";
         }
         renderResults();
+        if (lightboxWasShowing && state.visibleItems.length) {
+          const nextIndex = Math.min(previousLightboxIndex, state.visibleItems.length - 1);
+          state.lightboxIndex = nextIndex;
+          state.lightboxKey = state.visibleItems[nextIndex].key;
+          updateLightboxContent();
+        }
         setStatus(`Deleted the last saved generation for variation ${index + 1}.`);
         return;
       }
@@ -5954,12 +5968,16 @@ body.solar-curator.person-variations-page .empty-state {
         } else {
           frame.textContent = "Waiting to generate.";
         }
-        if (variantCount > 0) {
+        const canDeleteResult = variantCount > 0 || result.status === "error" || result.notice;
+        if (canDeleteResult) {
           const deleteButton = document.createElement("button");
           deleteButton.className = "ghost-btn mini-icon-btn result-delete";
           deleteButton.type = "button";
-          deleteButton.title = `Delete current generation for variation ${index + 1}`;
-          deleteButton.setAttribute("aria-label", `Delete current generation for variation ${index + 1}`);
+          const deleteLabel = variantCount > 0
+            ? `Delete current generation for variation ${index + 1}`
+            : `Remove failed generation for variation ${index + 1}`;
+          deleteButton.title = deleteLabel;
+          deleteButton.setAttribute("aria-label", deleteLabel);
           deleteButton.innerHTML = `
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M9 3h6l1 2h4v2H4V5h4l1-2Zm-2 6h2v9H7V9Zm4 0h2v9h-2V9Zm4 0h2v9h-2V9ZM6 21a2 2 0 0 1-2-2V7h16v12a2 2 0 0 1-2 2H6Z"/>
@@ -7786,17 +7804,27 @@ body.solar-curator.person-variations-page .empty-state {
       if (!entry) {
         return;
       }
+      const lightboxWasShowing = isSliderLightboxCollection() && state.lightboxKey === entryId;
+      const previousLightboxIndex = state.lightboxIndex;
       await deleteBlobKeys(getEditArchiveBlobKeys(entry));
       editState.archive = editState.archive.filter((item) => item.id !== entryId);
       if (editState.currentArchiveId === entryId) {
         editState.currentArchiveId = "";
       }
-      if (isSliderLightboxCollection() && state.lightboxKey === entryId) {
-        closeLightbox();
-      }
       ensureCurrentEditArchiveSelection();
       saveEditArchive();
       renderEditWorkspace();
+      if (lightboxWasShowing) {
+        if (!editState.archive.length) {
+          closeLightbox();
+        } else {
+          const nextIndex = Math.min(previousLightboxIndex, editState.archive.length - 1);
+          state.lightboxIndex = nextIndex;
+          state.lightboxKey = editState.archive[nextIndex].id;
+          state.lightboxCollection = "slider";
+          updateLightboxContent();
+        }
+      }
       setStatus("Saved slider edit deleted.");
     }
 
@@ -8894,17 +8922,26 @@ body.solar-curator.person-variations-page .empty-state {
       if (!entry) {
         return;
       }
+      const lightboxWasShowing = state.lightboxCollection === "swap" && state.lightboxKey === entryId;
+      const previousLightboxIndex = state.lightboxIndex;
       await deleteBlobKeys(getSwapArchiveBlobKeys(entry));
       swapState.archive = swapState.archive.filter((item) => item.id !== entryId);
       if (swapState.currentArchiveId === entryId) {
         swapState.currentArchiveId = "";
       }
-      if (state.lightboxCollection === "swap" && state.lightboxKey === entryId) {
-        closeLightbox();
-      }
       ensureCurrentSwapArchiveSelection();
       saveSwapArchive();
       renderSwapWorkspace();
+      if (lightboxWasShowing) {
+        if (!swapState.archive.length) {
+          closeLightbox();
+        } else {
+          const nextIndex = Math.min(previousLightboxIndex, swapState.archive.length - 1);
+          state.lightboxIndex = nextIndex;
+          state.lightboxKey = swapState.archive[nextIndex].id;
+          updateLightboxContent();
+        }
+      }
       setStatus("Saved face swap deleted.");
     }
 
