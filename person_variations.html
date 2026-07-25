@@ -419,6 +419,12 @@
       line-height: 1.4;
     }
 
+    /* Main prompts benefit from more room at every screen size. */
+    .prompt-row > textarea,
+    .prompt-row .prompt-copy > textarea {
+      min-height: 140px;
+    }
+
     .prompt-copy {
       min-width: 0;
       display: grid;
@@ -1110,6 +1116,29 @@
       backdrop-filter: blur(8px);
     }
 
+    .lightbox-delete {
+      position: fixed;
+      top: max(16px, calc(env(safe-area-inset-top) + 12px));
+      right: max(68px, calc(env(safe-area-inset-right) + 64px));
+      z-index: 30050;
+      width: 34px;
+      height: 34px;
+      min-width: 34px;
+      padding: 7px;
+      border-radius: 11px;
+      color: #ffd6d6;
+      background: rgba(10, 14, 21, 0.72);
+      border-color: rgba(255, 123, 123, 0.38);
+      backdrop-filter: blur(8px);
+    }
+
+    .lightbox-delete:hover,
+    .lightbox-delete:focus-visible {
+      color: #fff;
+      background: rgba(142, 36, 36, 0.9);
+      border-color: rgba(255, 164, 164, 0.9);
+    }
+
     .lightbox-nav {
       position: absolute;
       top: 50%;
@@ -1209,6 +1238,16 @@
 
       .prompt-row {
         grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      /* Keep long generation prompts comfortably readable on phones. */
+      .prompt-row > textarea,
+      .prompt-row .prompt-copy > textarea {
+        min-height: 168px;
+        font-size: 16px;
+        line-height: 1.55;
+        padding: 14px 15px;
       }
 
       .prompt-tools {
@@ -3024,6 +3063,11 @@ body.solar-curator.person-variations-page .empty-state {
           <path d="M18.3 5.71 12 12l6.3 6.29-1.41 1.41L10.59 13.41 4.29 19.7 2.88 18.29 9.17 12 2.88 5.71 4.29 4.3l6.3 6.29 6.29-6.3z"/>
         </svg>
       </button>
+      <button id="lightbox-delete-btn" class="ghost-btn icon-btn lightbox-delete" type="button" aria-label="Delete this image" title="Delete this image">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M9 3h6l1 2h4v2H4V5h4l1-2Zm-2 6h2v9H7V9Zm4 0h2v9h-2V9Zm4 0h2v9h2V9ZM6 21a2 2 0 0 1-2-2V7h16v12a2 2 0 0 1-2 2H6Z"/>
+        </svg>
+      </button>
       <div id="lightbox-stage" class="lightbox-stage">
         <img id="lightbox-image" class="lightbox-image" alt="Full size generated image" />
         <img id="lightbox-compare-overlay" class="lightbox-image lightbox-compare-overlay" alt="Original source preview" hidden />
@@ -3319,6 +3363,7 @@ body.solar-curator.person-variations-page .empty-state {
     const lightboxUpButton = document.getElementById("lightbox-up-btn");
     const lightboxDownButton = document.getElementById("lightbox-down-btn");
     const lightboxCloseButton = document.getElementById("lightbox-close-btn");
+    const lightboxDeleteButton = document.getElementById("lightbox-delete-btn");
     let tearDownLightboxVisualViewport = null;
     const editPasteTarget = document.getElementById("edit-paste-target");
     const editSourcePreview = document.getElementById("edit-source-preview");
@@ -5965,6 +6010,7 @@ body.solar-curator.person-variations-page .empty-state {
 
     function updateLightboxContent() {
       const item = getLightboxItem();
+      lightboxDeleteButton.hidden = !item;
       if (isLightboxCompareMode() && !canShowSliderCompareForItem(item)) {
         state.lightboxCollection = "slider";
       }
@@ -6069,6 +6115,7 @@ body.solar-curator.person-variations-page .empty-state {
     function resetLightboxChromePosition() {
       ["left", "top", "right", "bottom", "transform"].forEach((key) => {
         lightboxCloseButton.style.removeProperty(key);
+        lightboxDeleteButton.style.removeProperty(key);
       });
     }
 
@@ -6079,10 +6126,38 @@ body.solar-curator.person-variations-page .empty-state {
       }
       const pad = 12;
       const cw = lightboxCloseButton.offsetWidth || 48;
+      const dw = lightboxDeleteButton.offsetWidth || 34;
       lightboxCloseButton.style.right = "auto";
       lightboxCloseButton.style.bottom = "auto";
       lightboxCloseButton.style.left = `${Math.round(vv.offsetLeft + vv.width - cw - pad)}px`;
       lightboxCloseButton.style.top = `${Math.round(vv.offsetTop + pad)}px`;
+      lightboxDeleteButton.style.right = "auto";
+      lightboxDeleteButton.style.bottom = "auto";
+      lightboxDeleteButton.style.left = `${Math.round(vv.offsetLeft + vv.width - cw - dw - (pad * 2))}px`;
+      lightboxDeleteButton.style.top = `${Math.round(vv.offsetTop + pad + 7)}px`;
+    }
+
+    function deleteLightboxImage() {
+      const item = getLightboxItem();
+      if (!item) {
+        return;
+      }
+      if (state.lightboxCollection === "slider" || state.lightboxCollection === "slider-compare") {
+        deleteEditArchiveEntry(item.id).catch((error) => {
+          setStatus(error.message || "Could not delete the saved slider edit.");
+        });
+        return;
+      }
+      if (state.lightboxCollection === "swap") {
+        deleteSwapArchiveEntry(item.id).catch((error) => {
+          setStatus(error.message || "Could not delete the saved face swap.");
+        });
+        return;
+      }
+      syncItemVariantContext(item);
+      deleteResultImages(item.promptIndex).catch((error) => {
+        setStatus(error.message || `Could not delete the current generation for variation ${item.promptIndex + 1}.`);
+      });
     }
 
     function installLightboxVisualViewportSync() {
@@ -9883,6 +9958,7 @@ body.solar-curator.person-variations-page .empty-state {
     lightboxUpButton.addEventListener("click", () => stepLightboxPrompt(-1));
     lightboxDownButton.addEventListener("click", () => stepLightboxPrompt(1));
     lightboxCloseButton.addEventListener("click", closeLightbox);
+    lightboxDeleteButton.addEventListener("click", deleteLightboxImage);
     bindGridSwipeNavigation(
       lightboxStage,
       () => stepLightboxVersion(-1),
