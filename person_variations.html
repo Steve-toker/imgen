@@ -2647,6 +2647,40 @@ body.solar-curator.person-variations-page .empty-state {
     border-radius: 1.6rem;
   }
 }
+
+/* Avoid WebKit's expensive/unstable image + backdrop-filter compositing path on
+   touch devices. It can flicker and leave the composited layer intercepting taps. */
+@media (hover: none), (pointer: coarse) {
+  body.solar-curator .carousel-dots,
+  body.solar-curator .result-regenerate,
+  body.solar-curator .result-delete,
+  body.solar-curator .result-version-nav,
+  body.solar-curator .drag-handle,
+  body.solar-curator .prompt-badge,
+  body.solar-curator .filter-pill,
+  body.solar-curator .person-source-chip::after,
+  body.solar-curator .stage-note,
+  body.solar-curator .lightbox,
+  body.solar-curator .lightbox-dots,
+  body.solar-curator .swap-stage-note {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  body.solar-curator .prompt-row,
+  body.solar-curator .person-card,
+  body.solar-curator .result-card,
+  body.solar-curator button {
+    transition: none;
+  }
+
+  body.solar-curator .prompt-row:hover,
+  body.solar-curator .person-card:hover,
+  body.solar-curator .result-card:hover,
+  body.solar-curator button:hover {
+    transform: none;
+  }
+}
   </style>
 </head>
 <body class="solar-curator person-variations-page">
@@ -3511,6 +3545,7 @@ body.solar-curator.person-variations-page .empty-state {
     const sourceBlobUrlCache = new Map();
     const sourceBlobUrlLoads = new Set();
     let imageDbPromise = null;
+    let pendingResultsRenderFrame = 0;
 
     const state = {
       people: [],
@@ -3773,15 +3808,6 @@ body.solar-curator.person-variations-page .empty-state {
             block: "center",
             inline: "nearest"
           });
-        }
-        if (typeof card.focus === "function") {
-          try {
-            card.focus({
-              preventScroll: true
-            });
-          } catch (_error) {
-            card.focus();
-          }
         }
       });
     }
@@ -5443,21 +5469,31 @@ body.solar-curator.person-variations-page .empty-state {
           if (!record?.blob) {
             version.blobKey = "";
             saveResultsMetadata();
-            renderResults();
+            scheduleResultsRender();
             return;
           }
           const objectUrl = URL.createObjectURL(record.blob);
           blobUrlCache.set(blobKey, objectUrl);
-          renderResults();
+          scheduleResultsRender();
         })
         .catch(() => {
           version.blobKey = "";
           saveResultsMetadata();
-          renderResults();
+          scheduleResultsRender();
         })
         .finally(() => {
           blobUrlLoads.delete(blobKey);
         });
+    }
+
+    function scheduleResultsRender() {
+      if (pendingResultsRenderFrame) {
+        return;
+      }
+      pendingResultsRenderFrame = requestAnimationFrame(() => {
+        pendingResultsRenderFrame = 0;
+        renderResults();
+      });
     }
 
     function renderDots(container, total, activeIndex) {
@@ -5906,7 +5942,13 @@ body.solar-curator.person-variations-page .empty-state {
         card.dataset.itemKey = item.key;
         card.tabIndex = -1;
         ensureResultVersions(result);
-        result.versions.forEach(hydrateVersionImage);
+        const visibleVersionIndex = Number.isInteger(item.currentVariant?.versionIndex)
+          ? item.currentVariant.versionIndex
+          : result.currentVersion;
+        const visibleVersion = visibleVersionIndex >= 0
+          ? item.currentVariant?.result?.versions?.[visibleVersionIndex] || result.versions[visibleVersionIndex]
+          : null;
+        hydrateVersionImage(visibleVersion);
         const activeImageUrl = getResultImageUrl(result);
         const variantCount = getVisibleItemVariantCount(item) || getResultVersionCount(result);
 
@@ -5941,7 +5983,9 @@ body.solar-curator.person-variations-page .empty-state {
         if (activeImageUrl) {
           frame.classList.add("clickable");
           const image = document.createElement("img");
-          image.src = addCacheBuster(activeImageUrl);
+          image.loading = "lazy";
+          image.decoding = "async";
+          image.src = activeImageUrl;
           image.alt = `Generated variation ${index + 1}`;
           image.addEventListener("error", () => {
             handleVisibleItemImageError(item);
@@ -9352,7 +9396,6 @@ body.solar-curator.person-variations-page .empty-state {
         error: "",
         notice: ""
       };
-      queueResultCardReveal(state.activePersonId, index);
       renderResults();
 
       try {
@@ -9381,7 +9424,9 @@ body.solar-curator.person-variations-page .empty-state {
             : ""
         };
         delete state.variantSelections[selectionKey];
-        queueResultCardReveal(state.activePersonId, index);
+        if (!data.is_moderated) {
+          queueResultCardReveal(state.activePersonId, index);
+        }
         renderResults();
         if (data.is_moderated) {
           recordMainPromptAttempt(index, false);
@@ -9414,7 +9459,6 @@ body.solar-curator.person-variations-page .empty-state {
             notice: previousVersions.length ? "Moderated, kept previous image." : "Moderated."
           };
           delete state.variantSelections[selectionKey];
-          queueResultCardReveal(state.activePersonId, index);
           renderResults();
           recordMainPromptAttempt(index, false);
           renderPrompts();
@@ -9435,7 +9479,6 @@ body.solar-curator.person-variations-page .empty-state {
           error: error.message || "Failed",
           notice: ""
         };
-        queueResultCardReveal(state.activePersonId, index);
         renderResults();
         recordMainPromptAttempt(index, false);
         renderPrompts();
