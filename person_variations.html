@@ -2312,14 +2312,27 @@ body.solar-curator.person-variations-page .empty-state {
   font-size: 0.68rem;
 }
 
+html.video-maker-open,
+body.video-maker-open {
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
 .video-maker {
-  position: fixed;
-  inset: 0;
+  position: fixed !important;
+  inset: 0 !important;
   z-index: 120;
+  width: 100vw;
+  height: 100dvh;
+  min-height: 100svh;
   display: grid;
   place-items: center;
   padding: 1rem;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  isolation: isolate;
   background: rgba(24, 19, 18, 0.7);
+  -webkit-backdrop-filter: blur(16px);
   backdrop-filter: blur(16px);
 }
 
@@ -2512,6 +2525,9 @@ body.solar-curator.person-variations-page .empty-state {
 @media (max-width: 760px) {
   .video-maker {
     align-items: start;
+    height: 100dvh;
+    min-height: 100svh;
+    max-height: 100dvh;
     padding: 0;
     overflow-y: auto;
     overscroll-behavior: contain;
@@ -2519,7 +2535,7 @@ body.solar-curator.person-variations-page .empty-state {
 
   .video-maker-card {
     width: 100%;
-    min-height: 100dvh;
+    min-height: 100svh;
     max-height: none;
     grid-template-columns: 1fr;
     align-content: start;
@@ -2553,7 +2569,12 @@ body.solar-curator.person-variations-page .empty-state {
   }
 
   .video-maker-progress {
+    position: fixed;
+    inset: 0;
+    z-index: 140;
     padding: 1rem;
+    min-height: 100svh;
+    border-radius: 0;
   }
 
   .video-maker-spinner {
@@ -3967,6 +3988,7 @@ body.solar-curator.person-variations-page .empty-state {
     const lightboxCloseButton = document.getElementById("lightbox-close-btn");
     const lightboxDeleteButton = document.getElementById("lightbox-delete-btn");
     const videoMaker = document.getElementById("video-maker");
+    const videoMakerCard = videoMaker.querySelector(".video-maker-card");
     const videoMakerPreview = videoMaker.querySelector(".video-maker-preview");
     const videoMakerImage = document.getElementById("video-maker-image");
     const videoMakerOutput = document.getElementById("video-maker-output");
@@ -4287,9 +4309,22 @@ body.solar-curator.person-variations-page .empty-state {
       videoMakerSourceLabel.textContent = label || "Selected archive image";
       videoMakerPrompt.value = getSavedVideoPrompt(promptKey);
       videoMaker.hidden = false;
-      document.body.style.overflow = "hidden";
+      videoMaker.setAttribute("aria-busy", "false");
+      document.documentElement.classList.add("video-maker-open");
+      document.body.classList.add("video-maker-open");
+      videoMaker.scrollTop = 0;
+      videoMakerCard.scrollTop = 0;
       setVideoMakerStatus("Adjust the prompt or generate with the saved value.");
-      requestAnimationFrame(() => videoMakerPrompt.focus());
+      requestAnimationFrame(() => {
+        videoMaker.scrollTop = 0;
+        videoMakerCard.scrollTop = 0;
+        const mobileOrTouch = window.matchMedia("(max-width: 760px), (pointer: coarse)").matches;
+        if (mobileOrTouch) {
+          videoMakerCloseButton.focus({ preventScroll: true });
+        } else {
+          videoMakerPrompt.focus({ preventScroll: true });
+        }
+      });
     }
 
     function closeVideoMaker() {
@@ -4298,7 +4333,9 @@ body.solar-curator.person-variations-page .empty-state {
       }
       persistVideoMakerPrompt();
       videoMaker.hidden = true;
-      document.body.style.overflow = "";
+      videoMaker.removeAttribute("aria-busy");
+      document.documentElement.classList.remove("video-maker-open");
+      document.body.classList.remove("video-maker-open");
       videoMakerSource = "";
       videoMakerPromptKey = "";
       clearVideoMakerOutput();
@@ -4362,6 +4399,7 @@ body.solar-curator.person-variations-page .empty-state {
       videoMakerDownload.hidden = true;
       videoMakerGenerateButton.textContent = "Generating…";
       videoMakerCloseButton.disabled = true;
+      videoMaker.setAttribute("aria-busy", "true");
       startVideoMakerProgress();
       try {
         const videoUrl = await requestLtxVideo(videoMakerSource, prompt);
@@ -4385,6 +4423,7 @@ body.solar-curator.person-variations-page .empty-state {
         videoMakerPrompt.disabled = false;
         videoMakerGenerateButton.textContent = "Generate Video";
         videoMakerCloseButton.disabled = false;
+        videoMaker.setAttribute("aria-busy", "false");
       }
     }
 
