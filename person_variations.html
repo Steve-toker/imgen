@@ -398,7 +398,9 @@
       display: grid;
       place-items: center;
       cursor: grab;
+      touch-action: none;
       user-select: none;
+      -webkit-user-select: none;
       font-size: 1.1rem;
     }
 
@@ -2229,7 +2231,8 @@ body.solar-curator.person-variations-page .empty-state {
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: fill;
+  object-position: 0 0;
   background: transparent;
   pointer-events: none;
   -webkit-user-drag: none;
@@ -4111,6 +4114,7 @@ body.video-maker-open {
       lightboxComparePercent: 100,
       generateCount: 10,
       dragIndex: -1,
+      dragOverIndex: -1,
       dragSource: null,
       variantSelections: {},
       objectPreviewUrl: "",
@@ -4142,8 +4146,11 @@ body.video-maker-open {
       currentArchiveId: "",
       preparedSourceKey: "",
       preparedSourceDataUrl: "",
+      preparedSourceWidth: 0,
+      preparedSourceHeight: 0,
       preparedSourcePromise: null,
-      dragIndex: -1
+      dragIndex: -1,
+      dragOverIndex: -1
     };
 
     const defaultFaceSwapPromptVersion = 3;
@@ -4816,6 +4823,8 @@ body.video-maker-open {
     function clearEditPreparedSourceCache() {
       editState.preparedSourceKey = "";
       editState.preparedSourceDataUrl = "";
+      editState.preparedSourceWidth = 0;
+      editState.preparedSourceHeight = 0;
       editState.preparedSourcePromise = null;
     }
 
@@ -6327,7 +6336,7 @@ body.video-maker-open {
       return Boolean(
         isLightboxCompareMode() &&
         item &&
-        editState.source &&
+        editState.preparedSourceDataUrl &&
         item.id === editState.currentArchiveId
       );
     }
@@ -6958,14 +6967,14 @@ body.video-maker-open {
       }
       if (canShowSliderCompareForItem(item)) {
         const imageUrl = getEditArchiveImageUrl(item);
-        if (!imageUrl || !editState.source) {
+        if (!imageUrl || !editState.preparedSourceDataUrl) {
           return;
         }
         hydrateEditArchiveEntry(item);
         setLightboxCompareMode(true);
         resetLightboxZoom();
         lightboxImage.src = addCacheBuster(imageUrl);
-        lightboxCompareOverlay.src = addCacheBuster(editState.source);
+        lightboxCompareOverlay.src = editState.preparedSourceDataUrl;
         lightboxImage.alt = `Full size slider comparison ${state.lightboxIndex + 1}`;
         lightboxCompareOverlay.alt = "Original source preview";
         lightboxImage.onload = () => {
@@ -7434,44 +7443,179 @@ body.video-maker-open {
       }, { passive: false });
     }
 
+    let iosPromptHapticLabel = null;
+
+    function getIosPromptHapticLabel() {
+      if (iosPromptHapticLabel?.isConnected) {
+        return iosPromptHapticLabel;
+      }
+      const switchId = "prompt-reorder-haptic-switch";
+      const hapticSwitch = document.createElement("input");
+      hapticSwitch.type = "checkbox";
+      hapticSwitch.id = switchId;
+      hapticSwitch.setAttribute("switch", "");
+      hapticSwitch.setAttribute("aria-hidden", "true");
+      hapticSwitch.tabIndex = -1;
+      hapticSwitch.style.cssText = "position:fixed;width:1px;height:1px;left:-10px;bottom:-10px;opacity:0;pointer-events:none;";
+
+      iosPromptHapticLabel = document.createElement("label");
+      iosPromptHapticLabel.htmlFor = switchId;
+      iosPromptHapticLabel.setAttribute("aria-hidden", "true");
+      iosPromptHapticLabel.style.cssText = "position:fixed;width:1px;height:1px;left:-10px;bottom:-10px;opacity:0;pointer-events:none;";
+      document.body.append(hapticSwitch, iosPromptHapticLabel);
+      return iosPromptHapticLabel;
+    }
+
+    function triggerPromptReorderHaptic() {
+      if (typeof navigator.vibrate === "function" && navigator.vibrate(8)) {
+        return;
+      }
+      if (/iPhone|iPod/.test(navigator.userAgent)) {
+        getIosPromptHapticLabel().click();
+      }
+    }
+
+    function bindPromptReorder({ row, dragHandle, list, dragState, initialIndex, move }) {
+      const clearDropTargets = () => {
+        list.querySelectorAll(".prompt-row.drop-target").forEach((element) => {
+          element.classList.remove("drop-target");
+        });
+      };
+
+      const markCrossedRow = (targetRow, clientY) => {
+        const targetIndex = Number(targetRow?.dataset.index);
+        if (!Number.isInteger(targetIndex) || dragState.dragIndex < 0) {
+          return false;
+        }
+        if (targetIndex === dragState.dragIndex) {
+          clearDropTargets();
+          dragState.dragOverIndex = targetIndex;
+          return true;
+        }
+        const targetBounds = targetRow.getBoundingClientRect();
+        const targetMidpoint = targetBounds.top + (targetBounds.height / 2);
+        const hasPassedTarget = targetIndex > dragState.dragIndex
+          ? clientY >= targetMidpoint
+          : clientY <= targetMidpoint;
+        if (!hasPassedTarget) {
+          return false;
+        }
+        clearDropTargets();
+        targetRow.classList.add("drop-target");
+        if (dragState.dragOverIndex !== targetIndex) {
+          dragState.dragOverIndex = targetIndex;
+          triggerPromptReorderHaptic();
+        }
+        return true;
+      };
+
+      row.addEventListener("dragover", (event) => {
+        event.preventDefault();
+        markCrossedRow(row, event.clientY);
+      });
+      row.addEventListener("drop", (event) => {
+        event.preventDefault();
+        const fromIndex = dragState.dragIndex;
+        const toIndex = dragState.dragOverIndex;
+        dragState.dragIndex = -1;
+        dragState.dragOverIndex = -1;
+        clearDropTargets();
+        move(fromIndex, toIndex);
+      });
+
+      dragHandle.draggable = !dragState.isGenerating && !window.matchMedia("(pointer: coarse)").matches;
+      dragHandle.addEventListener("dragstart", (event) => {
+        dragState.dragIndex = initialIndex;
+        dragState.dragOverIndex = initialIndex;
+        row.classList.add("dragging");
+        dragHandle.setAttribute("aria-grabbed", "true");
+        event.dataTransfer.effectAllowed = "move";
+        event.dataTransfer.setData("text/plain", String(initialIndex));
+      });
+      dragHandle.addEventListener("dragend", () => {
+        dragState.dragIndex = -1;
+        dragState.dragOverIndex = -1;
+        row.classList.remove("dragging");
+        dragHandle.setAttribute("aria-grabbed", "false");
+        clearDropTargets();
+      });
+
+      let touchPointerId = -1;
+      let touchFromIndex = -1;
+      let touchToIndex = -1;
+
+      dragHandle.addEventListener("pointerdown", (event) => {
+        if (event.pointerType === "mouse" || dragState.isGenerating) {
+          return;
+        }
+        event.preventDefault();
+        touchPointerId = event.pointerId;
+        touchFromIndex = Number(row.dataset.index);
+        touchToIndex = touchFromIndex;
+        dragState.dragIndex = touchFromIndex;
+        dragState.dragOverIndex = touchFromIndex;
+        row.classList.add("dragging");
+        dragHandle.setAttribute("aria-grabbed", "true");
+        dragHandle.setPointerCapture?.(event.pointerId);
+      });
+
+      dragHandle.addEventListener("pointermove", (event) => {
+        if (event.pointerId !== touchPointerId) {
+          return;
+        }
+        event.preventDefault();
+        const targetRow = document.elementFromPoint(event.clientX, event.clientY)?.closest(".prompt-row");
+        if (!targetRow || targetRow.parentElement !== list) {
+          return;
+        }
+        const targetIndex = Number(targetRow.dataset.index);
+        if (Number.isInteger(targetIndex) && markCrossedRow(targetRow, event.clientY)) {
+          touchToIndex = targetIndex;
+        }
+      });
+
+      const finishTouchReorder = (event, shouldMove) => {
+        if (event.pointerId !== touchPointerId) {
+          return;
+        }
+        if (dragHandle.hasPointerCapture?.(event.pointerId)) {
+          dragHandle.releasePointerCapture(event.pointerId);
+        }
+        touchPointerId = -1;
+        dragState.dragIndex = -1;
+        dragState.dragOverIndex = -1;
+        row.classList.remove("dragging");
+        dragHandle.setAttribute("aria-grabbed", "false");
+        clearDropTargets();
+        if (shouldMove) {
+          move(touchFromIndex, touchToIndex);
+        }
+      };
+
+      dragHandle.addEventListener("pointerup", (event) => finishTouchReorder(event, true));
+      dragHandle.addEventListener("pointercancel", (event) => finishTouchReorder(event, false));
+    }
+
     function renderPrompts() {
       promptList.innerHTML = "";
       state.prompts.forEach((prompt, index) => {
         const row = document.createElement("div");
         row.className = "prompt-row";
         row.dataset.index = String(index);
-        row.addEventListener("dragover", (event) => {
-          event.preventDefault();
-          if (state.dragIndex >= 0 && state.dragIndex !== index) {
-            row.classList.add("drop-target");
-          }
-        });
-        row.addEventListener("dragleave", () => {
-          row.classList.remove("drop-target");
-        });
-        row.addEventListener("drop", (event) => {
-          event.preventDefault();
-          row.classList.remove("drop-target");
-          movePrompt(state.dragIndex, index);
-        });
 
         const dragHandle = document.createElement("div");
         dragHandle.className = "drag-handle";
         dragHandle.innerHTML = '<span class="drag-grip" aria-hidden="true">⠿</span><span class="drag-handle-label">Drag to reorder</span>';
-        dragHandle.draggable = !state.isGenerating;
         dragHandle.title = "Drag to reorder prompt";
-        dragHandle.addEventListener("dragstart", (event) => {
-          state.dragIndex = index;
-          row.classList.add("dragging");
-          event.dataTransfer.effectAllowed = "move";
-          event.dataTransfer.setData("text/plain", String(index));
-        });
-        dragHandle.addEventListener("dragend", () => {
-          state.dragIndex = -1;
-          row.classList.remove("dragging");
-          document.querySelectorAll(".prompt-row.drop-target").forEach((element) => {
-            element.classList.remove("drop-target");
-          });
+        dragHandle.setAttribute("aria-label", `Drag prompt ${index + 1} to reorder`);
+        dragHandle.setAttribute("aria-grabbed", "false");
+        bindPromptReorder({
+          row,
+          dragHandle,
+          list: promptList,
+          dragState: state,
+          initialIndex: index,
+          move: movePrompt
         });
 
         const textarea = document.createElement("textarea");
@@ -8042,38 +8186,20 @@ body.video-maker-open {
         const row = document.createElement("div");
         row.className = "prompt-row";
         row.dataset.index = String(index);
-        row.addEventListener("dragover", (event) => {
-          event.preventDefault();
-          if (editState.dragIndex >= 0 && editState.dragIndex !== index) {
-            row.classList.add("drop-target");
-          }
-        });
-        row.addEventListener("dragleave", () => {
-          row.classList.remove("drop-target");
-        });
-        row.addEventListener("drop", (event) => {
-          event.preventDefault();
-          row.classList.remove("drop-target");
-          moveEditPrompt(editState.dragIndex, index);
-        });
 
         const dragHandle = document.createElement("div");
         dragHandle.className = "drag-handle";
         dragHandle.innerHTML = '<span class="drag-grip" aria-hidden="true">⠿</span><span class="drag-handle-label">Drag to reorder</span>';
-        dragHandle.draggable = !editState.isGenerating;
         dragHandle.title = "Drag to reorder prompt";
-        dragHandle.addEventListener("dragstart", (event) => {
-          editState.dragIndex = index;
-          row.classList.add("dragging");
-          event.dataTransfer.effectAllowed = "move";
-          event.dataTransfer.setData("text/plain", String(index));
-        });
-        dragHandle.addEventListener("dragend", () => {
-          editState.dragIndex = -1;
-          row.classList.remove("dragging");
-          editPromptList.querySelectorAll(".prompt-row.drop-target").forEach((element) => {
-            element.classList.remove("drop-target");
-          });
+        dragHandle.setAttribute("aria-label", `Drag fallback prompt ${index + 1} to reorder`);
+        dragHandle.setAttribute("aria-grabbed", "false");
+        bindPromptReorder({
+          row,
+          dragHandle,
+          list: editPromptList,
+          dragState: editState,
+          initialIndex: index,
+          move: moveEditPrompt
         });
 
         const textarea = document.createElement("textarea");
@@ -8311,6 +8437,9 @@ body.video-maker-open {
     function renderEditCompareStage() {
       const currentEntry = getCurrentEditArchiveEntry();
       const generatedUrl = getEditArchiveImageUrl(currentEntry);
+      const comparisonSource = editState.preparedSourceDataUrl;
+      const comparisonWidth = editState.preparedSourceWidth;
+      const comparisonHeight = editState.preparedSourceHeight;
       if (!editState.source) {
         editCompareStage.classList.add("empty");
         editCompareStage.dataset.emptyMessage = "Paste a source image, then run a slider edit.";
@@ -8321,7 +8450,7 @@ body.video-maker-open {
         refreshEditButtons();
         return;
       }
-      if (!generatedUrl) {
+      if (!generatedUrl || !comparisonSource || !comparisonWidth || !comparisonHeight) {
         editCompareStage.classList.add("empty");
         editCompareStage.dataset.emptyMessage = "Run a slider edit to compare the latest result against the original.";
         editCompareBaseImage.removeAttribute("src");
@@ -8337,12 +8466,10 @@ body.video-maker-open {
       if (editCompareBaseImage.src !== generatedUrl) {
         editCompareBaseImage.src = generatedUrl;
       }
-      if (editCompareOverlayImage.src !== editState.source) {
-        editCompareOverlayImage.src = editState.source;
+      if (editCompareOverlayImage.src !== comparisonSource) {
+        editCompareOverlayImage.src = comparisonSource;
       }
-      editCompareStage.style.aspectRatio = editState.sourceWidth && editState.sourceHeight
-        ? `${editState.sourceWidth} / ${editState.sourceHeight}`
-        : "";
+      editCompareStage.style.aspectRatio = `${comparisonWidth} / ${comparisonHeight}`;
       updateEditCompareReveal();
       setEditStageNote("Use the slider to compare original and edited image");
       refreshEditButtons();
@@ -8395,17 +8522,57 @@ body.video-maker-open {
       setStatus("Slider edit source cleared.");
     }
 
+    function getSliderEditTargetDimensions(sourceWidth, sourceHeight) {
+      const targetPixels = 921600;
+      const outputScale = Math.sqrt(targetPixels / (sourceWidth * sourceHeight));
+      const roundDimension = (value) => Math.max(256, Math.min(2048, Math.round(value / 32) * 32));
+      return {
+        width: roundDimension(sourceWidth * outputScale),
+        height: roundDimension(sourceHeight * outputScale)
+      };
+    }
+
+    async function loadEditNormalizationImage(source) {
+      if (!isHttpUrl(source)) {
+        return {
+          image: await loadImageElement(source),
+          release: () => {}
+        };
+      }
+
+      let response;
+      try {
+        response = await fetch(source);
+      } catch (_error) {
+        throw new Error("The remote image could not be normalized because its server does not allow browser image downloads. Download or paste the image instead.");
+      }
+      if (!response.ok) {
+        throw new Error(`The remote image could not be downloaded for normalization (${response.status}).`);
+      }
+      const objectUrl = URL.createObjectURL(await response.blob());
+      try {
+        return {
+          image: await loadImageElement(objectUrl),
+          release: () => URL.revokeObjectURL(objectUrl)
+        };
+      } catch (error) {
+        URL.revokeObjectURL(objectUrl);
+        throw error;
+      }
+    }
+
     async function buildPreparedEditSource() {
       const source = editState.source;
       if (!source) {
         throw new Error("Paste a source image first.");
       }
-      if (isHttpUrl(source)) {
-        return source;
-      }
       if (editState.preparedSourceKey === source) {
-        if (editState.preparedSourceDataUrl) {
-          return editState.preparedSourceDataUrl;
+        if (editState.preparedSourceDataUrl && editState.preparedSourceWidth && editState.preparedSourceHeight) {
+          return {
+            dataUrl: editState.preparedSourceDataUrl,
+            width: editState.preparedSourceWidth,
+            height: editState.preparedSourceHeight
+          };
         }
         if (editState.preparedSourcePromise) {
           return editState.preparedSourcePromise;
@@ -8414,33 +8581,39 @@ body.video-maker-open {
 
       editState.preparedSourceKey = source;
       editState.preparedSourcePromise = (async () => {
-        const image = await loadImageElement(source);
-        const sourceWidth = image.naturalWidth || image.width;
-        const sourceHeight = image.naturalHeight || image.height;
-        if (!sourceWidth || !sourceHeight) {
-          throw new Error("Could not read the source image dimensions.");
+        const loaded = await loadEditNormalizationImage(source);
+        try {
+          const image = loaded.image;
+          const sourceWidth = image.naturalWidth || image.width;
+          const sourceHeight = image.naturalHeight || image.height;
+          if (!sourceWidth || !sourceHeight) {
+            throw new Error("Could not read the source image dimensions.");
+          }
+          const target = getSliderEditTargetDimensions(sourceWidth, sourceHeight);
+          const canvas = document.createElement("canvas");
+          canvas.width = target.width;
+          canvas.height = target.height;
+          const context = canvas.getContext("2d");
+          if (!context) {
+            throw new Error("Could not prepare the source image.");
+          }
+          context.drawImage(image, 0, 0, target.width, target.height);
+          return {
+            dataUrl: canvas.toDataURL("image/jpeg", 0.92),
+            width: target.width,
+            height: target.height
+          };
+        } finally {
+          loaded.release();
         }
-        const longestSide = Math.max(sourceWidth, sourceHeight);
-        const scaleDown = longestSide > preparedSourceMaxLongSide
-          ? (preparedSourceMaxLongSide / longestSide)
-          : 1;
-        const finalWidth = Math.max(1, Math.round(sourceWidth * scaleDown));
-        const finalHeight = Math.max(1, Math.round(sourceHeight * scaleDown));
-        const canvas = document.createElement("canvas");
-        canvas.width = finalWidth;
-        canvas.height = finalHeight;
-        const context = canvas.getContext("2d");
-        if (!context) {
-          throw new Error("Could not prepare the source image.");
-        }
-        context.drawImage(image, 0, 0, finalWidth, finalHeight);
-        return canvas.toDataURL("image/jpeg", 0.92);
       })();
 
       try {
         const preparedSource = await editState.preparedSourcePromise;
         if (editState.preparedSourceKey === source) {
-          editState.preparedSourceDataUrl = preparedSource;
+          editState.preparedSourceDataUrl = preparedSource.dataUrl;
+          editState.preparedSourceWidth = preparedSource.width;
+          editState.preparedSourceHeight = preparedSource.height;
           editState.preparedSourcePromise = null;
         }
         return preparedSource;
@@ -8542,19 +8715,12 @@ body.video-maker-open {
 
     async function requestSliderEdit(prompt) {
       const preparedSource = await buildPreparedEditSource();
-      const sourceWidth = editState.sourceWidth || 1024;
-      const sourceHeight = editState.sourceHeight || 1024;
-      const targetPixels = 921600;
-      const outputScale = Math.sqrt(targetPixels / (sourceWidth * sourceHeight));
-      const roundDimension = (value) => Math.max(256, Math.min(2048, Math.round(value / 32) * 32));
-      const width = roundDimension(sourceWidth * outputScale);
-      const height = roundDimension(sourceHeight * outputScale);
       return {
         edited_url: await requestQwenImage({
-          source: preparedSource,
+          source: preparedSource.dataUrl,
           prompt: String(prompt || "").trim(),
-          width,
-          height
+          width: preparedSource.width,
+          height: preparedSource.height
         }),
         is_moderated: false
       };
