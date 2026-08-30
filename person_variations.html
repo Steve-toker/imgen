@@ -1788,6 +1788,13 @@ body.solar-curator .stage-note {
     0 14px 26px rgba(172, 52, 22, 0.08);
 }
 
+body.solar-curator .stage-note.error {
+  background: rgba(153, 27, 27, 0.94);
+  color: #fff;
+  box-shadow: 0 14px 30px rgba(153, 27, 27, 0.28);
+  overflow-wrap: anywhere;
+}
+
 body.solar-curator .drag-handle,
 body.solar-curator .prompt-badge {
   border: none;
@@ -2202,6 +2209,19 @@ body.solar-curator.person-variations-page .empty-state {
   background:
     radial-gradient(circle at top left, rgba(240, 101, 67, 0.08), transparent 34%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(246, 239, 230, 0.98));
+}
+
+.edit-compare-stage .stage-note {
+  position: absolute;
+  left: 1rem;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 4;
+  padding: 0.75rem 0.95rem;
+  border-radius: 1rem;
+  font-size: 0.84rem;
+  line-height: 1.4;
+  text-align: center;
 }
 
 .edit-compare-stage.empty::before {
@@ -2983,7 +3003,7 @@ body.video-maker-open {
   <div class="wrap">
     <section class="hero">
       <h1>Qwen Character Lab</h1>
-      <p>Paste a photo of one person, adjust the prompts, then generate identity-preserving variations with Qwen-Image-Edit-2511 and the Cinematic-FlatLog LoRA.</p>
+      <p>Paste a photo of one person, adjust the prompts, then generate identity-preserving variations through your private Qwen Edit Studio.</p>
       <p class="status" id="status">Paste, upload, or choose a saved person source to start generating.</p>
       <div class="mode-switch" role="tablist" aria-label="Workspace mode">
         <button id="variation-mode-btn" class="ghost-btn mode-tab" type="button" role="tab" aria-selected="true" aria-controls="variation-layout">Qwen Variations</button>
@@ -3060,7 +3080,7 @@ body.video-maker-open {
 
           <form id="token-form" class="token-panel">
             <label class="field" for="token-input">
-              <span class="field-label">Hugging Face token for Qwen requests (optional)</span>
+              <span class="field-label">Hugging Face token for your private Qwen Space (required)</span>
               <input id="token-input" type="password" placeholder="hf_..." autocomplete="off" spellcheck="false" />
             </label>
             <div class="controls">
@@ -3073,8 +3093,8 @@ body.video-maker-open {
           </form>
 
           <div class="token-panel">
-            <strong>Qwen-Image-Edit-2511 + Cinematic-FlatLog</strong>
-            <span class="field-label">Runs directly from this browser through the public Hugging Face Space. A token is optional.</span>
+            <strong>Private Qwen Edit Studio</strong>
+            <span class="field-label">Runs directly from this browser through your private Hugging Face Space.</span>
           </div>
 
           <div id="prompt-editor" class="prompt-editor">
@@ -3201,7 +3221,7 @@ body.video-maker-open {
 
           <form class="token-panel">
             <label class="field" for="edit-token-input">
-              <span class="field-label">Hugging Face token for Qwen requests (optional)</span>
+              <span class="field-label">Hugging Face token for your private Qwen Space (required)</span>
               <input id="edit-token-input" type="password" placeholder="hf_..." autocomplete="off" spellcheck="false" />
             </label>
             <div class="controls">
@@ -3214,8 +3234,8 @@ body.video-maker-open {
           </form>
 
           <div class="token-panel">
-            <strong>Qwen slider editing</strong>
-            <span class="field-label">Runs directly from this browser through the public Qwen Space with Cinematic-FlatLog.</span>
+            <strong>Private Qwen Edit Studio</strong>
+            <span class="field-label">Slider edits use the same private Space as every other image edit.</span>
           </div>
 
           <div id="edit-prompt-editor" class="prompt-editor">
@@ -3259,7 +3279,7 @@ body.video-maker-open {
               <img id="edit-compare-base-image" class="edit-compare-base" alt="Generated slider edit preview" />
               <img id="edit-compare-overlay-image" class="edit-compare-overlay" alt="Original source preview" />
               <div id="edit-compare-handle" class="edit-compare-handle" aria-hidden="true"></div>
-              <div id="edit-stage-note" class="stage-note">Waiting for a source image</div>
+              <div id="edit-stage-note" class="stage-note" role="alert" aria-live="assertive">Waiting for a source image</div>
             </div>
             <label class="field edit-compare-controls" for="edit-compare-range">
               <span>Reveal edited image</span>
@@ -3382,7 +3402,7 @@ body.video-maker-open {
 
           <form class="token-panel">
             <label class="field" for="swap-token-input">
-              <span class="field-label">Hugging Face token (optional)</span>
+              <span class="field-label">Hugging Face token for your private Qwen Space (required)</span>
               <input id="swap-token-input" type="password" placeholder="hf_..." autocomplete="off" spellcheck="false" />
             </label>
             <div class="controls">
@@ -3395,8 +3415,8 @@ body.video-maker-open {
           </form>
 
           <div class="token-panel">
-            <strong>Qwen-Image-Edit-2511 + Cinematic-FlatLog</strong>
-            <span class="field-label">Uses both complete images and the face-swap prompt through the public Qwen Hugging Face Space.</span>
+            <strong>Private Qwen Edit Studio</strong>
+            <span class="field-label">Uses both complete images and the face-swap prompt through your private Hugging Face Space.</span>
           </div>
 
           <label class="swap-field" hidden>
@@ -3522,22 +3542,22 @@ body.video-maker-open {
     const qwenGradioLibraryPromise = import("https://cdn.jsdelivr.net/npm/buffer@6.0.3/+esm")
       .then(({ Buffer }) => {
         globalThis.Buffer = Buffer;
-        return import("https://cdn.jsdelivr.net/npm/@gradio/client@2.3.1/dist/index.min.js");
+        return import("https://cdn.jsdelivr.net/npm/@gradio/client@2.5.1/dist/index.min.js");
       });
-    const qwenSpaceId = "prithivMLmods/Qwen-Image-Edit-2511-LoRAs-Fast";
-    const qwenLoraAdapter = "Cinematic-FlatLog";
+    const qwenSpaceId = "AdamGustavsson/Pro-Realism-Edit-Studio-Private";
     const qwenOutputColorCorrection = {
       saturation: 1.3,
       contrast: 1.15,
       brightness: 0.92
     };
-    const ltxVideoSpaceId = "nsfwalex/LTX2.3-Studio";
+    const ltxVideoSpaceId = "techfreakworm/LTX2.3-Studio";
     const defaultVideoPrompt = "Continue this scene. ensure identity is kept";
     let qwenClientPromise = null;
     let qwenClientToken = null;
+    const temporaryQwenObjectUrls = new Set();
     let ltxVideoClientPromise = null;
     let ltxVideoClientToken = null;
-    let ltxVideoSpaceHost = "https://nsfwalex-ltx2-3-studio.hf.space";
+    let ltxVideoSpaceHost = "https://techfreakworm-ltx2-3-studio.hf.space";
     let ltxVideoPlaybackObjectUrl = "";
 
     function normalizeHuggingFaceToken(value) {
@@ -3548,57 +3568,15 @@ body.video-maker-open {
         .trim();
     }
 
-    async function resolveQwenSpaceHost(token) {
-      const metadataUrl = `https://huggingface.co/api/spaces/${qwenSpaceId}/host`;
-      let response;
-      try {
-        response = await fetch(metadataUrl, {
-          headers: token ? { Authorization: `Bearer ${token}` } : {}
-        });
-      } catch (error) {
-        throw new Error(`Could not contact Hugging Face to load the Qwen Space metadata. ${getQwenErrorMessage(error)}`);
-      }
-
-      if (response.status === 401 || response.status === 403) {
-        throw new Error(token
-          ? "Hugging Face rejected the token. It may be expired or invalid. Clear it to use the public Space anonymously, or paste a valid token."
-          : "Hugging Face rejected the anonymous request to the public Qwen Space.");
-      }
-      if (response.status === 404) {
-        throw new Error(`The Qwen Space ${qwenSpaceId} was not found. It may have been renamed, deleted, or made unavailable.`);
-      }
-      if (!response.ok) {
-        throw new Error(`Hugging Face could not load the Qwen Space metadata (HTTP ${response.status}).`);
-      }
-
-      const metadata = await response.json();
-      if (typeof metadata?.host !== "string" || !metadata.host.trim()) {
-        throw new Error("Hugging Face returned Qwen Space metadata without a valid host.");
-      }
-      return metadata.host;
-    }
-
-    function isTransientQwenMetadataError(error) {
-      const message = getQwenErrorMessage(error);
-      return /space metadata could not be loaded|body\s*stream\s*buffer was aborted|failed to fetch|network(?:error)?|load failed|temporar(?:y|ily) unavailable|http 5\d{2}/i.test(message);
-    }
-
     async function connectQwenClient(token) {
-      const { Client } = await qwenGradioLibraryPromise;
-      let lastError;
-      for (let attempt = 0; attempt < 3; attempt += 1) {
-        try {
-          const host = await resolveQwenSpaceHost(token);
-          return await Client.connect(host, token ? { token } : {});
-        } catch (error) {
-          lastError = error;
-          if (!isTransientQwenMetadataError(error) || attempt === 2) {
-            throw error;
-          }
-          await new Promise((resolve) => window.setTimeout(resolve, 600 * (attempt + 1)));
-        }
+      if (!token) {
+        throw new Error("A Hugging Face token is required for your private Qwen Space.");
       }
-      throw lastError;
+      const { Client } = await qwenGradioLibraryPromise;
+      return Client.connect(qwenSpaceId, {
+        token,
+        record_history: false
+      });
     }
 
     async function getQwenClient() {
@@ -3606,8 +3584,7 @@ body.video-maker-open {
       if (!qwenClientPromise || token !== qwenClientToken) {
         qwenClientToken = token;
         const connectionPromise = connectQwenClient(token).catch((error) => {
-          // A rejected cached promise would make every later generation fail
-          // instantly even after a transient Hugging Face metadata outage.
+          // Never retain a failed connection; the next explicit run may retry.
           if (qwenClientPromise === connectionPromise) {
             qwenClientPromise = null;
           }
@@ -3631,6 +3608,9 @@ body.video-maker-open {
 
     async function prepareGradioFile(source) {
       const { handle_file } = await qwenGradioLibraryPromise;
+      if (source instanceof Blob) {
+        return handle_file(source);
+      }
       if (isHttpUrl(source)) {
         return handle_file(source);
       }
@@ -3641,13 +3621,34 @@ body.video-maker-open {
       return handle_file(await response.blob());
     }
 
-    function extractQwenImageDataUrl(result) {
-      const payload = result?.data?.[0];
-      const imageDataUrl = payload?.image || (typeof payload === "string" ? payload : "");
-      if (!/^data:image\//i.test(imageDataUrl)) {
-        throw new Error("The Qwen Space did not return an image.");
+    async function extractQwenImageDataUrl(result) {
+      const outputFile = result?.data?.[0]?.[0]?.image;
+      const outputUrl = outputFile?.url;
+      if (typeof outputUrl !== "string" || !/^https?:\/\//i.test(outputUrl)) {
+        throw new Error("The private Qwen Space returned an unsupported image response.");
       }
-      return imageDataUrl;
+      const token = getSharedTokenValue();
+      const controller = new AbortController();
+      const timeoutId = window.setTimeout(() => controller.abort(), 30000);
+      try {
+        const response = await fetch(outputUrl, {
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+          signal: controller.signal
+        });
+        if (!response.ok) {
+          throw new Error(`Could not download the generated image (HTTP ${response.status}).`);
+        }
+        const objectUrl = URL.createObjectURL(await response.blob());
+        temporaryQwenObjectUrls.add(objectUrl);
+        return objectUrl;
+      } catch (error) {
+        if (error?.name === "AbortError") {
+          throw new Error("The generated image download did not finish within 30 seconds.");
+        }
+        throw error;
+      } finally {
+        window.clearTimeout(timeoutId);
+      }
     }
 
     async function correctQwenOutputColors(imageDataUrl) {
@@ -3713,32 +3714,128 @@ body.video-maker-open {
       if (isExplicitQuotaError) {
         return new Error("Hugging Face ZeroGPU quota is exhausted for this token. Wait for the reset, add credits, or use a token with available quota.");
       }
-      if (isTransientQwenMetadataError(error)) {
-        return new Error("Hugging Face temporarily failed to load the Space metadata after three attempts. The Space may still be running; wait a moment and try the generation again.");
+      if (/\b429\b|too many requests|rate.?limit/i.test(message)) {
+        return new Error("Hugging Face is rate-limiting requests (HTTP 429), so generation never started. Wait for the limit to reset and try again.");
+      }
+      if (/failed to fetch|connection errored out|could not resolve app config/i.test(message)) {
+        return new Error("Hugging Face rejected the connection before generation started. The Space endpoint may be rate-limited; wait and try again.");
       }
       return new Error(message);
     }
 
-    async function requestQwenImage({ source, secondSource = null, prompt, width, height }) {
+    async function waitWithTimeout(promise, timeoutMs, timeoutMessage) {
+      let timeoutId;
       try {
-        const app = await getQwenClient();
-        const images = [await prepareQwenImageDataUrl(source)];
-        if (secondSource) {
-          images.push(await prepareQwenImageDataUrl(secondSource));
+        return await Promise.race([
+          Promise.resolve(promise),
+          new Promise((_, reject) => {
+            timeoutId = window.setTimeout(() => reject(new Error(timeoutMessage)), timeoutMs);
+          })
+        ]);
+      } finally {
+        window.clearTimeout(timeoutId);
+      }
+    }
+
+    async function submitQwenPrediction(app, payload, onStatus) {
+      const submission = app.submit("/infer", payload);
+      let completed = false;
+      let receivedEvent = false;
+      let timeoutId;
+      let acknowledgementTimeoutId;
+      const timeout = new Promise((_, reject) => {
+        timeoutId = window.setTimeout(() => {
+          reject(new Error("Hugging Face did not finish the edit within 2 minutes. The request may be queued or rate-limited."));
+        }, 120000);
+      });
+      const acknowledgementTimeout = new Promise((_, reject) => {
+        acknowledgementTimeoutId = window.setTimeout(() => {
+          reject(new Error("Hugging Face did not acknowledge the upload within 20 seconds. The Space endpoint is likely still rate-limited."));
+        }, 20000);
+      });
+
+      try {
+        while (true) {
+          const pendingOperations = [submission.next(), timeout];
+          if (!receivedEvent) {
+            pendingOperations.push(acknowledgementTimeout);
+          }
+          const next = await Promise.race(pendingOperations);
+          if (!receivedEvent) {
+            receivedEvent = true;
+            window.clearTimeout(acknowledgementTimeoutId);
+          }
+          if (next.done) {
+            throw new Error("Hugging Face closed the edit request without returning an image.");
+          }
+          const event = next.value;
+          if (event?.type === "status") {
+            if (event.stage === "error" || event.broken || event.success === false) {
+              const detail = typeof event.message === "string"
+                ? event.message
+                : event.original_msg || event.code || "Hugging Face reported that the edit failed.";
+              throw new Error(detail);
+            }
+            if (event.stage === "pending") {
+              const queueDetail = Number.isFinite(event.position)
+                ? ` — queue position ${event.position + 1}`
+                : "";
+              onStatus?.(`Waiting in the Hugging Face queue${queueDetail}`);
+            } else if (event.stage === "generating" || event.stage === "streaming") {
+              onStatus?.("Qwen is generating the edit");
+            }
+            continue;
+          }
+          if (event?.type === "data") {
+            completed = true;
+            return event;
+          }
         }
-        const result = await app.predict("/edit_image", {
-          images_b64_json: JSON.stringify(images),
+      } finally {
+        window.clearTimeout(timeoutId);
+        window.clearTimeout(acknowledgementTimeoutId);
+        if (!completed) {
+          try {
+            Promise.resolve(submission.cancel()).catch(() => {});
+          } catch (_error) {
+            // The stream may have failed before Hugging Face assigned an event id.
+          }
+        }
+        try {
+          submission.close_stream();
+        } catch (_error) {
+          // The stream may already be closed.
+        }
+      }
+    }
+
+    async function requestQwenImage({ source, secondSource = null, prompt, width, height, onStatus = null }) {
+      try {
+        onStatus?.("Connecting to Hugging Face");
+        const app = await waitWithTimeout(
+          getQwenClient(),
+          30000,
+          "Hugging Face did not accept the connection within 30 seconds. The Space endpoint may still be rate-limited."
+        );
+        const uploadSize = source instanceof Blob
+          ? ` (${(source.size / (1024 * 1024)).toFixed(1)} MB)`
+          : "";
+        onStatus?.(`Uploading image${uploadSize} and waiting for Qwen`);
+        const result = await submitQwenPrediction(app, {
+          image_1: await prepareGradioFile(source),
+          image_2: secondSource ? await prepareGradioFile(secondSource) : null,
           prompt,
-          lora_adapter: qwenLoraAdapter,
           seed: 0,
           randomize_seed: true,
-          guidance_scale: 1,
-          steps: 4
-        });
-        return await correctQwenOutputColors(extractQwenImageDataUrl(result));
+          true_guidance_scale: 1,
+          num_inference_steps: 4,
+          height: Math.max(256, Math.min(2048, Math.round((height || 1280) / 8) * 8)),
+          width: Math.max(256, Math.min(2048, Math.round((width || 720) / 8) * 8))
+        }, onStatus);
+        onStatus?.("Downloading generated image");
+        return await extractQwenImageDataUrl(result);
       } catch (error) {
         console.error("Qwen request failed with the original Hugging Face error:", error);
-        qwenClientPromise = null;
         throw friendlyQwenError(error);
       }
     }
@@ -3764,8 +3861,8 @@ body.video-maker-open {
         ltxVideoClientToken = token;
         const connectionPromise = (async () => {
           const { Client } = await qwenGradioLibraryPromise;
-          const host = await resolveLtxVideoSpaceHost(token);
-          return Client.connect(host, token
+          await resolveLtxVideoSpaceHost(token);
+          return Client.connect(ltxVideoSpaceId, token
             ? { token, events: ["data", "status"] }
             : { events: ["data", "status"] });
         })().catch((error) => {
@@ -4170,6 +4267,8 @@ body.video-maker-open {
     const editState = {
       source: "",
       sourcePreviewUrl: "",
+      sourceObjectUrl: "",
+      sourceBlob: null,
       sourceLabel: "",
       sourceWidth: 0,
       sourceHeight: 0,
@@ -4182,6 +4281,8 @@ body.video-maker-open {
       currentArchiveId: "",
       preparedSourceKey: "",
       preparedSourceDataUrl: "",
+      preparedSourceObjectUrl: "",
+      preparedSourceUploadBlob: null,
       preparedSourceWidth: 0,
       preparedSourceHeight: 0,
       preparedSourcePromise: null,
@@ -4857,8 +4958,13 @@ body.video-maker-open {
     }
 
     function clearEditPreparedSourceCache() {
+      if (editState.preparedSourceObjectUrl) {
+        URL.revokeObjectURL(editState.preparedSourceObjectUrl);
+      }
       editState.preparedSourceKey = "";
       editState.preparedSourceDataUrl = "";
+      editState.preparedSourceObjectUrl = "";
+      editState.preparedSourceUploadBlob = null;
       editState.preparedSourceWidth = 0;
       editState.preparedSourceHeight = 0;
       editState.preparedSourcePromise = null;
@@ -5464,20 +5570,28 @@ body.video-maker-open {
     }
 
     async function persistGeneratedVersion(imageUrl) {
-      const persistedRemoteUrl = isDataImageUrl(imageUrl) ? "" : imageUrl;
-      const response = await fetch(imageUrl);
-      if (!response.ok) {
-        throw new Error(`Could not download generated image (${response.status}).`);
+      const isTemporaryQwenUrl = temporaryQwenObjectUrls.has(imageUrl);
+      const persistedRemoteUrl = isDataImageUrl(imageUrl) || isTemporaryQwenUrl ? "" : imageUrl;
+      try {
+        const response = await fetch(imageUrl);
+        if (!response.ok) {
+          throw new Error(`Could not download generated image (${response.status}).`);
+        }
+        const blob = await response.blob();
+        const { id } = await storeBlobWithFifo(blob, persistedRemoteUrl);
+        const objectUrl = URL.createObjectURL(blob);
+        blobUrlCache.set(id, objectUrl);
+        return {
+          remoteUrl: persistedRemoteUrl,
+          blobKey: id,
+          createdAt: Date.now()
+        };
+      } finally {
+        if (isTemporaryQwenUrl) {
+          temporaryQwenObjectUrls.delete(imageUrl);
+          URL.revokeObjectURL(imageUrl);
+        }
       }
-      const blob = await response.blob();
-      const { id } = await storeBlobWithFifo(blob, persistedRemoteUrl);
-      const objectUrl = URL.createObjectURL(blob);
-      blobUrlCache.set(id, objectUrl);
-      return {
-        remoteUrl: persistedRemoteUrl,
-        blobKey: id,
-        createdAt: Date.now()
-      };
     }
 
     function isHttpUrl(value) {
@@ -8025,8 +8139,17 @@ body.video-maker-open {
       savePrompts();
     }
 
-    function setEditStageNote(message) {
+    function setEditStageNote(message, tone = "") {
       editStageNote.textContent = message;
+      editStageNote.classList.toggle("error", tone === "error");
+    }
+
+    function reportSliderError(error) {
+      const detail = getQwenErrorMessage(error) || "The slider edit failed without an error message.";
+      const message = `Slider edit failed: ${detail}`;
+      setEditStageNote(message, "error");
+      setStatus(message, "error");
+      console.error("Slider edit failed:", error);
     }
 
     function updateEditCompareReveal() {
@@ -8396,6 +8519,12 @@ body.video-maker-open {
 
     function renderEditArchive() {
       editArchiveGrid.innerHTML = "";
+      editResultsSummary.textContent = `${editState.archive.length} saved`;
+      editResultsEmpty.style.display = editState.archive.length ? "none" : "block";
+      if (!editState.archiveOpen) {
+        refreshEditButtons();
+        return;
+      }
       editState.archive.forEach((entry, index) => {
         hydrateEditArchiveEntry(entry);
         const card = document.createElement("article");
@@ -8406,6 +8535,8 @@ body.video-maker-open {
         const imageUrl = getEditArchiveImageUrl(entry);
         if (imageUrl) {
           const image = document.createElement("img");
+          image.loading = "lazy";
+          image.decoding = "async";
           image.src = addCacheBuster(imageUrl);
           image.alt = `Saved slider edit ${index + 1}`;
           image.addEventListener("error", () => {
@@ -8464,8 +8595,6 @@ body.video-maker-open {
         editArchiveGrid.appendChild(card);
       });
 
-      editResultsSummary.textContent = `${editState.archive.length} saved`;
-      editResultsEmpty.style.display = editState.archive.length ? "none" : "block";
       saveEditArchive();
       refreshEditButtons();
     }
@@ -8521,17 +8650,54 @@ body.video-maker-open {
       refreshEditButtons();
     }
 
-    async function setEditSource(source, label, previewUrl = source) {
+    function revokeEditSourceObjectUrl() {
+      if (editState.sourceObjectUrl) {
+        URL.revokeObjectURL(editState.sourceObjectUrl);
+        editState.sourceObjectUrl = "";
+      }
+    }
+
+    async function setEditSource(source, label, previewUrl = source, ownedObjectUrl = "", sourceBlob = null) {
       clearEditPreparedSourceCache();
-      const image = await loadImageElement(source);
+      if (editState.sourceObjectUrl && editState.sourceObjectUrl !== ownedObjectUrl) {
+        URL.revokeObjectURL(editState.sourceObjectUrl);
+      }
       editState.source = source;
       editState.sourcePreviewUrl = previewUrl;
+      editState.sourceObjectUrl = ownedObjectUrl;
+      editState.sourceBlob = sourceBlob;
       editState.sourceLabel = label;
-      editState.sourceWidth = image.naturalWidth || image.width || 0;
-      editState.sourceHeight = image.naturalHeight || image.height || 0;
+      editState.sourceWidth = 0;
+      editState.sourceHeight = 0;
       editState.currentArchiveId = "";
       editState.sliderPercent = 100;
       renderEditWorkspace();
+
+      if (ownedObjectUrl) {
+        const updateDimensions = () => {
+          if (editState.source !== source) {
+            return;
+          }
+          editState.sourceWidth = editSourceImage.naturalWidth || editSourceImage.width || 0;
+          editState.sourceHeight = editSourceImage.naturalHeight || editSourceImage.height || 0;
+          renderEditCompareStage();
+        };
+        if (editSourceImage.complete && editSourceImage.naturalWidth) {
+          updateDimensions();
+        } else {
+          editSourceImage.addEventListener("load", updateDimensions, { once: true });
+        }
+        await new Promise((resolve) => window.requestAnimationFrame(resolve));
+      } else {
+        const image = await loadImageElement(source);
+        if (editState.source !== source) {
+          return;
+        }
+        editState.sourceWidth = image.naturalWidth || image.width || 0;
+        editState.sourceHeight = image.naturalHeight || image.height || 0;
+        renderEditCompareStage();
+      }
+
       if (!getEnabledEditPromptIndices().length) {
         setStatus("Slider edit source ready. Enable at least one fallback prompt.");
         return;
@@ -8540,10 +8706,17 @@ body.video-maker-open {
       await runSliderEdit();
     }
 
+    async function setEditSourceBlob(blob, label) {
+      const objectUrl = URL.createObjectURL(blob);
+      await setEditSource(objectUrl, label, objectUrl, objectUrl, blob);
+    }
+
     async function clearEditSource() {
       clearEditPreparedSourceCache();
+      revokeEditSourceObjectUrl();
       editState.source = "";
       editState.sourcePreviewUrl = "";
+      editState.sourceBlob = null;
       editState.sourceLabel = "";
       editState.sourceWidth = 0;
       editState.sourceHeight = 0;
@@ -8564,10 +8737,88 @@ body.video-maker-open {
       };
     }
 
+    async function readImageBlobDimensions(blob) {
+      const bytes = new Uint8Array(await blob.slice(0, 1024 * 1024).arrayBuffer());
+      const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+      if (bytes.length >= 24
+        && bytes[0] === 0x89
+        && bytes[1] === 0x50
+        && bytes[2] === 0x4e
+        && bytes[3] === 0x47) {
+        return { width: view.getUint32(16), height: view.getUint32(20) };
+      }
+      if (bytes.length >= 10
+        && bytes[0] === 0x47
+        && bytes[1] === 0x49
+        && bytes[2] === 0x46) {
+        return { width: view.getUint16(6, true), height: view.getUint16(8, true) };
+      }
+      if (bytes.length >= 12 && bytes[0] === 0xff && bytes[1] === 0xd8) {
+        const startOfFrameMarkers = new Set([
+          0xc0, 0xc1, 0xc2, 0xc3, 0xc5, 0xc6, 0xc7,
+          0xc9, 0xca, 0xcb, 0xcd, 0xce, 0xcf
+        ]);
+        let offset = 2;
+        while (offset + 9 < bytes.length) {
+          if (bytes[offset] !== 0xff) {
+            offset += 1;
+            continue;
+          }
+          const marker = bytes[offset + 1];
+          if (marker === 0xd8 || marker === 0xd9) {
+            offset += 2;
+            continue;
+          }
+          const segmentLength = view.getUint16(offset + 2);
+          if (segmentLength < 2 || offset + 2 + segmentLength > bytes.length) {
+            break;
+          }
+          if (startOfFrameMarkers.has(marker)) {
+            return {
+              width: view.getUint16(offset + 7),
+              height: view.getUint16(offset + 5)
+            };
+          }
+          offset += 2 + segmentLength;
+        }
+      }
+      return null;
+    }
+
+    async function getLoadedEditPreviewImage(source) {
+      const previewSource = editState.sourcePreviewUrl || editState.source;
+      if (source !== editState.source || previewSource !== source || !editSourceImage.getAttribute("src")) {
+        return null;
+      }
+      if (editSourceImage.complete) {
+        if (editSourceImage.naturalWidth) {
+          return editSourceImage;
+        }
+        throw new Error("Could not decode the pasted source image.");
+      }
+      return new Promise((resolve, reject) => {
+        const handleLoad = () => {
+          cleanup();
+          resolve(editState.source === source ? editSourceImage : null);
+        };
+        const handleError = () => {
+          cleanup();
+          reject(new Error("Could not decode the pasted source image."));
+        };
+        const cleanup = () => {
+          editSourceImage.removeEventListener("load", handleLoad);
+          editSourceImage.removeEventListener("error", handleError);
+        };
+        editSourceImage.addEventListener("load", handleLoad, { once: true });
+        editSourceImage.addEventListener("error", handleError, { once: true });
+      });
+    }
+
     async function loadEditNormalizationImage(source) {
       if (!isHttpUrl(source)) {
+        const previewImage = await getLoadedEditPreviewImage(source);
         return {
-          image: await loadImageElement(source),
+          image: previewImage || await loadImageElement(source),
           release: () => {}
         };
       }
@@ -8602,6 +8853,7 @@ body.video-maker-open {
         if (editState.preparedSourceDataUrl && editState.preparedSourceWidth && editState.preparedSourceHeight) {
           return {
             dataUrl: editState.preparedSourceDataUrl,
+            uploadSource: editState.preparedSourceUploadBlob || editState.preparedSourceDataUrl,
             width: editState.preparedSourceWidth,
             height: editState.preparedSourceHeight
           };
@@ -8613,6 +8865,20 @@ body.video-maker-open {
 
       editState.preparedSourceKey = source;
       editState.preparedSourcePromise = (async () => {
+        const sourceBlob = editState.sourceBlob;
+        if (sourceBlob) {
+          const dimensions = await readImageBlobDimensions(sourceBlob);
+          const sourceWidth = dimensions?.width || editState.sourceWidth || 720;
+          const sourceHeight = dimensions?.height || editState.sourceHeight || 1280;
+          const target = getSliderEditTargetDimensions(sourceWidth, sourceHeight);
+          return {
+            dataUrl: editState.sourcePreviewUrl || source,
+            uploadSource: sourceBlob,
+            objectUrl: "",
+            width: target.width,
+            height: target.height
+          };
+        }
         const loaded = await loadEditNormalizationImage(source);
         try {
           const image = loaded.image;
@@ -8630,8 +8896,19 @@ body.video-maker-open {
             throw new Error("Could not prepare the source image.");
           }
           context.drawImage(image, 0, 0, target.width, target.height);
+          const preparedBlob = await new Promise((resolve, reject) => {
+            canvas.toBlob((blob) => {
+              if (blob) {
+                resolve(blob);
+              } else {
+                reject(new Error("Could not encode the source image."));
+              }
+            }, "image/jpeg", 0.92);
+          });
+          const preparedObjectUrl = URL.createObjectURL(preparedBlob);
           return {
-            dataUrl: canvas.toDataURL("image/jpeg", 0.92),
+            dataUrl: preparedObjectUrl,
+            objectUrl: preparedObjectUrl,
             width: target.width,
             height: target.height
           };
@@ -8644,9 +8921,25 @@ body.video-maker-open {
         const preparedSource = await editState.preparedSourcePromise;
         if (editState.preparedSourceKey === source) {
           editState.preparedSourceDataUrl = preparedSource.dataUrl;
+          editState.preparedSourceObjectUrl = preparedSource.objectUrl || "";
+          editState.preparedSourceUploadBlob = preparedSource.uploadSource instanceof Blob
+            ? preparedSource.uploadSource
+            : null;
           editState.preparedSourceWidth = preparedSource.width;
           editState.preparedSourceHeight = preparedSource.height;
           editState.preparedSourcePromise = null;
+          if (preparedSource.objectUrl && editState.sourcePreviewUrl === source) {
+            editState.sourcePreviewUrl = preparedSource.dataUrl;
+            editSourceImage.src = preparedSource.dataUrl;
+            editState.sourceWidth = preparedSource.width;
+            editState.sourceHeight = preparedSource.height;
+            if (editState.sourceObjectUrl === source) {
+              URL.revokeObjectURL(editState.sourceObjectUrl);
+              editState.sourceObjectUrl = "";
+            }
+          }
+        } else if (preparedSource.objectUrl) {
+          URL.revokeObjectURL(preparedSource.objectUrl);
         }
         return preparedSource;
       } catch (error) {
@@ -8662,8 +8955,7 @@ body.video-maker-open {
         setStatus("Choose an image file.");
         return;
       }
-      const dataUrl = await blobToDataUrl(file);
-      await setEditSource(dataUrl, label);
+      await setEditSourceBlob(file, label);
     }
 
     async function handleEditPaste(event) {
@@ -8680,8 +8972,7 @@ body.video-maker-open {
           setStatus("Could not read the pasted image.");
           return;
         }
-        const dataUrl = await blobToDataUrl(blob);
-        await setEditSource(dataUrl, "pasted image");
+        await setEditSourceBlob(blob, "pasted image");
         return;
       }
 
@@ -8712,8 +9003,7 @@ body.video-maker-open {
             const imageType = (item.types || []).find((type) => type.startsWith("image/"));
             if (imageType) {
               const blob = await item.getType(imageType);
-              const dataUrl = await blobToDataUrl(blob);
-              await setEditSource(dataUrl, "clipboard image");
+              await setEditSourceBlob(blob, "clipboard image");
               return;
             }
             if ((item.types || []).includes("text/plain")) {
@@ -8746,16 +9036,41 @@ body.video-maker-open {
     }
 
     async function requestSliderEdit(prompt) {
-      const preparedSource = await buildPreparedEditSource();
-      return {
-        edited_url: await requestQwenImage({
-          source: preparedSource.dataUrl,
-          prompt: String(prompt || "").trim(),
-          width: preparedSource.width,
-          height: preparedSource.height
-        }),
-        is_moderated: false
+      const startedAt = Date.now();
+      let phase = "Preparing source image";
+      let phaseStartedAt = startedAt;
+      const showProgress = () => {
+        const now = Date.now();
+        const phaseSeconds = Math.max(0, Math.floor((now - phaseStartedAt) / 1000));
+        const totalSeconds = Math.max(0, Math.floor((now - startedAt) / 1000));
+        const totalDetail = totalSeconds === phaseSeconds ? "" : `, ${totalSeconds}s total`;
+        const message = `${phase} (${phaseSeconds}s${totalDetail})`;
+        setEditStageNote(message);
+        setStatus(message);
       };
+      const progressTimer = window.setInterval(showProgress, 1000);
+      showProgress();
+      try {
+        const preparedSource = await buildPreparedEditSource();
+        return {
+          edited_url: await requestQwenImage({
+            source: preparedSource.uploadSource || preparedSource.dataUrl,
+            prompt: String(prompt || "").trim(),
+            width: preparedSource.width,
+            height: preparedSource.height,
+            onStatus: (nextPhase) => {
+              if (nextPhase !== phase) {
+                phase = nextPhase;
+                phaseStartedAt = Date.now();
+              }
+              showProgress();
+            }
+          }),
+          is_moderated: false
+        };
+      } finally {
+        window.clearInterval(progressTimer);
+      }
     }
 
     function buildRandomizedSliderEditPrompt(prompt) {
@@ -8837,8 +9152,11 @@ body.video-maker-open {
           setStatus("Slider edit generated successfully.");
           return;
         }
-        setEditStageNote("All prompt attempts failed");
-        setStatus("All enabled prompt attempts failed. Adjust the prompt list and try again.");
+        setEditStageNote("All enabled prompt attempts failed. Adjust the prompt list and try again.", "error");
+        setStatus("All enabled prompt attempts failed. Adjust the prompt list and try again.", "error");
+      } catch (error) {
+        reportSliderError(error);
+        throw error;
       } finally {
         editState.isGenerating = false;
         refreshEditButtons();
@@ -9697,6 +10015,12 @@ body.video-maker-open {
 
     function renderSwapArchive() {
       swapArchiveGrid.innerHTML = "";
+      swapResultsSummary.textContent = `${swapState.archive.length} saved`;
+      swapResultsEmpty.style.display = swapState.archive.length ? "none" : "block";
+      if (!swapState.archiveOpen) {
+        refreshSwapButtons();
+        return;
+      }
       swapState.archive.forEach((entry, index) => {
         hydrateSwapArchiveEntry(entry);
         const card = document.createElement("article");
@@ -9707,6 +10031,8 @@ body.video-maker-open {
         const imageUrl = getSwapArchiveImageUrl(entry);
         if (imageUrl) {
           const image = document.createElement("img");
+          image.loading = "lazy";
+          image.decoding = "async";
           image.src = addCacheBuster(imageUrl);
           image.alt = `Saved face swap ${index + 1}`;
           image.addEventListener("error", () => {
@@ -9773,8 +10099,6 @@ body.video-maker-open {
         swapArchiveGrid.appendChild(card);
       });
 
-      swapResultsSummary.textContent = `${swapState.archive.length} saved`;
-      swapResultsEmpty.style.display = swapState.archive.length ? "none" : "block";
       saveSwapArchive();
       refreshSwapButtons();
     }
@@ -10209,7 +10533,6 @@ body.video-maker-open {
       const saved = loadSwapSession();
       swapState.archive = loadSwapArchive();
       if (!saved) {
-        renderSwapWorkspace();
         return;
       }
       swapState.prompt = saved.promptVersion === defaultFaceSwapPromptVersion && typeof saved.prompt === "string" && saved.prompt.trim()
@@ -10229,7 +10552,6 @@ body.video-maker-open {
       swapState.targetMaskMode = saved.targetMaskMode === "remove" ? "remove" : "add";
       swapState.generateCount = Math.max(1, Math.min(4, Number(saved.generateCount) || 2));
       swapState.donorPickerValue = typeof saved.donorPickerValue === "string" ? saved.donorPickerValue : "";
-      renderSwapWorkspace();
     }
 
     async function handlePaste(event) {
@@ -10718,8 +11040,7 @@ body.video-maker-open {
         editState.isGenerating = false;
         refreshEditButtons();
         renderEditPrompts();
-        setEditStageNote("Slider edit failed");
-        setStatus(error.message || "Could not generate the slider edit.");
+        reportSliderError(error);
       });
     });
     swapGenerateButton.addEventListener("click", () => {
@@ -10792,7 +11113,7 @@ body.video-maker-open {
         return;
       }
       pasteEditFromClipboard().catch((error) => {
-        setStatus(error.message || "Could not read the clipboard.");
+        reportSliderError(error);
       });
     });
     swapTargetPasteClipboardButton.addEventListener("click", () => {
@@ -10925,7 +11246,7 @@ body.video-maker-open {
     editPickImageInput.addEventListener("change", (event) => {
       const file = event.target.files?.[0];
       loadEditSelectedFile(file, "selected image").catch((error) => {
-        setStatus(error.message || "Could not load selected image.");
+        reportSliderError(error);
       });
       editPickImageInput.value = "";
     });
@@ -10939,7 +11260,7 @@ body.video-maker-open {
     editCameraImageInput.addEventListener("change", (event) => {
       const file = event.target.files?.[0];
       loadEditSelectedFile(file, "camera image").catch((error) => {
-        setStatus(error.message || "Could not load camera image.");
+        reportSliderError(error);
       });
       editCameraImageInput.value = "";
     });
@@ -10955,7 +11276,7 @@ body.video-maker-open {
     editPasteTarget.addEventListener("click", () => editPasteTarget.focus());
     editPasteTarget.addEventListener("paste", (event) => {
       handleEditPaste(event).catch((error) => {
-        setStatus(error.message || "Could not read pasted content.");
+        reportSliderError(error);
       });
     });
     swapTargetPasteTarget.addEventListener("click", () => swapTargetPasteTarget.focus());
@@ -11027,7 +11348,7 @@ body.video-maker-open {
         handleEditPaste(event).then(() => {
           editMobilePasteField.value = "";
         }).catch((error) => {
-          setStatus(error.message || "Could not read pasted content.");
+          reportSliderError(error);
         });
       });
       editMobilePasteField.addEventListener("input", () => {
@@ -11038,13 +11359,13 @@ body.video-maker-open {
         editMobilePasteField.value = "";
         if (isHttpUrl(trimmedValue)) {
           setEditSource(trimmedValue, "pasted image URL").catch((error) => {
-            setStatus(error.message || "Could not read pasted content.");
+            reportSliderError(error);
           });
           return;
         }
         if (trimmedValue.startsWith("data:image/")) {
           setEditSource(trimmedValue, "pasted image").catch((error) => {
-            setStatus(error.message || "Could not read pasted content.");
+            reportSliderError(error);
           });
         }
       });
